@@ -1,0 +1,3 @@
+# Cloudflare Pages: deploy only the built site, not node_modules or source.
+name = "lotterynumberlab"
+pages_build_output_dir = "dist"

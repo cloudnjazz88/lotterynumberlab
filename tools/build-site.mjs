@@ -5,7 +5,7 @@
  *   node tools/build-site.mjs
  */
 
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir, cp, rm } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -349,3 +349,23 @@ if (todo.length) {
   console.log("\nACTION REQUIRED before publishing — edit content/site.mjs:");
   for (const item of todo) console.log("  - " + item);
 }
+
+const DIST = resolve(ROOT, "dist");
+await rm(DIST, { recursive: true, force: true });
+
+const assets = [
+  "styles.css",
+  "src/app.js",
+  "src/data.js",
+  "src/stats.js",
+  "src/generator.js",
+  "src/charts.js",
+  "data/draws.js",
+];
+const publish = [...new Set([...written, ...assets])];
+for (const file of publish) {
+  const to = resolve(DIST, file);
+  await mkdir(dirname(to), { recursive: true });
+  await cp(resolve(ROOT, file), to);
+}
+console.log(`\npublished ${publish.length} files to dist/`);
