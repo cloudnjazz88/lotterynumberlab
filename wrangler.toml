@@ -1,3 +1,7 @@
-# Cloudflare Pages: deploy only the built site, not node_modules or source.
+# Static site for Cloudflare Workers + Assets (npx wrangler deploy).
+# Do not set `main` — there is no Worker entry file; src/ is browser JavaScript.
 name = "lotterynumberlab"
-pages_build_output_dir = "dist"
+compatibility_date = "2026-08-24"
+
+[assets]
+directory = "./dist"
