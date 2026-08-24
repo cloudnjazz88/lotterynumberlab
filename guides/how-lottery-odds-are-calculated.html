@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>How to calculate lottery odds yourself | Lottery Number Lab</title>
+    <meta name="description" content="A step-by-step guide to calculating lottery odds with combinations: the C(n,k) formula, jackpot odds, every prize tier, overall odds, and a reference table of every Mega Millions and Powerball matrix." />
+    <link rel="canonical" href="https://lotterynumberlab.com/guides/how-lottery-odds-are-calculated.html" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Lottery Number Lab" />
+    <meta property="og:title" content="How to calculate lottery odds yourself" />
+    <meta property="og:description" content="A step-by-step guide to calculating lottery odds with combinations: the C(n,k) formula, jackpot odds, every prize tier, overall odds, and a reference table of every Mega Millions and Powerball matrix." />
+    <meta property="og:url" content="https://lotterynumberlab.com/guides/how-lottery-odds-are-calculated.html" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to calculate lottery odds yourself","description":"A step-by-step guide to calculating lottery odds with combinations: the C(n,k) formula, jackpot odds, every prize tier, overall odds, and a reference table of every Mega Millions and Powerball matrix.","datePublished":"2026-08-24","dateModified":"2026-08-24","author":{"@type":"Organization","name":"Lottery Number Lab"},"publisher":{"@type":"Organization","name":"Lottery Number Lab"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://lotterynumberlab.com/guides/how-lottery-odds-are-calculated.html"},"isAccessibleForFree":true}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://lotterynumberlab.com/guides/"},{"@type":"ListItem","position":3,"name":"How to calculate lottery odds yourself","item":"https://lotterynumberlab.com/guides/how-lottery-odds-are-calculated.html"}]}</script>
+  </head>
+  <body data-view="page" data-game="home">
+    <div class="backdrop" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="../index.html">
+        <div class="brand-mark"><span>US</span></div>
+        <div class="brand-text">
+          <span class="brand-name">Lottery Number Lab</span>
+          <span class="brand-sub" id="brandSub">Odds, drawing history and probability for Mega Millions and Powerball</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="../index.html">Home</a>
+        <a href="../mega-millions.html">Mega Millions</a>
+        <a href="../powerball.html">Powerball</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../guides/index.html" class="is-on" aria-current="page">Guides</a>
+        <a href="../about.html">About</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="index.html">Guides</a>
+        <span aria-hidden="true">/</span>
+        <span>Math primer</span>
+      </nav>
+
+      <article class="panel prose prose--article">
+        <header class="article-head">
+          <p class="page-kicker">Math primer</p>
+          <h1>How to calculate lottery odds yourself</h1>
+          <p class="article-dek">Two formulas cover every jackpot game ever sold. Once you can reproduce the official prize chart, no lottery claim can surprise you again.</p>
+          <p class="article-meta">
+            <time datetime="2026-08-24">Published August 24, 2026</time>
+            · figures computed from 2,312 drawings
+            and the published game rules
+          </p>
+        </header>
+
+<p class="lede">
+  Lottery odds are not a secret and not an estimate. They are a counting exercise you can do on
+  paper, and every figure a lottery publishes can be reproduced from the ball matrix alone. Here
+  is the whole method, with the arithmetic shown.
+</p>
+
+<h2>Step 1: order does not matter</h2>
+<p>
+  A ticket matches whether or not the balls arrive in your order, so the count you need is
+  combinations, not permutations. The number of ways to choose k items from n is
+</p>
+<p class="formula">C(n,&nbsp;k) = n! / [ k! × (n−k)! ]</p>
+<p>
+  For Mega Millions' five white balls from 70, the fraction is easier written
+  out and cancelled:
+</p>
+<p class="formula">
+  C(70,&nbsp;5) =
+  (70 × 69 × 68 ×
+  67 × 66) / (5 × 4 × 3 × 2 × 1) =
+  <b>12,103,014</b>
+</p>
+<p>
+  Dividing by 5! is what removes the orderings: every set of five numbers can be arranged 120
+  ways, and all 120 win the same prize.
+</p>
+
+<h2>Step 2: multiply by the second pool</h2>
+<p>
+  The bonus ball comes from a separate machine, so it is an independent choice and the counts
+  multiply. This is the step people get wrong most often — the bonus ball is <em>not</em> one of
+  the five, and it can duplicate one of them.
+</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Game</th><th>White-ball sets</th><th>×</th><th>Bonus pool</th><th>=</th><th>Jackpot odds</th></tr></thead>
+  <tbody><tr><td>Mega Millions</td><td>12,103,014</td><td>×</td><td>24</td><td>=</td><td><b>1 in 290,472,336</b></td></tr>
+  <tr><td>Powerball</td><td>11,238,513</td><td>×</td><td>26</td><td>=</td><td><b>1 in 292,201,338</b></td></tr></tbody></table></div>
+
+<h2>Step 3: the other prize tiers</h2>
+<p>
+  For a partial match you need to count two things at once: how many of your five numbers hit,
+  and how many missed. If m of your five match, then m came from the 5 drawn balls and (5−m)
+  came from the (N−5) balls that were not drawn:
+</p>
+<p class="formula">
+  P(exactly m white) = C(5,&nbsp;m) × C(N−5,&nbsp;5−m) / C(N,&nbsp;5)
+</p>
+<p>Then multiply by 1/B if you also need the bonus ball, or (B−1)/B if you must miss it.</p>
+<h3>Worked example: 4 white balls plus the Powerball</h3>
+<p class="formula">
+  C(5,&nbsp;4) × C(64,&nbsp;1) / C(69,&nbsp;5) × 1/26 =
+  5 × 64 / 11,238,513 × 1/26 =
+  <b>1 in 913,129</b>
+</p>
+<p>
+  Powerball publishes 1 in 913,129.18 for that tier. The formula reproduces it exactly, and the
+  same two lines of arithmetic generate every other row of the official chart.
+</p>
+<div class="table-wrap"><table><caption>Every Powerball tier, from the matrix alone.</caption>
+  <thead><tr><th>Match</th><th>Formula</th><th>Odds</th></tr></thead>
+  <tbody><tr><td>5 white + PB</td><td>C(5,&nbsp;5) × C(64,&nbsp;0) / C(69,&nbsp;5) × 1/26</td><td>1 in 292,201,338</td></tr>
+  <tr><td>5 white</td><td>C(5,&nbsp;5) × C(64,&nbsp;0) / C(69,&nbsp;5) × 25/26</td><td>1 in 11,688,054</td></tr>
+  <tr><td>4 white + PB</td><td>C(5,&nbsp;4) × C(64,&nbsp;1) / C(69,&nbsp;5) × 1/26</td><td>1 in 913,129</td></tr>
+  <tr><td>4 white</td><td>C(5,&nbsp;4) × C(64,&nbsp;1) / C(69,&nbsp;5) × 25/26</td><td>1 in 36,525</td></tr>
+  <tr><td>3 white + PB</td><td>C(5,&nbsp;3) × C(64,&nbsp;2) / C(69,&nbsp;5) × 1/26</td><td>1 in 14,494</td></tr>
+  <tr><td>3 white</td><td>C(5,&nbsp;3) × C(64,&nbsp;2) / C(69,&nbsp;5) × 25/26</td><td>1 in 579.76</td></tr>
+  <tr><td>2 white + PB</td><td>C(5,&nbsp;2) × C(64,&nbsp;3) / C(69,&nbsp;5) × 1/26</td><td>1 in 701.33</td></tr>
+  <tr><td>1 white + PB</td><td>C(5,&nbsp;1) × C(64,&nbsp;4) / C(69,&nbsp;5) × 1/26</td><td>1 in 91.98</td></tr>
+  <tr><td>0 white + PB</td><td>C(5,&nbsp;0) × C(64,&nbsp;5) / C(69,&nbsp;5) × 1/26</td><td>1 in 38.32</td></tr></tbody></table></div>
+
+<h2>Step 4: the overall odds</h2>
+<p>
+  "Odds of winning any prize" is just the sum of the winning tiers' probabilities, inverted.
+  Adding the nine rows above gives 1 in 24.87 for Powerball; the same sum
+  for Mega Millions gives 1 in 23.07. Both match the official statements
+  ("about 1 in 25" and "1 in 23") because they are the same calculation.
+</p>
+
+
+
+<h2>Four mistakes to avoid</h2>
+<ul>
+  <li>
+    <b>Adding when you should multiply.</b> Independent stages multiply. The chance of matching
+    five white balls <em>and</em> the bonus is the product of the two, not the sum.
+  </li>
+  <li>
+    <b>Using permutations.</b> Forgetting to divide by 5! inflates the count by 120× and gives
+    an "odds" figure in the tens of billions.
+  </li>
+  <li>
+    <b>Treating "1 in 292 million" as a percentage.</b> It is 0.000000342%. Writing it as a
+    percentage is a good way to feel the size of it.
+  </li>
+  <li>
+    <b>Assuming odds accumulate.</b> Buying 10 tickets makes your chance 10 in 292,201,338, not
+    1 in 29,220,134 for each of ten independent shots at the same prize — and playing every week
+    for fifty years buys around 2,600 draws against a 292&nbsp;million denominator.
+  </li>
+</ul>
+
+<h2>Reference: every matrix these two games have used</h2>
+<p>
+  Both lotteries have changed their ball pools repeatedly, and every change moved the jackpot
+  odds. This is also why frequency statistics must never be mixed across eras.
+</p>
+<div class="table-wrap"><table><caption>Jackpot odds computed from each published matrix.</caption>
+  <thead><tr><th>Effective</th><th>Game</th><th>Matrix</th><th>Jackpot odds</th></tr></thead>
+  <tbody><tr><td>April 22, 1992</td><td>Powerball</td><td>5/45 + 1/45</td><td>1 in 54,979,155</td></tr>
+  <tr><td>September 6, 1996</td><td>Mega Millions</td><td>5/50 + 1/25</td><td>1 in 52,969,000</td></tr>
+  <tr><td>November 5, 1997</td><td>Powerball</td><td>5/49 + 1/42</td><td>1 in 80,089,128</td></tr>
+  <tr><td>January 13, 1999</td><td>Mega Millions</td><td>5/50 + 1/36</td><td>1 in 76,275,360</td></tr>
+  <tr><td>May 15, 2002</td><td>Mega Millions</td><td>5/52 + 1/52</td><td>1 in 135,145,920</td></tr>
+  <tr><td>October 9, 2002</td><td>Powerball</td><td>5/53 + 1/42</td><td>1 in 120,526,770</td></tr>
+  <tr><td>June 24, 2005</td><td>Mega Millions</td><td>5/56 + 1/46</td><td>1 in 175,711,536</td></tr>
+  <tr><td>January 7, 2009</td><td>Powerball</td><td>5/59 + 1/39</td><td>1 in 195,249,054</td></tr>
+  <tr><td>January 15, 2012</td><td>Powerball</td><td>5/59 + 1/35</td><td>1 in 175,223,510</td></tr>
+  <tr><td>October 22, 2013</td><td>Mega Millions</td><td>5/75 + 1/15</td><td>1 in 258,890,850</td></tr>
+  <tr><td>October 7, 2015</td><td>Powerball</td><td>5/69 + 1/26</td><td>1 in 292,201,338</td></tr>
+  <tr><td>October 31, 2017</td><td>Mega Millions</td><td>5/70 + 1/25</td><td>1 in 302,575,350</td></tr>
+  <tr><td>April 8, 2025</td><td>Mega Millions</td><td>5/70 + 1/24</td><td>1 in 290,472,336</td></tr></tbody></table></div>
+<p>
+  The trend is unmistakable: with two exceptions, every revision made the jackpot harder to win.
+  <a href="powerball-2015-rule-change.html">The reasoning behind that is worth a page of its
+  own</a>.
+</p>
+
+<h2>Now do it for your own state game</h2>
+<p>
+  The method is identical for any pick-5 or pick-6 game — swap N, k and B and turn the handle.
+  If your result matches the odds on the back of the play slip, you have understood the game
+  completely. If a website's numbers disagree with your arithmetic, trust the arithmetic.
+</p>
+        <footer class="article-foot">
+          <p class="disclaimer-text">
+            Entertainment and information only. Lottery drawings are independent random events
+            and no method described on this site can improve your odds of winning. 18+ (21+ in
+            some states). Verify all results with your state lottery.
+            <a href="../terms.html">Full disclaimer</a>.
+          </p>
+        </footer>
+      </article>
+
+      
+
+      <nav class="article-nav" aria-label="More guides">
+        <a class="article-nav__side" href="mega-millions-2025-rule-change.html">
+          <span>Previous</span><b>What the 2025 Mega Millions overhaul actually changed</b>
+        </a>
+        <a class="article-nav__side article-nav__side--next" href="mega-millions-vs-powerball-odds.html">
+          <span>Next</span><b>Mega Millions vs Powerball: the odds compared, tier by tier</b>
+        </a>
+      </nav>
+
+      <section class="section" aria-labelledby="more-guides">
+        <h2 class="section__title" id="more-guides">Keep reading</h2>
+        <div class="guide-cards">
+        <a class="guide-card" href="../guides/mega-millions-vs-powerball-odds.html">
+          <span class="guide-card__kicker">Odds</span>
+          <h3>Mega Millions vs Powerball: the odds compared, tier by tier</h3>
+          <p>Both jackpots are advertised in the hundreds of millions and both are almost impossibly unlikely — but the two games are not equally hard, and the smaller tiers differ a lot.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="guide-card" href="../guides/independent-trials.html">
+          <span class="guide-card__kicker">Probability</span>
+          <h3>The law of independent trials: why past numbers can't predict the next drawing</h3>
+          <p>A ball that has not appeared in 40 drawings is not "due". Here is what independence actually means, and what the full drawing record says when you test it properly.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="guide-card" href="../guides/hot-and-cold-numbers-tested.html">
+          <span class="guide-card__kicker">Data</span>
+          <h3>Are hot and cold numbers real? Testing the full drawing record</h3>
+          <p>Every lottery site publishes a hot-numbers table. We ran the two tests that decide whether those tables contain any information at all.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <h2>Lottery Number Lab</h2>
+          <p>Odds, drawing history and probability for Mega Millions and Powerball. All drawing dates and times on this site are US Eastern Time (ET).</p>
+        </div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="../guides/index.html">All guides</a>
+          <a href="../results/index.html">Past winning numbers</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../glossary.html">Glossary</a>
+          <a href="../methodology.html">Methodology & corrections</a>
+          <a href="../about.html">About & contact</a>
+          <a href="../privacy-policy.html">Privacy policy</a>
+          <a href="../terms.html">Terms & disclaimer</a>
+          <a href="../responsible-play.html">Responsible play</a>
+        </nav>
+      </div>
+      <p class="footer__disclaimer"><strong>Disclaimer.</strong> The numbers this site produces are reference figures for
+<strong>entertainment purposes only</strong>, based on historical statistics and a random
+sampling algorithm. Every lottery drawing is a perfectly independent event, so nothing here
+guarantees or improves a win. Please do not buy lottery tickets excessively.</p>
+      <p class="footer__warn">
+        This site is an independent statistics project. It is not affiliated with, endorsed by
+        or connected to the Mega Millions Consortium, the Multi-State Lottery Association
+        (MUSL), or any state lottery. It does not sell lottery tickets and cannot pay prizes.
+        Official results must always be verified with your state lottery.
+        Play only where legal and only if you are old enough — 18+, or 21+ in some states.
+        If gambling stops being fun, call 1-800-GAMBLER or visit
+        <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener nofollow">ncpgambling.org</a>.
+      </p>
+      <p class="footer__meta">© 2026–present Lottery Number Lab. Drawing data from the
+        New York State Open Data portal.</p>
+    </footer>
+    
+  </body>
+</html>

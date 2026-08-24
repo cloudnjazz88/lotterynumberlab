@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>When is a lottery ticket "worth" it? The expected-value math | Lottery Number Lab</title>
+    <meta name="description" content="How to compute the expected value of a Mega Millions or Powerball ticket, the jackpot size needed to break even after cash discount and taxes, and why positive expected value still isn't a good bet." />
+    <link rel="canonical" href="https://lotterynumberlab.com/guides/expected-value-of-a-lottery-ticket.html" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Lottery Number Lab" />
+    <meta property="og:title" content="When is a lottery ticket "worth" it? The expected-value math" />
+    <meta property="og:description" content="How to compute the expected value of a Mega Millions or Powerball ticket, the jackpot size needed to break even after cash discount and taxes, and why positive expected value still isn't a good bet." />
+    <meta property="og:url" content="https://lotterynumberlab.com/guides/expected-value-of-a-lottery-ticket.html" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"When is a lottery ticket \"worth\" it? The expected-value math","description":"How to compute the expected value of a Mega Millions or Powerball ticket, the jackpot size needed to break even after cash discount and taxes, and why positive expected value still isn't a good bet.","datePublished":"2026-08-24","dateModified":"2026-08-24","author":{"@type":"Organization","name":"Lottery Number Lab"},"publisher":{"@type":"Organization","name":"Lottery Number Lab"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://lotterynumberlab.com/guides/expected-value-of-a-lottery-ticket.html"},"isAccessibleForFree":true}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://lotterynumberlab.com/guides/"},{"@type":"ListItem","position":3,"name":"When is a lottery ticket \"worth\" it? The expected-value math","item":"https://lotterynumberlab.com/guides/expected-value-of-a-lottery-ticket.html"}]}</script>
+  </head>
+  <body data-view="page" data-game="home">
+    <div class="backdrop" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="../index.html">
+        <div class="brand-mark"><span>US</span></div>
+        <div class="brand-text">
+          <span class="brand-name">Lottery Number Lab</span>
+          <span class="brand-sub" id="brandSub">Odds, drawing history and probability for Mega Millions and Powerball</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="../index.html">Home</a>
+        <a href="../mega-millions.html">Mega Millions</a>
+        <a href="../powerball.html">Powerball</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../guides/index.html" class="is-on" aria-current="page">Guides</a>
+        <a href="../about.html">About</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="index.html">Guides</a>
+        <span aria-hidden="true">/</span>
+        <span>Analysis</span>
+      </nav>
+
+      <article class="panel prose prose--article">
+        <header class="article-head">
+          <p class="page-kicker">Analysis</p>
+          <h1>When is a lottery ticket "worth" it? The expected-value math</h1>
+          <p class="article-dek">There is a jackpot size at which a ticket's expected value passes its price. It is much higher than most people assume, and reaching it still does not make the bet a good one.</p>
+          <p class="article-meta">
+            <time datetime="2026-08-24">Published August 24, 2026</time>
+            · figures computed from 2,312 drawings
+            and the published game rules
+          </p>
+        </header>
+
+<p class="lede">
+  Expected value is the average result of a bet repeated forever: each outcome's value
+  multiplied by its probability, all added together. For a lottery ticket it is the cleanest way
+  to see what you are buying — and the calculation has a genuinely surprising middle section.
+</p>
+
+<h2>Step 1: the fixed prizes</h2>
+<p>
+  Everything below the jackpot is a known amount at known odds, so it can be summed directly.
+</p>
+<div class="table-wrap"><table><caption>Powerball, 5 of 69 + 1 of 26, $2 per play.</caption>
+  <thead><tr><th>Match</th><th>Prize</th><th>Probability</th><th>Contribution to EV</th></tr></thead>
+  <tbody><tr><td>5 white</td><td>$1,000,000</td><td>1 in 11,688,054</td><td>$0.0856</td></tr>
+  <tr><td>4 white + PB</td><td>$50,000</td><td>1 in 913,129</td><td>$0.0548</td></tr>
+  <tr><td>4 white</td><td>$100</td><td>1 in 36,525</td><td>$0.0027</td></tr>
+  <tr><td>3 white + PB</td><td>$100</td><td>1 in 14,494</td><td>$0.0069</td></tr>
+  <tr><td>3 white</td><td>$7</td><td>1 in 579.76</td><td>$0.0121</td></tr>
+  <tr><td>2 white + PB</td><td>$7</td><td>1 in 701.33</td><td>$0.0100</td></tr>
+  <tr><td>1 white + PB</td><td>$4</td><td>1 in 91.98</td><td>$0.0435</td></tr>
+  <tr><td>0 white + PB</td><td>$4</td><td>1 in 38.32</td><td>$0.1044</td></tr>
+  <tr><td><b>Total fixed prizes</b></td><td></td><td></td><td><b>$0.3199</b></td></tr></tbody></table></div>
+<p>
+  A $2 Powerball ticket therefore returns
+  $0.32 — 16.0% of its price —
+  from the fixed tiers alone. The equivalent figure for a $5 Mega Millions
+  play is $0.37, or 7.5%,
+  before its built-in 2X–10X multiplier is applied. Roughly a fifth of your money, in other
+  words, is buying small prizes; the rest is buying jackpot probability.
+</p>
+
+<h2>Step 2: the naive break-even jackpot</h2>
+<p>
+  For the whole ticket to break even, the jackpot term has to cover the remaining
+  $2 − $0.32 =
+  $1.68. Divide by the jackpot
+  probability and you get the required prize:
+</p>
+<p class="formula">
+  Break-even jackpot = (ticket price − fixed EV) × 292,201,338 ≈
+  <b>$491 million</b>
+</p>
+<p>
+  That is the number people usually stop at, and on its own it makes billion-dollar jackpots look
+  like a bargain. It is also wrong, because it treats the advertised jackpot as money received.
+</p>
+
+<h2>Step 3: what the jackpot is actually worth</h2>
+<p>
+  The advertised figure is an annuity spread over 29 years. Take the cash instead and you get
+  roughly half. Then the entire amount is taxed as ordinary income at the top federal rate.
+</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Adjustment</th><th>Multiplier</th><th>Running value of an advertised $1 billion</th></tr></thead>
+  <tbody><tr><td>Advertised annuity</td><td>1.00</td><td>$1,000 million</td></tr>
+  <tr><td>Cash option (≈50%)</td><td>0.50</td><td>$500 million</td></tr>
+  <tr><td>Federal tax at 37%</td><td>0.63</td><td>$315 million</td></tr>
+  <tr><td><b>Kept, best case</b></td><td><b>0.32</b></td><td><b>$315 million</b></td></tr></tbody></table></div>
+<p>
+  Only about 32% of the advertised prize reaches the winner in
+  a no-state-tax jurisdiction, so the break-even jackpot has to be scaled up by the inverse of
+  that fraction:
+</p>
+<div class="table-wrap"><table><caption>Mega Millions figures include an allowance for the built-in multiplier on non-jackpot prizes; both ignore prize sharing.</caption>
+  <thead><tr><th>Game</th><th>Naive break-even</th><th>After cash discount and 37% federal tax</th></tr></thead>
+  <tbody><tr><td>Powerball</td><td>$491 million</td><td><b>$1.56 billion</b></td></tr>
+  <tr><td>Mega Millions</td><td>$1.13 billion</td><td><b>$3.58 billion</b></td></tr></tbody></table></div>
+<p>
+  Powerball has reached that territory a handful of times in its history. Mega Millions, at $5 a
+  play, essentially never has.
+</p>
+
+
+
+<h2>Step 4: the killer — sharing</h2>
+<p>
+  The calculation above assumes you would be the only winner. At exactly the jackpot levels where
+  expected value looks attractive, that assumption collapses: enormous jackpots sell enormous
+  numbers of tickets, and the chance that somebody else holds your combination rises with every
+  one of them.
+</p>
+<p>
+  The record board is blunt about it. The January 13, 2016 Powerball jackpot, the first
+  over a billion dollars, was split <b>3 ways</b>. The
+  September 6, 2025 jackpot of $1.787&nbsp;billion was split
+  <b>2 ways</b>. Sharing does not reduce the jackpot term a little; it
+  halves or thirds it, and it does so precisely when the prize is large enough to have tempted
+  you in.
+</p>
+<aside class="callout callout--note">
+  <h3>The practical conclusion</h3>
+  <p>Once the cash discount, income tax and sharing risk are all included, there is no
+  realistic advertised jackpot at which a Mega Millions or Powerball ticket is a
+  positive-expectation purchase. The jackpot chases the break-even point but effectively never
+  catches it.</p>
+</aside>
+
+<h2>Why positive expected value still wouldn't make it a good bet</h2>
+<p>
+  Suppose the arithmetic did tip over. A ticket would still be a terrible financial instrument,
+  for reasons that have nothing to do with the mean:
+</p>
+<ul>
+  <li>
+    <b>The variance is absurd.</b> The expected value is carried almost entirely by an outcome
+    with probability 1/292,201,338. You would need to buy tickets for far
+    longer than the age of the universe for the average to have any predictive power over your
+    own results.
+  </li>
+  <li>
+    <b>Money is not linear.</b> Losing $2 a week for decades costs real utility; the millionth
+    dollar of a jackpot adds far less happiness than the first. Under any concave utility
+    function the bet gets worse, not better.
+  </li>
+  <li>
+    <b>You cannot scale into it.</b> Buying every combination would cost hundreds of millions of
+    dollars, take longer than the sales window allows, and still expose you to sharing.
+  </li>
+</ul>
+
+<h2>The historical exceptions</h2>
+<p>
+  Beatable lotteries have existed, and none of them were jackpot games. In 1992 a syndicate
+  bought a large share of all possible combinations in the Virginia state lottery when a rolled
+  jackpot made the maths favourable. Between 2005 and 2012, groups in Massachusetts exploited
+  Cash WinFall, a game whose jackpot "rolled down" into the lower tiers when it was not won,
+  briefly giving high-volume buyers a genuine edge. Both loopholes were structural design flaws
+  in small games with cheap coverage, and both were closed. Neither has an analogue in a
+  1 in 292,201,338 national jackpot.
+</p>
+<p class="note">
+  Treat a ticket as an entertainment purchase with a known price and a known, tiny payoff
+  probability. That framing is honest and it never leads anywhere expensive.
+  <a href="../responsible-play.html">Our responsible play page</a> has the warning signs worth
+  knowing.
+</p>
+        <footer class="article-foot">
+          <p class="disclaimer-text">
+            Entertainment and information only. Lottery drawings are independent random events
+            and no method described on this site can improve your odds of winning. 18+ (21+ in
+            some states). Verify all results with your state lottery.
+            <a href="../terms.html">Full disclaimer</a>.
+          </p>
+        </footer>
+      </article>
+
+      
+
+      <nav class="article-nav" aria-label="More guides">
+        <a class="article-nav__side" href="what-winning-combinations-look-like.html">
+          <span>Previous</span><b>What real winning combinations look like: sums, splits and consecutive numbers</b>
+        </a>
+        <a class="article-nav__side article-nav__side--next" href="record-jackpots-and-taxes.html">
+          <span>Next</span><b>Record jackpots and the tax math winners actually face</b>
+        </a>
+      </nav>
+
+      <section class="section" aria-labelledby="more-guides">
+        <h2 class="section__title" id="more-guides">Keep reading</h2>
+        <div class="guide-cards">
+        <a class="guide-card" href="../guides/mega-millions-vs-powerball-odds.html">
+          <span class="guide-card__kicker">Odds</span>
+          <h3>Mega Millions vs Powerball: the odds compared, tier by tier</h3>
+          <p>Both jackpots are advertised in the hundreds of millions and both are almost impossibly unlikely — but the two games are not equally hard, and the smaller tiers differ a lot.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="guide-card" href="../guides/independent-trials.html">
+          <span class="guide-card__kicker">Probability</span>
+          <h3>The law of independent trials: why past numbers can't predict the next drawing</h3>
+          <p>A ball that has not appeared in 40 drawings is not "due". Here is what independence actually means, and what the full drawing record says when you test it properly.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="guide-card" href="../guides/hot-and-cold-numbers-tested.html">
+          <span class="guide-card__kicker">Data</span>
+          <h3>Are hot and cold numbers real? Testing the full drawing record</h3>
+          <p>Every lottery site publishes a hot-numbers table. We ran the two tests that decide whether those tables contain any information at all.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <h2>Lottery Number Lab</h2>
+          <p>Odds, drawing history and probability for Mega Millions and Powerball. All drawing dates and times on this site are US Eastern Time (ET).</p>
+        </div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="../guides/index.html">All guides</a>
+          <a href="../results/index.html">Past winning numbers</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../glossary.html">Glossary</a>
+          <a href="../methodology.html">Methodology & corrections</a>
+          <a href="../about.html">About & contact</a>
+          <a href="../privacy-policy.html">Privacy policy</a>
+          <a href="../terms.html">Terms & disclaimer</a>
+          <a href="../responsible-play.html">Responsible play</a>
+        </nav>
+      </div>
+      <p class="footer__disclaimer"><strong>Disclaimer.</strong> The numbers this site produces are reference figures for
+<strong>entertainment purposes only</strong>, based on historical statistics and a random
+sampling algorithm. Every lottery drawing is a perfectly independent event, so nothing here
+guarantees or improves a win. Please do not buy lottery tickets excessively.</p>
+      <p class="footer__warn">
+        This site is an independent statistics project. It is not affiliated with, endorsed by
+        or connected to the Mega Millions Consortium, the Multi-State Lottery Association
+        (MUSL), or any state lottery. It does not sell lottery tickets and cannot pay prizes.
+        Official results must always be verified with your state lottery.
+        Play only where legal and only if you are old enough — 18+, or 21+ in some states.
+        If gambling stops being fun, call 1-800-GAMBLER or visit
+        <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener nofollow">ncpgambling.org</a>.
+      </p>
+      <p class="footer__meta">© 2026–present Lottery Number Lab. Drawing data from the
+        New York State Open Data portal.</p>
+    </footer>
+    
+  </body>
+</html>

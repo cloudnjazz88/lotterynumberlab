@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Methodology: how lottery odds and statistics are computed here | Lottery Number Lab</title>
+    <meta name="description" content="How this site calculates prize-tier odds from ball matrices, which drawings are included, why eras are not mixed, the chi-square test, and how to send a correction." />
+    <link rel="canonical" href="https://lotterynumberlab.com/methodology.html" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lottery Number Lab" />
+    <meta property="og:title" content="Methodology: how lottery odds and statistics are computed here" />
+    <meta property="og:description" content="How this site calculates prize-tier odds from ball matrices, which drawings are included, why eras are not mixed, the chi-square test, and how to send a correction." />
+    <meta property="og:url" content="https://lotterynumberlab.com/methodology.html" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    
+  </head>
+  <body data-view="page" data-game="home">
+    <div class="backdrop" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <div class="brand-mark"><span>US</span></div>
+        <div class="brand-text">
+          <span class="brand-name">Lottery Number Lab</span>
+          <span class="brand-sub" id="brandSub">Odds, drawing history and probability for Mega Millions and Powerball</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="mega-millions.html">Mega Millions</a>
+        <a href="powerball.html">Powerball</a>
+        <a href="results/index.html">Results</a>
+        <a href="guides/index.html">Guides</a>
+        <a href="about.html" class="is-on" aria-current="page">About</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="panel prose prose--page">
+        <p class="page-kicker">Reference</p>
+        <h1>How the figures on this site are computed</h1>
+        <p class="lede">
+          Every odds table is a combination count from the published ball matrix. Every
+          frequency, dry spell and shape statistic is counted from the drawing record of the
+          current matrix only. If a number cannot be reproduced from those two inputs, it does
+          not appear.
+        </p>
+        <p class="note">Last updated: August 24, 2026.</p>
+
+        <h2>1. Odds</h2>
+        <p>
+          Jackpot odds are C(N,&nbsp;5) × B, where N is the white-ball pool and B the bonus
+          pool. Partial-match tiers use
+        </p>
+        <p class="formula">
+          C(5,&nbsp;m) × C(N−5,&nbsp;5−m) / C(N,&nbsp;5) × (1/B or (B−1)/B)
+        </p>
+        <p>
+          The resulting tables match the official Mega Millions and Powerball prize charts:
+          jackpot 1 in 290,472,336 and 1 in 292,201,338; any prize
+          1 in 23.07 and 1 in 24.87.
+        </p>
+
+        <h2>2. Drawing data</h2>
+        <p>
+          Results come from the New York State Open Data portal, which republishes official
+          multi-state drawings. The bundled snapshot currently runs through
+          August 21, 2026 (Mega Millions) and
+          August 22, 2026 (Powerball). The “Fetch latest results” button on
+          each dashboard talks to that portal directly. Feeds can lag or contain errors;
+          <strong>this site is not an official record</strong>.
+        </p>
+        <div class="table-wrap"><table>
+  <thead><tr><th>Game</th><th>Drawings used</th><th>First drawing</th><th>Why that start date</th></tr></thead>
+  <tbody><tr><td>Mega Millions</td><td>920</td><td>October 31, 2017</td><td>White balls became 1–70; earlier pools were 75, 56, 52…</td></tr>
+  <tr><td>Powerball</td><td>1,392</td><td>October 7, 2015</td><td>Current 5/69 + 1/26 matrix; earlier white balls stopped at 59</td></tr></tbody></table></div>
+
+        <h2>3. The April 2025 Mega Ball change</h2>
+        <p>
+          On April 8, 2025 the Mega Ball pool shrank from 25 to 24. White-ball
+          statistics still use the full 5/70 history. Generated Mega Balls are never above 24.
+          A separate “Current rules only” window starts at that date.
+        </p>
+
+        <h2>4. Tests we publish</h2>
+        <p>
+          A chi-square goodness-of-fit test compares each ball's count with the uniform
+          expectation (65.7 Mega Millions appearances per ball,
+          100.9 Powerball). Current p-values are
+          0.76 and 0.19 — consistent with a fair game.
+          Monte Carlo simulations of the same length produce “hot” and “cold” extremes as large
+          as the real record. Details:
+          <a href="guides/hot-and-cold-numbers-tested.html">hot and cold numbers tested</a>.
+        </p>
+
+        <h2>5. What the generator is</h2>
+        <p>
+          An optional way to sample combinations that look like historical winners (frequency,
+          dry spells, sum, odd/even, low/high). It does not change anyone's odds. The
+          “pure random” preset is uniform; our test suite checks that with a chi-square test.
+        </p>
+
+        <h2>6. Corrections</h2>
+        <p>
+          If a figure is wrong, email <a href="mailto:contact@lotterynumberlab.com">contact@lotterynumberlab.com</a> with a
+          source. We will check it against the matrix or the drawing file and correct the page,
+          with the date above updated. We do not silently rewrite history to match a press
+          release; if an official chart and the combination formula disagree, the formula wins
+          and we say so.
+        </p>
+
+        <aside class="callout callout--note">
+  <h3>Independence</h3>
+  <p>This project is not affiliated with the Mega Millions Consortium, MUSL, or any
+          state lottery. Game names are used only to identify the games discussed.</p>
+</aside>
+
+        <section class="sources">
+  <h2>Sources</h2>
+  <p>
+    Figures on this page are computed from the published game rules and the drawing record.
+    These are the documents they are checked against — see
+    <a href="methodology.html">our methodology and corrections policy</a> for
+    how that is done.
+  </p>
+  <ul>
+  <li><a href="https://data.ny.gov/d/5xaw-6ayf" target="_blank" rel="noopener nofollow">New York State Open Data — Mega Millions winning numbers</a></li>
+  <li><a href="https://data.ny.gov/d/d6yy-54nr" target="_blank" rel="noopener nofollow">New York State Open Data — Powerball winning numbers</a></li>
+  <li><a href="https://www.megamillions.com/How-to-Play.aspx" target="_blank" rel="noopener nofollow">Mega Millions — How to Play and prize tiers</a></li>
+  <li><a href="https://www.powerball.com/powerball-prize-chart" target="_blank" rel="noopener nofollow">Powerball — prize chart and official odds</a></li>
+  <li><a href="https://www.megamillions.com/News/2025/New-Mega-Millions%C2%AE-arrives-in-April.aspx" target="_blank" rel="noopener nofollow">Mega Millions — “New Mega Millions arrives in April” (2025 game change)</a></li>
+  <li><a href="https://nelottery.com/media/powerball_factsheet7_15.pdf" target="_blank" rel="noopener nofollow">Nebraska Lottery — fact sheet on the October 2015 Powerball changes (old and new prize structures)</a></li>
+  </ul>
+</section>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <h2>Lottery Number Lab</h2>
+          <p>Odds, drawing history and probability for Mega Millions and Powerball. All drawing dates and times on this site are US Eastern Time (ET).</p>
+        </div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="guides/index.html">All guides</a>
+          <a href="results/index.html">Past winning numbers</a>
+          <a href="faq.html">FAQ</a>
+          <a href="glossary.html">Glossary</a>
+          <a href="methodology.html">Methodology & corrections</a>
+          <a href="about.html">About & contact</a>
+          <a href="privacy-policy.html">Privacy policy</a>
+          <a href="terms.html">Terms & disclaimer</a>
+          <a href="responsible-play.html">Responsible play</a>
+        </nav>
+      </div>
+      <p class="footer__disclaimer"><strong>Disclaimer.</strong> The numbers this site produces are reference figures for
+<strong>entertainment purposes only</strong>, based on historical statistics and a random
+sampling algorithm. Every lottery drawing is a perfectly independent event, so nothing here
+guarantees or improves a win. Please do not buy lottery tickets excessively.</p>
+      <p class="footer__warn">
+        This site is an independent statistics project. It is not affiliated with, endorsed by
+        or connected to the Mega Millions Consortium, the Multi-State Lottery Association
+        (MUSL), or any state lottery. It does not sell lottery tickets and cannot pay prizes.
+        Official results must always be verified with your state lottery.
+        Play only where legal and only if you are old enough — 18+, or 21+ in some states.
+        If gambling stops being fun, call 1-800-GAMBLER or visit
+        <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener nofollow">ncpgambling.org</a>.
+      </p>
+      <p class="footer__meta">© 2026–present Lottery Number Lab. Drawing data from the
+        New York State Open Data portal.</p>
+    </footer>
+    
+  </body>
+</html>

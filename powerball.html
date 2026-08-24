@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Powerball number generator and drawing statistics | Lottery Number Lab</title>
+    <meta name="description" content="Powerball number generator weighted by 1,392 drawings since October 7, 2015, with ball frequencies, sum distribution, prize tiers and exact odds." />
+    <link rel="canonical" href="https://lotterynumberlab.com/powerball.html" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lottery Number Lab" />
+    <meta property="og:title" content="Powerball number generator and drawing statistics" />
+    <meta property="og:description" content="Powerball number generator weighted by 1,392 drawings since October 7, 2015, with ball frequencies, sum distribution, prize tiers and exact odds." />
+    <meta property="og:url" content="https://lotterynumberlab.com/powerball.html" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    
+  </head>
+  <body data-view="game" data-game="powerball">
+    <div class="backdrop" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <div class="brand-mark"><span>PB</span></div>
+        <div class="brand-text">
+          <span class="brand-name">Lottery Number Lab</span>
+          <span class="brand-sub" id="brandSub">Powerball · 5 of 69 + 1 of 26 · Mondays, Wednesdays & Saturdays, 10:59 p.m. ET</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="mega-millions.html">Mega Millions</a>
+        <a href="powerball.html" class="is-on" aria-current="page">Powerball</a>
+        <a href="results/index.html">Results</a>
+        <a href="guides/index.html">Guides</a>
+        <a href="about.html">About</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="panel panel--generator">
+        <div class="gen-head">
+          <div>
+            <h1 id="genTitle">Powerball number generator</h1>
+            <p id="genSubtitle">
+              One click gives you five lines, weighted by 1,392 drawings
+              since October 7, 2015. Drawn Mondays, Wednesdays & Saturdays at
+              10:59 p.m. ET.
+            </p>
+            <p class="next-draw">
+              Next drawing:
+              <b data-next-drawing="powerball">Mondays, Wednesdays & Saturdays, 10:59 p.m. ET</b>
+            </p>
+          </div>
+          <button id="generateBtn" class="cta" type="button">
+            <span class="cta__icon" aria-hidden="true">✦</span>
+            <span class="cta__label">Generate 5 lines</span>
+          </button>
+        </div>
+
+        <div id="games" class="games" aria-live="polite">
+          <div class="empty-state">
+            <div class="empty-state__balls" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p>Press <b>Generate 5 lines</b> to get your Powerball numbers.</p>
+            <span
+              >Frequency, dry spells, recent momentum, pair affinity, sums and odd/even balance
+              all come from the real winning history.</span
+            >
+          </div>
+        </div>
+
+        <div class="ball-legend" id="ballLegend" hidden>
+          <span><i class="dot--hot"></i>running hot</span>
+          <span><i class="dot--cold"></i>running cold</span>
+          <span><i class="dot--due"></i>long dry spell</span>
+          <span class="ball-legend__hint">Hover a ball for its full statistics</span>
+        </div>
+
+        <div class="gen-foot">
+          <div class="gen-foot__meta" id="genMeta"></div>
+          <div class="gen-foot__actions">
+            <button id="copyAll" class="btn btn--ghost" type="button" disabled>Copy all</button>
+          </div>
+        </div>
+
+        <p class="inline-disclaimer">The numbers this site produces are reference figures for
+<strong>entertainment purposes only</strong>, based on historical statistics and a random
+sampling algorithm. Every lottery drawing is a perfectly independent event, so nothing here
+guarantees or improves a win. Please do not buy lottery tickets excessively.</p>
+      </section>
+
+      <aside class="panel panel--settings">
+        <h2>Method settings</h2>
+
+        <div class="field">
+          <label for="windowSelect">Analysis window</label>
+          <select id="windowSelect"></select>
+          <p class="field__hint" id="windowHint"></p>
+        </div>
+
+        <div class="field">
+          <span class="field__label">Weighting preset</span>
+          <div class="presets" id="presets">
+            <button type="button" class="chip is-on" data-preset="balanced">Balanced</button>
+            <button type="button" class="chip" data-preset="hot">Hot numbers</button>
+            <button type="button" class="chip" data-preset="cold">Cold &amp; overdue</button>
+            <button type="button" class="chip" data-preset="max">Max statistics</button>
+            <button type="button" class="chip" data-preset="pure">Pure random</button>
+          </div>
+        </div>
+
+        <div class="sliders" id="sliders">
+          <div class="slider" data-key="freq">
+            <div class="slider__top">
+              <label for="wFreq">Draw frequency</label>
+              <output id="wFreqOut">0.60</output>
+            </div>
+            <input id="wFreq" type="range" min="-1.2" max="1.2" step="0.05" value="0.6" />
+            <div class="slider__ends"><span>rarely drawn</span><span>often drawn</span></div>
+          </div>
+          <div class="slider" data-key="gap">
+            <div class="slider__top">
+              <label for="wGap">Dry spell</label>
+              <output id="wGapOut">0.50</output>
+            </div>
+            <input id="wGap" type="range" min="-1.2" max="1.2" step="0.05" value="0.5" />
+            <div class="slider__ends"><span>drawn recently</span><span>missing longest</span></div>
+          </div>
+          <div class="slider" data-key="momentum">
+            <div class="slider__top">
+              <label for="wMomentum">Momentum <small>(last 60 drawings)</small></label>
+              <output id="wMomentumOut">0.45</output>
+            </div>
+            <input id="wMomentum" type="range" min="-1.2" max="1.2" step="0.05" value="0.45" />
+            <div class="slider__ends"><span>cooling off</span><span>heating up</span></div>
+          </div>
+          <div class="slider" data-key="pair">
+            <div class="slider__top">
+              <label for="wPair">Pair affinity</label>
+              <output id="wPairOut">0.40</output>
+            </div>
+            <input id="wPair" type="range" min="0" max="1.2" step="0.05" value="0.4" />
+            <div class="slider__ends"><span>ignore</span><span>strong</span></div>
+          </div>
+        </div>
+
+        <div class="field field--toggles">
+          <label class="switch">
+            <input id="matchPatterns" type="checkbox" checked />
+            <span class="switch__box"></span>
+            <span class="switch__text">
+              Match historical shape
+              <small>Sum, odd/even, low/high and decade spread follow the real distribution</small>
+            </span>
+          </label>
+          <label class="switch">
+            <input id="avoidPast" type="checkbox" checked />
+            <span class="switch__box"></span>
+            <span class="switch__text">
+              Skip past jackpot combinations
+              <small>Exclude the five-number sets that have already been drawn</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="maxOverlap">Max shared numbers between lines</label>
+          <select id="maxOverlap">
+            <option value="1">1 number</option>
+            <option value="2">2 numbers</option>
+            <option value="3" selected>3 numbers</option>
+            <option value="5">No limit</option>
+          </select>
+        </div>
+
+        <div class="field field--data">
+          <button id="refreshBtn" class="btn btn--ghost btn--full" type="button">
+            Fetch latest results
+          </button>
+          <p class="field__hint" id="refreshStatus"></p>
+          <p class="field__hint field__hint--src" id="dataSource"></p>
+        </div>
+      </aside>
+
+      <section class="panel panel--stats">
+        <div class="stats-head">
+          <h2>Drawing statistics</h2>
+          <div class="tabs" id="tabs" role="tablist">
+            <button type="button" class="tab is-on" data-tab="main" role="tab">White balls</button>
+            <button type="button" class="tab" data-tab="special" role="tab" id="tabSpecial">
+              Powerball
+            </button>
+            <button type="button" class="tab" data-tab="sum" role="tab">Sum spread</button>
+            <button type="button" class="tab" data-tab="grid" role="tab">Ball by ball</button>
+            <button type="button" class="tab" data-tab="recent" role="tab">Recent draws</button>
+          </div>
+        </div>
+
+        <div class="summary" id="summary"></div>
+
+        <div class="tab-panel is-on" data-panel="main">
+          <p class="chart-caption">
+            How often each white ball (1–69) has come up across
+            1,392 drawings. The dashed line is the count expected from pure
+            chance — every ball should sit near 101 — and
+            highlighted bars are the numbers you just generated.
+          </p>
+          <div class="chart-box"><canvas id="chartMain"></canvas></div>
+        </div>
+
+        <div class="tab-panel" data-panel="special">
+          <p class="chart-caption">
+            Powerball frequency (1–26).
+          </p>
+          <div class="chart-box chart-box--short"><canvas id="chartSpecial"></canvas></div>
+        </div>
+
+        <div class="tab-panel" data-panel="sum">
+          <p class="chart-caption">
+            How the five white balls have added up historically. The
+            <b class="hl">accent lines</b> mark the sums of the lines you just generated.
+          </p>
+          <div class="chart-box chart-box--short"><canvas id="chartSum"></canvas></div>
+          <div class="sum-legend" id="sumLegend"></div>
+        </div>
+
+        <div class="tab-panel" data-panel="grid">
+          <p class="chart-caption">
+            Warmer colours are drawn more often. The small number is
+            <b>drawings since that ball last appeared</b>.
+          </p>
+          <div class="number-grid" id="numberGrid"></div>
+          <div class="grid-legend">
+            <span class="grid-legend__scale" aria-hidden="true"></span>
+            <span>cold</span>
+            <span class="grid-legend__spacer"></span>
+            <span>hot</span>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="recent">
+          <div class="recent" id="recentDraws"></div>
+        </div>
+      </section>
+
+      
+
+      <section class="panel prose panel--reference">
+        <h2>Powerball rules, odds and prize tiers</h2>
+        <p>
+          Powerball draws five white balls from 1–69 and one
+          Powerball from 1–26. Order does not matter, so the
+          number of possible tickets is
+          C(69,&nbsp;5)&nbsp;×&nbsp;26 =
+          292,201,338 — the jackpot odds. Drawings are held
+          mondays, wednesdays & saturdays at 10:59 p.m. ET.
+          Power Play is an optional $1 add-on that multiplies non-jackpot prizes by 2X–10X
+         (the $1,000,000 tier is capped at $2,000,000).
+        </p>
+        <div class="table-wrap"><table><caption>Powerball prize tiers (5 of 69 + 1 of 26). Overall odds of winning something: 1 in 24.87.</caption>
+  <thead><tr><th>Match</th><th>Base prize</th><th>Odds</th></tr></thead>
+  <tbody><tr><td>5 white + PB</td><td><b>Jackpot</b></td><td>1 in 292,201,338</td></tr>
+  <tr><td>5 white</td><td>$1,000,000</td><td>1 in 11,688,054</td></tr>
+  <tr><td>4 white + PB</td><td>$50,000</td><td>1 in 913,129</td></tr>
+  <tr><td>4 white</td><td>$100</td><td>1 in 36,525</td></tr>
+  <tr><td>3 white + PB</td><td>$100</td><td>1 in 14,494</td></tr>
+  <tr><td>3 white</td><td>$7</td><td>1 in 579.76</td></tr>
+  <tr><td>2 white + PB</td><td>$7</td><td>1 in 701.33</td></tr>
+  <tr><td>1 white + PB</td><td>$4</td><td>1 in 91.98</td></tr>
+  <tr><td>0 white + PB</td><td>$4</td><td>1 in 38.32</td></tr></tbody></table></div>
+        <p>
+          Adding up every tier, the fixed prizes return 16.0%
+          of the $2 ticket price on average. The rest of a ticket's value
+          sits in the jackpot, which is why the expected value of a play swings so widely with
+          the advertised prize.
+          <a class="text-link" href="guides/expected-value-of-a-lottery-ticket.html"
+            >See the break-even calculation →</a
+          >
+        </p>
+        <h3>What this generator does — and what it cannot do</h3>
+        <p>
+          The generator weights each ball by how often it has been drawn, how long it has been
+          missing, its momentum over the last 60 drawings and which balls it tends to appear
+          with, then shapes each line so its sum, odd/even split, low/high split and decade
+          spread look like a real drawing. That makes the output <em>statistically typical</em>
+          of past winners. It does not make it more likely to win: the 292,201,338
+          possible tickets are, and remain, equally likely.
+          <a class="text-link" href="guides/independent-trials.html"
+            >Why past numbers cannot predict the next draw →</a
+          >
+        </p>
+        <p class="reference__cross">
+          Playing the other game too?
+          <a class="text-link" href="mega-millions.html"
+            >Open the Mega Millions generator →</a
+          >
+        </p>
+      </section>
+
+      <section class="section" aria-labelledby="related-heading">
+        <h2 class="section__title" id="related-heading">Related reading</h2>
+        <div class="guide-cards">
+        <a class="guide-card" href="guides/mega-millions-vs-powerball-odds.html">
+          <span class="guide-card__kicker">Odds</span>
+          <h3>Mega Millions vs Powerball: the odds compared, tier by tier</h3>
+          <p>Both jackpots are advertised in the hundreds of millions and both are almost impossibly unlikely — but the two games are not equally hard, and the smaller tiers differ a lot.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="guide-card" href="guides/independent-trials.html">
+          <span class="guide-card__kicker">Probability</span>
+          <h3>The law of independent trials: why past numbers can't predict the next drawing</h3>
+          <p>A ball that has not appeared in 40 drawings is not "due". Here is what independence actually means, and what the full drawing record says when you test it properly.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="guide-card" href="guides/hot-and-cold-numbers-tested.html">
+          <span class="guide-card__kicker">Data</span>
+          <h3>Are hot and cold numbers real? Testing the full drawing record</h3>
+          <p>Every lottery site publishes a hot-numbers table. We ran the two tests that decide whether those tables contain any information at all.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        </div>
+      </section>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <h2>Lottery Number Lab</h2>
+          <p>Odds, drawing history and probability for Mega Millions and Powerball. All drawing dates and times on this site are US Eastern Time (ET).</p>
+        </div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="guides/index.html">All guides</a>
+          <a href="results/index.html">Past winning numbers</a>
+          <a href="faq.html">FAQ</a>
+          <a href="glossary.html">Glossary</a>
+          <a href="methodology.html">Methodology & corrections</a>
+          <a href="about.html">About & contact</a>
+          <a href="privacy-policy.html">Privacy policy</a>
+          <a href="terms.html">Terms & disclaimer</a>
+          <a href="responsible-play.html">Responsible play</a>
+        </nav>
+      </div>
+      <p class="footer__disclaimer"><strong>Disclaimer.</strong> The numbers this site produces are reference figures for
+<strong>entertainment purposes only</strong>, based on historical statistics and a random
+sampling algorithm. Every lottery drawing is a perfectly independent event, so nothing here
+guarantees or improves a win. Please do not buy lottery tickets excessively.</p>
+      <p class="footer__warn">
+        This site is an independent statistics project. It is not affiliated with, endorsed by
+        or connected to the Mega Millions Consortium, the Multi-State Lottery Association
+        (MUSL), or any state lottery. It does not sell lottery tickets and cannot pay prizes.
+        Official results must always be verified with your state lottery.
+        Play only where legal and only if you are old enough — 18+, or 21+ in some states.
+        If gambling stops being fun, call 1-800-GAMBLER or visit
+        <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener nofollow">ncpgambling.org</a>.
+      </p>
+      <p class="footer__meta">© 2026–present Lottery Number Lab. Drawing data from the
+        New York State Open Data portal.</p>
+    </footer>
+    <script src="data/draws.js"></script>
+    <script src="src/data.js"></script>
+    <script src="src/stats.js"></script>
+    <script src="src/generator.js"></script>
+    <script src="src/charts.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>

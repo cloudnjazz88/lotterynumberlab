@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The law of independent trials: why past numbers can't predict the next drawing | Lottery Number Lab</title>
+    <meta name="description" content="What statistical independence means for lottery drawings, why 'due' numbers and the gambler's fallacy are wrong, and a chi-square test of the complete Mega Millions and Powerball drawing record." />
+    <link rel="canonical" href="https://lotterynumberlab.com/guides/independent-trials.html" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Lottery Number Lab" />
+    <meta property="og:title" content="The law of independent trials: why past numbers can't predict the next drawing" />
+    <meta property="og:description" content="What statistical independence means for lottery drawings, why 'due' numbers and the gambler's fallacy are wrong, and a chi-square test of the complete Mega Millions and Powerball drawing record." />
+    <meta property="og:url" content="https://lotterynumberlab.com/guides/independent-trials.html" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The law of independent trials: why past numbers can't predict the next drawing","description":"What statistical independence means for lottery drawings, why 'due' numbers and the gambler's fallacy are wrong, and a chi-square test of the complete Mega Millions and Powerball drawing record.","datePublished":"2026-08-24","dateModified":"2026-08-24","author":{"@type":"Organization","name":"Lottery Number Lab"},"publisher":{"@type":"Organization","name":"Lottery Number Lab"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://lotterynumberlab.com/guides/independent-trials.html"},"isAccessibleForFree":true}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://lotterynumberlab.com/guides/"},{"@type":"ListItem","position":3,"name":"The law of independent trials: why past numbers can't predict the next drawing","item":"https://lotterynumberlab.com/guides/independent-trials.html"}]}</script>
+  </head>
+  <body data-view="page" data-game="home">
+    <div class="backdrop" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="../index.html">
+        <div class="brand-mark"><span>US</span></div>
+        <div class="brand-text">
+          <span class="brand-name">Lottery Number Lab</span>
+          <span class="brand-sub" id="brandSub">Odds, drawing history and probability for Mega Millions and Powerball</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="../index.html">Home</a>
+        <a href="../mega-millions.html">Mega Millions</a>
+        <a href="../powerball.html">Powerball</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../guides/index.html" class="is-on" aria-current="page">Guides</a>
+        <a href="../about.html">About</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="index.html">Guides</a>
+        <span aria-hidden="true">/</span>
+        <span>Probability</span>
+      </nav>
+
+      <article class="panel prose prose--article">
+        <header class="article-head">
+          <p class="page-kicker">Probability</p>
+          <h1>The law of independent trials: why past numbers can't predict the next drawing</h1>
+          <p class="article-dek">A ball that has not appeared in 40 drawings is not "due". Here is what independence actually means, and what the full drawing record says when you test it properly.</p>
+          <p class="article-meta">
+            <time datetime="2026-08-24">Published August 24, 2026</time>
+            · figures computed from 2,312 drawings
+            and the published game rules
+          </p>
+        </header>
+
+<p class="lede">
+  Almost every lottery strategy ever sold rests on one assumption: that the past drawings tell
+  you something about the next one. They do not. This is not an opinion about lotteries — it
+  is a property of how the drawings are constructed, and it is measurable.
+</p>
+
+<h2>What "independent" means</h2>
+<p>
+  Two events are independent when knowing the outcome of one tells you nothing about the
+  probability of the other. Formally, P(A&nbsp;|&nbsp;B) = P(A). A lottery drawing is the
+  textbook example: the machine is loaded with a full set of balls every time, the balls are
+  weighed and tested, and nothing about last Friday's result changes tonight's physical setup.
+</p>
+<p>
+  The consequence is uncomfortable but simple. Before tonight's Powerball drawing, each of the
+  292,201,338 possible tickets has probability
+  1/292,201,338. The ticket 1-2-3-4-5 with PB&nbsp;6 has
+  exactly that probability. So does the combination that won last week. So does the set our own
+  generator just produced. A weighting scheme can change <em>which</em> equally-likely ticket
+  you end up holding; it cannot change the "equally likely" part.
+</p>
+
+<aside class="callout callout--note">
+  <h3>The gambler's fallacy, in one sentence</h3>
+  <p>Balls have no memory, no sense of fairness and no obligation to even out. The belief that
+  a long-absent number is "due" — or that a frequent number is "on a run" — is the single most
+  common statistical error in gambling, and it survives because humans are very bad at
+  recognising what randomness looks like.</p>
+</aside>
+
+<h2>Testing it on the full drawing record</h2>
+<p>
+  If some numbers really were favoured, the counts would not fit a uniform distribution. That
+  is exactly what a chi-square goodness-of-fit test measures. Below, every drawing since each
+  game's current ball matrix began — 2,312 drawings in total — is tested against the
+  hypothesis that every ball is equally likely.
+</p>
+<div class="table-wrap"><table class="table--compare">
+  <thead><tr><th></th><th>Mega Millions</th><th>Powerball</th></tr></thead>
+  <tbody><tr><td>Drawings tested</td><td>920</td><td>1,392</td></tr>
+  <tr><td>White balls</td><td>1–70</td><td>1–69</td></tr>
+  <tr><td>Expected appearances per ball</td><td>65.7</td><td>100.9</td></tr>
+  <tr><td>Chi-square statistic</td><td>60.3</td><td>78.0</td></tr>
+  <tr><td>Degrees of freedom</td><td>69</td><td>68</td></tr>
+  <tr><td>p-value</td><td>0.76</td><td>0.19</td></tr></tbody></table></div>
+<p>
+  Under a fair game the chi-square statistic should land near its degrees of freedom
+  (69 and 68 respectively), and it does. The p-values —
+  0.76 and 0.19 — are the probability of seeing a spread of
+  counts at least this uneven purely by chance. Neither is anywhere near the conventional 0.05
+  threshold. There is no statistical evidence of bias in either game.
+</p>
+
+<h2>But some numbers <em>have</em> come up far more often</h2>
+<p>
+  They have, and that is the point. In 1,392 Powerball drawings, ball
+  21 has appeared 124 times while ball
+  13 has appeared only 76 times. A gap of
+  48 appearances looks like a signal. It is not.
+</p>
+<p>
+  To show why, we simulated 4,000 alternative histories of the same
+  length using a uniform random generator — a game guaranteed to be fair — and recorded how
+  extreme the most- and least-drawn balls were each time.
+</p>
+<div class="table-wrap"><table>
+  <thead><tr><th></th><th>Real record</th><th>Fair simulation (average)</th></tr></thead>
+  <tbody><tr><td>Mega Millions: most-drawn ball</td><td>85 (ball 10)</td><td>85.1</td></tr>
+  <tr><td>Mega Millions: least-drawn ball</td><td>51 (ball 51)</td><td>47.7</td></tr>
+  <tr><td>Mega Millions: hottest-to-coldest gap</td><td>34</td><td>37.4</td></tr>
+  <tr><td>Powerball: most-drawn ball</td><td>124 (ball 21)</td><td>124.7</td></tr>
+  <tr><td>Powerball: least-drawn ball</td><td>76 (ball 13)</td><td>78.5</td></tr>
+  <tr><td>Powerball: hottest-to-coldest gap</td><td>48</td><td>46.2</td></tr></tbody></table></div>
+<p>
+  The real "hot" and "cold" extremes sit essentially on top of what a provably fair machine
+  produces. Spread of that size is not evidence of bias; it is the expected consequence of
+  distributing a few thousand appearances across seventy independent slots. If the counts came
+  out perfectly level, <em>that</em> would be the anomaly worth investigating.
+</p>
+
+
+
+<h2>Three things people expect to see, and what actually happens</h2>
+<h3>1. "A number is due after a long absence"</h3>
+<p>
+  The longest current dry spell in Mega Millions belongs to ball 8, last
+  seen 49 drawings ago. Its probability of appearing tonight is
+  5/70 — identical to every other ball, and identical to what it was the day
+  after it last appeared. Dry spells of that length are ordinary: with
+  70 balls and 5 drawn per game, the average wait between appearances is
+  14 drawings, and waits several times longer
+  than average are routine in any memoryless process.
+</p>
+<h3>2. "Numbers from the last drawing won't repeat"</h3>
+<p>
+  In 920 Mega Millions drawings, 32.8% contained at
+  least one ball from the immediately preceding drawing; for Powerball it is
+  31.9%. Repeats are not rare — they are the norm in roughly a third of
+  drawings, exactly as independence predicts.
+</p>
+<h3>3. "Consecutive numbers never come up"</h3>
+<p>
+  25.8% of Mega Millions drawings and
+  26.4% of Powerball drawings contain at least one pair of
+  consecutive numbers. Avoiding them on purpose removes about a quarter of the real winning
+  patterns from your ticket for no reason at all.
+</p>
+
+<h2>The one thing your choice does affect</h2>
+<p>
+  Independence kills prediction, but it does not make every ticket equally <em>valuable</em>.
+  If you win a jackpot, you split it with everyone else holding the same combination — and
+  human number choices are extremely predictable. Dates, sequences and patterns on the play
+  slip are picked far more often than the pool would suggest. Choosing unpopular combinations
+  cannot improve your chance of winning, but it can improve what you keep if you do.
+  That is the only defensible edge in number selection, and it is about
+  <a href="what-winning-combinations-look-like.html">how other players pick, not how the balls
+  fall</a>.
+</p>
+
+<aside class="callout callout--warn">
+  <h3>What our generator is for</h3>
+  <p>This site weights numbers by frequency, dry spells, momentum and pair history because
+  those statistics are interesting and because the resulting lines look like real winning
+  combinations. That is a presentation choice, not a prediction. Set every slider to zero and
+  you get uniform randomness; the odds are identical either way, and we would rather say so
+  plainly than sell you a system.</p>
+</aside>
+        <footer class="article-foot">
+          <p class="disclaimer-text">
+            Entertainment and information only. Lottery drawings are independent random events
+            and no method described on this site can improve your odds of winning. 18+ (21+ in
+            some states). Verify all results with your state lottery.
+            <a href="../terms.html">Full disclaimer</a>.
+          </p>
+        </footer>
+      </article>
+
+      
+
+      <nav class="article-nav" aria-label="More guides">
+        <a class="article-nav__side" href="mega-millions-vs-powerball-odds.html">
+          <span>Previous</span><b>Mega Millions vs Powerball: the odds compared, tier by tier</b>
+        </a>
+        <a class="article-nav__side article-nav__side--next" href="hot-and-cold-numbers-tested.html">
+          <span>Next</span><b>Are hot and cold numbers real? Testing the full drawing record</b>
+        </a>
+      </nav>
+
+      <section class="section" aria-labelledby="more-guides">
+        <h2 class="section__title" id="more-guides">Keep reading</h2>
+        <div class="guide-cards">
+        <a class="guide-card" href="../guides/mega-millions-vs-powerball-odds.html">
+          <span class="guide-card__kicker">Odds</span>
+          <h3>Mega Millions vs Powerball: the odds compared, tier by tier</h3>
+          <p>Both jackpots are advertised in the hundreds of millions and both are almost impossibly unlikely — but the two games are not equally hard, and the smaller tiers differ a lot.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="guide-card" href="../guides/hot-and-cold-numbers-tested.html">
+          <span class="guide-card__kicker">Data</span>
+          <h3>Are hot and cold numbers real? Testing the full drawing record</h3>
+          <p>Every lottery site publishes a hot-numbers table. We ran the two tests that decide whether those tables contain any information at all.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="guide-card" href="../guides/what-winning-combinations-look-like.html">
+          <span class="guide-card__kicker">Data</span>
+          <h3>What real winning combinations look like: sums, splits and consecutive numbers</h3>
+          <p>Winning tickets are not evenly spread across the play slip. The pattern is entirely a consequence of counting — and it matters for one reason only, which is not the one usually claimed.</p>
+          <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+        </a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <h2>Lottery Number Lab</h2>
+          <p>Odds, drawing history and probability for Mega Millions and Powerball. All drawing dates and times on this site are US Eastern Time (ET).</p>
+        </div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="../guides/index.html">All guides</a>
+          <a href="../results/index.html">Past winning numbers</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../glossary.html">Glossary</a>
+          <a href="../methodology.html">Methodology & corrections</a>
+          <a href="../about.html">About & contact</a>
+          <a href="../privacy-policy.html">Privacy policy</a>
+          <a href="../terms.html">Terms & disclaimer</a>
+          <a href="../responsible-play.html">Responsible play</a>
+        </nav>
+      </div>
+      <p class="footer__disclaimer"><strong>Disclaimer.</strong> The numbers this site produces are reference figures for
+<strong>entertainment purposes only</strong>, based on historical statistics and a random
+sampling algorithm. Every lottery drawing is a perfectly independent event, so nothing here
+guarantees or improves a win. Please do not buy lottery tickets excessively.</p>
+      <p class="footer__warn">
+        This site is an independent statistics project. It is not affiliated with, endorsed by
+        or connected to the Mega Millions Consortium, the Multi-State Lottery Association
+        (MUSL), or any state lottery. It does not sell lottery tickets and cannot pay prizes.
+        Official results must always be verified with your state lottery.
+        Play only where legal and only if you are old enough — 18+, or 21+ in some states.
+        If gambling stops being fun, call 1-800-GAMBLER or visit
+        <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener nofollow">ncpgambling.org</a>.
+      </p>
+      <p class="footer__meta">© 2026–present Lottery Number Lab. Drawing data from the
+        New York State Open Data portal.</p>
+    </footer>
+    
+  </body>
+</html>
