@@ -15,7 +15,7 @@ export const SITE = {
   /** Your name or the name you publish under. Shown on About. Do not leave blank before applying to AdSense. */
   operatorName: "Lottery Num Lab",
   location: "the United States",
-  adsensePublisherId: "",
+  adsensePublisherId: "ca-pub-9237217026636557",
   /**
    * Keep false until Google approves the site. The publisher ID alone is
    * enough for AdSense to verify ownership; empty ad boxes hurt the review.
