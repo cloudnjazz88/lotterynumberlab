@@ -123,17 +123,18 @@ export function homeBody(ctx, guides) {
 
   return `      <section class="hero">
         <p class="hero__eyebrow">Independent lottery statistics</p>
-        <h1>The maths behind the two biggest lotteries in the United States.</h1>
+        <h1>Mega Millions and Powerball winning numbers, odds, and statistics</h1>
         <p class="hero__lead">
-          Every drawing since each game's current ball matrix began —
+          Latest US Mega Millions and Powerball winning numbers, plus every drawing since each
+          game's current ball matrix began —
           ${num(mm.history.count)} Mega Millions and ${num(pb.history.count)} Powerball results —
-          analysed ball by ball. The odds tables on this site reproduce the official prize
-          charts. The guides explain what those numbers actually mean, including why past
-          drawings cannot predict the next one.
+          analysed ball by ball. The odds tables reproduce the official prize charts. The guides
+          explain what those numbers actually mean, including why past drawings cannot predict
+          the next one.
         </p>
         <div class="hero-ctas">
-          <a class="hero-cta" data-game="megamillions" href="mega-millions.html">Mega Millions generator</a>
-          <a class="hero-cta" data-game="powerball" href="powerball.html">Powerball generator</a>
+          <a class="hero-cta" data-game="megamillions" href="mega-millions.html">Mega Millions winning numbers</a>
+          <a class="hero-cta" data-game="powerball" href="powerball.html">Powerball winning numbers</a>
         </div>
         <p class="hero__actions">
           <a class="text-link" href="guides/index.html">Read the guides</a>
@@ -315,15 +316,19 @@ export function gameBody(ctx, gameId, guides) {
          applied to any non-jackpot prize, so the smallest possible win is $10.`
       : `Power Play is an optional $1 add-on that multiplies non-jackpot prizes by 2X–10X
          (the $1,000,000 tier is capped at $2,000,000).`;
+  const latest = game.history.draws[0];
+  const archiveYear = latest.d.slice(0, 4);
+  const archiveHref = `results/${gameId === "megamillions" ? "mega-millions" : "powerball"}-${archiveYear}.html`;
 
   return `      <section class="panel panel--generator">
         <div class="gen-head">
           <div>
-            <h1 id="genTitle">${config.name} number generator</h1>
+            <h1 id="genTitle">${config.name} winning numbers and number generator</h1>
             <p id="genSubtitle">
-              One click gives you five lines, weighted by ${num(game.history.count)} drawings
-              since ${dateLong(game.history.firstDraw)}. Drawn ${config.drawDaysLabel} at
-              ${config.drawTimeLabel}.
+              Latest ${config.name} drawing ${dateLong(latest.d)}. Generate ticket lines, compare
+              them with frequencies from ${num(game.history.count)} drawings since
+              ${dateLong(game.history.firstDraw)}, and review official odds. Drawn
+              ${config.drawDaysLabel} at ${config.drawTimeLabel}.
             </p>
             <p class="next-draw">
               Next drawing:
@@ -335,6 +340,26 @@ export function gameBody(ctx, gameId, guides) {
             <span class="cta__label">Generate 5 lines</span>
           </button>
         </div>
+
+        <section class="latest-on-game" aria-label="Latest ${config.name} drawing">
+          <p class="latest-on-game__kicker">Latest winning numbers · ${dateLong(latest.d)} ET</p>
+          <div class="balls balls--xl">${balls(config, latest)}</div>
+          <ol class="latest-on-game__recent">
+            ${game.history.draws
+              .slice(1, 6)
+              .map(
+                (draw) => `<li>
+              <time datetime="${draw.d}">${dateLong(draw.d)}</time>
+              ${balls(config, draw)}
+            </li>`,
+              )
+              .join("")}
+          </ol>
+          <p class="latest-on-game__note">
+            Confirm a ticket with your state lottery before you claim.
+            <a class="text-link" href="${archiveHref}">${config.name} winning numbers for ${archiveYear}</a>
+          </p>
+        </section>
 
         <div id="games" class="games" aria-live="polite">
           <div class="empty-state">

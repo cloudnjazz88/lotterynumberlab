@@ -53,7 +53,7 @@ export function resultsHub(ctx) {
 
   return `      <section class="hero hero--slim">
         <p class="hero__eyebrow">Archive</p>
-        <h1>Past winning numbers</h1>
+        <h1>Past Mega Millions and Powerball winning numbers</h1>
         <p class="hero__lead">
           Every Mega Millions drawing since ${dateLong(ctx.mm.history.firstDraw)} and every
           Powerball drawing since ${dateLong(ctx.pb.history.firstDraw)} —
@@ -173,7 +173,7 @@ export function yearPage(ctx, gameId, year) {
       <article class="panel prose prose--article">
         <header class="article-head">
           <p class="page-kicker">${config.name} archive</p>
-          <h1>${config.name} results for ${year}</h1>
+          <h1>${config.name} winning numbers for ${year}</h1>
           <p class="article-dek">
             All ${data.count} ${config.name} drawings held in ${year}, from
             ${dateLong(data.first)} to ${dateLong(data.last)}, with the year's frequency and shape
@@ -326,7 +326,12 @@ export function yearPageSpecs(ctx) {
   const pages = [];
   for (const game of [ctx.mm, ctx.pb]) {
     for (const year of game.years) {
-      pages.push({ gameId: game.config.id, year: year.year, count: year.count });
+      pages.push({
+        gameId: game.config.id,
+        year: year.year,
+        count: year.count,
+        last: year.last,
+      });
     }
   }
   return pages;

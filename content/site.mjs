@@ -86,8 +86,10 @@ const NAV = [
 ];
 
 const FOOTER_LINKS = [
-  { label: "All guides", href: "guides/index.html" },
+  { label: "Mega Millions numbers", href: "mega-millions.html" },
+  { label: "Powerball numbers", href: "powerball.html" },
   { label: "Past winning numbers", href: "results/index.html" },
+  { label: "All guides", href: "guides/index.html" },
   { label: "FAQ", href: "faq.html" },
   { label: "Glossary", href: "glossary.html" },
   { label: "Methodology & corrections", href: "methodology.html" },
@@ -209,6 +211,37 @@ const stripTags = (html) =>
     .replace(/\s+/g, " ")
     .trim();
 
+function breadcrumbLd(page, base) {
+  const pageUrl = `${base}/${page.slug.replace(/index\.html$/, "")}`;
+  const items = [{ "@type": "ListItem", position: 1, name: "Home", item: `${base}/` }];
+
+  if (page.slug.startsWith("guides/")) {
+    items.push({ "@type": "ListItem", position: 2, name: "Guides", item: `${base}/guides/` });
+    if (page.slug !== "guides/index.html") {
+      items.push({ "@type": "ListItem", position: 3, name: page.title, item: pageUrl });
+    }
+  } else if (page.slug.startsWith("results/")) {
+    items.push({
+      "@type": "ListItem",
+      position: 2,
+      name: "Winning numbers",
+      item: `${base}/results/`,
+    });
+    if (page.slug !== "results/index.html") {
+      items.push({ "@type": "ListItem", position: 3, name: page.title, item: pageUrl });
+    }
+  } else if (page.slug !== "index.html") {
+    items.push({ "@type": "ListItem", position: 2, name: page.title, item: pageUrl });
+  }
+
+  if (items.length < 2) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items,
+  };
+}
+
 function jsonLd(page, depth) {
   const base = SITE.url.replace(/\/$/, "");
   const pageUrl = `${base}/${page.slug}`;
@@ -226,15 +259,6 @@ function jsonLd(page, depth) {
       publisher: { "@type": "Organization", name: SITE.name },
       mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
       isAccessibleForFree: true,
-    });
-    blocks.push({
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: `${base}/` },
-        { "@type": "ListItem", position: 2, name: "Guides", item: `${base}/guides/` },
-        { "@type": "ListItem", position: 3, name: page.title, item: pageUrl },
-      ],
     });
   } else if (page.slug === "about.html") {
     const org = {
@@ -254,15 +278,33 @@ function jsonLd(page, depth) {
     if (SITE.operatorName) org.founder = { "@type": "Organization", name: SITE.operatorName };
     blocks.push(org);
   } else if (page.slug === "index.html") {
-    blocks.push({
+    const site = {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: SITE.name,
       url: `${base}/`,
-      description: SITE.tagline,
+      description: page.description || SITE.tagline,
       inLanguage: "en-US",
-    });
+      publisher: { "@type": "Organization", name: SITE.name, url: `${base}/` },
+    };
+    if (page.modified) site.dateModified = page.modified;
+    blocks.push(site);
+  } else if (page.view === "game") {
+    const webpage = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: page.title,
+      description: page.description,
+      url: pageUrl,
+      isPartOf: { "@type": "WebSite", name: SITE.name, url: `${base}/` },
+      about: page.game === "powerball" ? "Powerball" : "Mega Millions",
+    };
+    if (page.modified) webpage.dateModified = page.modified;
+    blocks.push(webpage);
   }
+
+  const crumbs = breadcrumbLd(page, base);
+  if (crumbs) blocks.push(crumbs);
 
   if (page.faq) {
     blocks.push({
@@ -302,22 +344,27 @@ export function layout(page) {
     .map((src) => `<script src="${link(src, depth)}"></script>`)
     .join("\n    ");
 
+  const docTitle = page.title.includes(SITE.shortName) ? page.title : `${page.title} | ${SITE.shortName}`;
+
   return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${page.title} | ${SITE.shortName}</title>
+    <title>${docTitle}</title>
     <meta name="description" content="${page.description}" />
+    <meta name="author" content="${SITE.name}" />
     <link rel="canonical" href="${canonical}" />
     <meta name="robots" content="${page.noindex ? "noindex, follow" : "index, follow, max-image-preview:large"}" />
     <meta property="og:type" content="${page.kind === "guide" ? "article" : "website"}" />
     <meta property="og:site_name" content="${SITE.name}" />
-    <meta property="og:title" content="${page.title}" />
+    <meta property="og:title" content="${docTitle}" />
     <meta property="og:description" content="${page.description}" />
     <meta property="og:url" content="${canonical}" />
     <meta property="og:locale" content="${SITE.locale}" />
-    <meta name="twitter:card" content="${page.ogImage ? "summary_large_image" : "summary"}" />${
+    <meta name="twitter:card" content="${page.ogImage ? "summary_large_image" : "summary"}" />
+    <meta name="twitter:title" content="${docTitle}" />
+    <meta name="twitter:description" content="${page.description}" />${
       page.ogImage
         ? `
     <meta property="og:image" content="${base}/${page.ogImage}" />

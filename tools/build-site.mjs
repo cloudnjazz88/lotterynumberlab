@@ -32,6 +32,15 @@ const GAME_SCRIPTS = [
 ];
 const HOME_SCRIPTS = ["src/data.js", "src/app.js"];
 
+const pad2 = (n) => String(n).padStart(2, "0");
+const drawPlain = (draw) => `${draw.n.map(pad2).join("-")} + ${pad2(draw.s)}`;
+const mmLatest = ctx.mm.history.draws[0];
+const pbLatest = ctx.pb.history.draws[0];
+const drawsLatest =
+  ctx.mm.history.latestDraw > ctx.pb.history.latestDraw
+    ? ctx.mm.history.latestDraw
+    : ctx.pb.history.latestDraw;
+
 /* ------------------------------- guide pages ------------------------------ */
 
 function guideArticle(guide, index) {
@@ -92,7 +101,7 @@ ${guide.body(ctx)}
 function guidesHub() {
   return `      <section class="hero hero--slim">
         <p class="hero__eyebrow">Guides</p>
-        <h1>Lottery statistics, explained properly</h1>
+        <h1>Mega Millions and Powerball odds guides</h1>
         <p class="hero__lead">
           Nine guides covering the probability, the prize structures, the tax arithmetic and the
           rule changes behind Mega Millions and Powerball. Every figure is computed from the
@@ -137,9 +146,10 @@ const pages = [
     slug: "index.html",
     view: "home",
     nav: "home",
-    title: "Mega Millions & Powerball statistics, odds and drawing history",
+    title: "Mega Millions and Powerball winning numbers, odds, and statistics",
     description:
-      "Independent statistics for Mega Millions and Powerball: exact odds for every prize tier, past winning numbers in ET, and guides to probability, taxes and rule changes. This site does not sell tickets.",
+      `Latest Mega Millions (${dateLong(mmLatest.d)}) and Powerball (${dateLong(pbLatest.d)}) winning numbers, jackpot odds, past results, and probability guides. Independent US lottery statistics. This site does not sell tickets.`,
+    modified: drawsLatest,
     body: homeBody(ctx, GUIDES),
     scripts: HOME_SCRIPTS,
   },
@@ -148,8 +158,9 @@ const pages = [
     view: "game",
     game: "megamillions",
     nav: "megamillions",
-    title: "Mega Millions number generator and drawing statistics",
-    description: `Mega Millions number generator weighted by ${num(ctx.mm.history.count)} drawings since ${dateLong(ctx.mm.history.firstDraw)}, with ball frequencies, sum distribution, prize tiers and exact odds.`,
+    title: `Mega Millions winning numbers for ${dateLong(mmLatest.d)}`,
+    description: `Latest Mega Millions winning numbers for ${dateLong(mmLatest.d)}: ${drawPlain(mmLatest)}. Number generator, ball frequencies, and official odds from ${num(ctx.mm.history.count)} drawings. Confirm with your state lottery.`,
+    modified: mmLatest.d,
     brandSub: `Mega Millions · ${ctx.mm.config.matrixLabel} · ${ctx.mm.config.drawDaysLabel}, ${ctx.mm.config.drawTimeLabel}`,
     body: gameBody(ctx, "megamillions", GUIDES),
     scripts: GAME_SCRIPTS,
@@ -159,8 +170,9 @@ const pages = [
     view: "game",
     game: "powerball",
     nav: "powerball",
-    title: "Powerball number generator and drawing statistics",
-    description: `Powerball number generator weighted by ${num(ctx.pb.history.count)} drawings since ${dateLong(ctx.pb.history.firstDraw)}, with ball frequencies, sum distribution, prize tiers and exact odds.`,
+    title: `Powerball winning numbers for ${dateLong(pbLatest.d)}`,
+    description: `Latest Powerball winning numbers for ${dateLong(pbLatest.d)}: ${drawPlain(pbLatest)}. Number generator, ball frequencies, and official odds from ${num(ctx.pb.history.count)} drawings. Confirm with your state lottery.`,
+    modified: pbLatest.d,
     brandSub: `Powerball · ${ctx.pb.config.matrixLabel} · ${ctx.pb.config.drawDaysLabel}, ${ctx.pb.config.drawTimeLabel}`,
     body: gameBody(ctx, "powerball", GUIDES),
     scripts: GAME_SCRIPTS,
@@ -168,9 +180,10 @@ const pages = [
   {
     slug: "guides/index.html",
     nav: "guides",
-    title: "Lottery odds and statistics guides",
+    title: "Mega Millions and Powerball odds guides",
     description:
       "Guides to Mega Millions and Powerball: odds compared tier by tier, independent trials, hot and cold numbers, expected value, record jackpots, and the 2015 and 2025 rule changes.",
+    modified: "2026-08-24",
     body: guidesHub(),
   },
   {
@@ -235,6 +248,7 @@ const pages = [
     nav: "results",
     title: "Past Mega Millions and Powerball winning numbers",
     description: `Archive of ${num(ctx.mm.history.count + ctx.pb.history.count)} Mega Millions and Powerball drawings under the current matrices, organised by year, with sums and frequency notes. Not an official record.`,
+    modified: drawsLatest,
     dataset: {
       name: "Mega Millions and Powerball drawing archive",
       coverage: `${ctx.pb.history.firstDraw}/${ctx.mm.history.latestDraw}`,
@@ -248,6 +262,7 @@ const pages = [
       nav: "results",
       title: `${gameName} winning numbers for ${spec.year}`,
       description: `All ${spec.count} ${gameName} drawings in ${spec.year}: winning numbers, sums, odd/even splits, and the year's most- and least-drawn balls. Convenience copy of public data; verify with your state lottery.`,
+      modified: spec.last,
       body: yearPage(ctx, spec.gameId, spec.year),
     };
   }),
@@ -259,6 +274,7 @@ const pages = [
     description: guide.description,
     published: guide.published,
     updated: guide.updated,
+    modified: guide.updated || guide.published,
     body: guideArticle(guide, index),
   })),
 ];
@@ -282,11 +298,20 @@ const today = new Date().toISOString().slice(0, 10);
 const sitemapUrls = pages
   .map((page) => {
     const loc = `${base}/${page.slug.replace(/index\.html$/, "")}`;
-    const priority = page.slug === "index.html" ? "1.0" : page.kind === "guide" ? "0.8" : "0.6";
+    const lastmod = page.modified || today;
+    const priority =
+      page.slug === "index.html"
+        ? "1.0"
+        : page.view === "game"
+          ? "0.9"
+          : page.kind === "guide" || page.slug === "results/index.html" || page.slug === "guides/index.html"
+            ? "0.8"
+            : "0.6";
+    const changefreq = page.view === "game" || page.slug === "index.html" ? "daily" : page.kind === "guide" ? "monthly" : "weekly";
     return `  <url>
     <loc>${loc}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${page.view ? "daily" : "monthly"}</changefreq>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`;
   })

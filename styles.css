@@ -238,7 +238,7 @@ a {
 .hero-cta {
   display: grid;
   place-items: center;
-  min-height: 52px;
+  min-height: 58px;
   padding: 12px 16px;
   border-radius: 14px;
   font-weight: 800;
@@ -1830,6 +1830,60 @@ td small {
 
 .next-draw b {
   color: var(--accent);
+}
+
+.latest-on-game {
+  margin: 18px 0 0;
+  padding: 16px 16px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+  background:
+    radial-gradient(120% 90% at 100% 0%, var(--accent-glow), transparent 58%),
+    rgba(0, 0, 0, 0.22);
+}
+
+.latest-on-game__kicker {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.latest-on-game .balls--xl {
+  margin: 0;
+}
+
+.latest-on-game__recent {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.latest-on-game__recent li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.latest-on-game__recent time {
+  min-width: 11.5em;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.latest-on-game__note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .inline-disclaimer {
