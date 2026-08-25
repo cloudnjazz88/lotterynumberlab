@@ -27,6 +27,30 @@ function nextDrawing(config, gameId) {
   return `<span data-next-drawing="${gameId}">see below</span>`;
 }
 
+function gameHref(config) {
+  return config.id === "megamillions" ? "mega-millions.html" : "powerball.html";
+}
+
+function latestSpotlight(game) {
+  const config = game.config;
+  const latest = game.history.draws[0];
+  return `<article class="latest-card" data-game="${config.id}">
+          <div class="latest-card__head">
+            <span class="latest-card__mark">${config.tag}</span>
+            <div>
+              <p class="latest-card__kicker">Latest drawing</p>
+              <h2>${config.name}</h2>
+              <p>${dateLong(latest.d)} · ${config.specialAbbr} = ${config.specialName}</p>
+            </div>
+          </div>
+          <div class="balls balls--xl">${balls(config, latest)}</div>
+          <p class="latest-card__next">
+            Next drawing ${nextDrawing(config, config.id)} · ${config.drawDaysLabel}, ${config.drawTimeLabel}
+          </p>
+          <a class="latest-card__btn" href="${gameHref(config)}">Open the ${config.name} generator</a>
+        </article>`;
+}
+
 function gameCard(game, depth) {
   const config = game.config;
   const latest = game.history.draws[0];
@@ -107,12 +131,45 @@ export function homeBody(ctx, guides) {
           charts. The guides explain what those numbers actually mean, including why past
           drawings cannot predict the next one.
         </p>
+        <div class="hero-ctas">
+          <a class="hero-cta" data-game="megamillions" href="mega-millions.html">Mega Millions generator</a>
+          <a class="hero-cta" data-game="powerball" href="powerball.html">Powerball generator</a>
+        </div>
         <p class="hero__actions">
           <a class="text-link" href="guides/index.html">Read the guides</a>
           <a class="text-link" href="results/index.html">Browse past winning numbers</a>
           <a class="text-link" href="faq.html">FAQ</a>
         </p>
         <p class="hero__note">${SITE.timeZoneNote} This site does not sell tickets.</p>
+      </section>
+
+      <section class="latest-strip" aria-labelledby="latest-heading">
+        <div class="latest-strip__head">
+          <h2 class="section__title" id="latest-heading">Latest winning numbers</h2>
+          <p>
+            The most recent Mega Millions and Powerball drawings. Confirm a ticket with your
+            state lottery before you claim.
+          </p>
+        </div>
+        <div class="latest-grid">
+        ${latestSpotlight(mm)}
+        ${latestSpotlight(pb)}
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="recent-heading">
+        <div class="recent-head">
+          <h2 class="section__title" id="recent-heading">Last 8 drawings</h2>
+          <p>
+            Official results from the New York State open-data feed. Dates are the ET drawing
+            dates.
+            <a class="text-link" href="results/index.html">Full archive by year →</a>
+          </p>
+        </div>
+        <div class="recent-grid">
+        ${recentColumn(mm)}
+        ${recentColumn(pb)}
+        </div>
       </section>
 
       <section class="section" aria-labelledby="featured-heading">
@@ -170,21 +227,6 @@ export function homeBody(ctx, guides) {
       </section>
 
       ${adSlot("home-mid")}
-
-      <section class="panel" aria-labelledby="recent-heading">
-        <div class="recent-head">
-          <h2 class="section__title" id="recent-heading">Latest winning numbers</h2>
-          <p>
-            Official results from the New York State open-data feed. Dates are the ET drawing
-            dates. Always confirm a ticket with your state lottery before you claim.
-            <a class="text-link" href="results/index.html">Full archive by year →</a>
-          </p>
-        </div>
-        <div class="recent-grid">
-        ${recentColumn(mm)}
-        ${recentColumn(pb)}
-        </div>
-      </section>
 
       <section class="section" aria-labelledby="guides-heading">
         <h2 class="section__title" id="guides-heading">Guides &amp; analysis</h2>
