@@ -368,4 +368,7 @@ for (const file of publish) {
   await mkdir(dirname(to), { recursive: true });
   await cp(resolve(ROOT, file), to);
 }
+
+await cp(resolve(DIST, "sitemap.xml"), resolve(DIST, "sitemap.txt"));
+await cp(resolve(DIST, "favicon.svg"), resolve(DIST, "favicon.svg.txt"));
 console.log(`\npublished ${publish.length} files to dist/`);
