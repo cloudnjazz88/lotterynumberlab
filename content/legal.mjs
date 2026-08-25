@@ -193,9 +193,22 @@ export function privacyPage() {
 
         <h3>5. Analytics</h3>
         <p>
-          If aggregate analytics are in use, they record page views and general traffic patterns
-          — never lottery selections, and never anything that identifies an individual. We do not
-          sell, rent or trade data about visitors to anyone, for any purpose.
+          This site uses Google Analytics 4 to record page views and general traffic patterns —
+          never lottery selections, and never anything that identifies you by name. Google may
+          set cookies or use similar technology for that measurement. We do not sell, rent or
+          trade data about visitors to anyone, for any purpose.
+        </p>
+        <p>
+          You can opt out of Google Analytics with the
+          <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener nofollow"
+            >Google Analytics opt-out browser add-on</a
+          >, and you can review how Google uses data from sites that use its services at
+          <a
+            href="https://policies.google.com/technologies/partner-sites"
+            target="_blank"
+            rel="noopener nofollow"
+            >policies.google.com/technologies/partner-sites</a
+          >.
         </p>
 
         <h3>6. External links and data sources</h3>

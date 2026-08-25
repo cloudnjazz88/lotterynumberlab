@@ -16,6 +16,7 @@ export const SITE = {
   operatorName: "Lottery Num Lab",
   location: "the United States",
   adsensePublisherId: "",
+  gaMeasurementId: "G-KG9C04QZWT",
   locale: "en_US",
   established: "2026",
   timeZoneNote: "All drawing dates and times on this site are US Eastern Time (ET).",
@@ -177,6 +178,19 @@ function adsenseHead() {
     ></script>`;
 }
 
+function analyticsHead() {
+  if (!SITE.gaMeasurementId) return "";
+  const id = SITE.gaMeasurementId;
+  return `
+    <script async src="https://www.googletagmanager.com/gtag/js?id=${id}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${id}');
+    </script>`;
+}
+
 /** Reserved ad container. Renders nothing until a publisher ID is configured. */
 export function adSlot(label = "") {
   if (!SITE.adsensePublisherId) return "";
@@ -315,7 +329,7 @@ export function layout(page) {
     }
     <link rel="icon" href="${link("favicon.svg", depth)}" type="image/svg+xml" />
     <link rel="stylesheet" href="${link("styles.css", depth)}" />
-    ${jsonLd(page, depth)}${adsenseHead()}
+    ${jsonLd(page, depth)}${adsenseHead()}${analyticsHead()}
   </head>
   <body data-view="${page.view || "page"}"${page.game ? ` data-game="${page.game}"` : ' data-game="home"'}>
     <div class="backdrop" aria-hidden="true"></div>
