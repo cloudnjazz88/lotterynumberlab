@@ -16,6 +16,11 @@ export const SITE = {
   operatorName: "Lottery Num Lab",
   location: "the United States",
   adsensePublisherId: "",
+  /**
+   * Keep false until Google approves the site. The publisher ID alone is
+   * enough for AdSense to verify ownership; empty ad boxes hurt the review.
+   */
+  adsenseShowAds: false,
   gaMeasurementId: "G-KG9C04QZWT",
   locale: "en_US",
   established: "2026",
@@ -193,9 +198,9 @@ function analyticsHead() {
     </script>`;
 }
 
-/** Reserved ad container. Renders nothing until a publisher ID is configured. */
+/** Reserved ad container. Renders nothing until ads are explicitly turned on. */
 export function adSlot(label = "") {
-  if (!SITE.adsensePublisherId) return "";
+  if (!SITE.adsensePublisherId || !SITE.adsenseShowAds) return "";
   return `<div class="ad-slot"${label ? ` data-slot="${label}"` : ""}>
   <ins class="adsbygoogle" style="display:block" data-ad-client="${SITE.adsensePublisherId}"
     data-ad-format="auto" data-full-width-responsive="true"></ins>

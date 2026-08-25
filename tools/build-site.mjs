@@ -396,4 +396,9 @@ for (const file of publish) {
 
 await cp(resolve(DIST, "sitemap.xml"), resolve(DIST, "sitemap.txt"));
 await cp(resolve(DIST, "favicon.svg"), resolve(DIST, "favicon.svg.txt"));
+try {
+  await cp(resolve(DIST, "ads.txt"), resolve(DIST, "ads.txt.txt"));
+} catch {
+  /* ads.txt is only written once a publisher ID is set */
+}
 console.log(`\npublished ${publish.length} files to dist/`);

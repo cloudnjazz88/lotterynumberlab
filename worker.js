@@ -14,6 +14,10 @@ export default {
       return serveAsset(env, request, "/favicon.svg.txt", "image/svg+xml; charset=utf-8");
     }
 
+    if (url.pathname === "/ads.txt") {
+      return serveAsset(env, request, "/ads.txt.txt", "text/plain; charset=utf-8");
+    }
+
     return env.ASSETS.fetch(request);
   },
 };

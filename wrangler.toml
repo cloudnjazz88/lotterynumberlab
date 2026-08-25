@@ -6,4 +6,4 @@ compatibility_date = "2026-08-24"
 [assets]
 directory = "./dist"
 binding = "ASSETS"
-run_worker_first = ["/sitemap.xml", "/favicon.svg"]
+run_worker_first = ["/sitemap.xml", "/favicon.svg", "/ads.txt"]
