@@ -1,0 +1,4 @@
+Contact: mailto:contact@lotterynumberlab.com
+Expires: 2027-08-24T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://lotterynumberlab.com/.well-known/security.txt

@@ -18,6 +18,10 @@ export default {
       return serveAsset(env, request, "/ads.txt.txt", "text/plain; charset=utf-8");
     }
 
+    if (url.pathname === "/.well-known/security.txt") {
+      return serveAsset(env, request, "/security.txt.txt", "text/plain; charset=utf-8");
+    }
+
     return env.ASSETS.fetch(request);
   },
 };

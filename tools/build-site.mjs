@@ -335,6 +335,16 @@ written.push(
 );
 written.push(
   await write(
+    ".well-known/security.txt",
+    `Contact: mailto:${SITE.email}
+Expires: 2027-08-24T23:59:59.000Z
+Preferred-Languages: en
+Canonical: ${base}/.well-known/security.txt
+`,
+  ),
+);
+written.push(
+  await write(
     "favicon.svg",
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
@@ -396,6 +406,7 @@ for (const file of publish) {
 
 await cp(resolve(DIST, "sitemap.xml"), resolve(DIST, "sitemap.txt"));
 await cp(resolve(DIST, "favicon.svg"), resolve(DIST, "favicon.svg.txt"));
+await cp(resolve(DIST, ".well-known/security.txt"), resolve(DIST, "security.txt.txt"));
 try {
   await cp(resolve(DIST, "ads.txt"), resolve(DIST, "ads.txt.txt"));
 } catch {
