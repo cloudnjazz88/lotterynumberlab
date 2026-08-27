@@ -1,10 +1,16 @@
 /**
  * Custom-domain requests for .xml/.svg were failing at the asset layer.
  * Serve those paths from plain-text copies with the correct Content-Type.
+ * www is a custom domain on this same zone — never onboard it as a new site.
  */
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.hostname === "www.lotterynumberlab.com") {
+      url.hostname = "lotterynumberlab.com";
+      return Response.redirect(url.href, 301);
+    }
 
     if (url.pathname === "/sitemap.xml") {
       return serveAsset(env, request, "/sitemap.txt", "application/xml; charset=utf-8");

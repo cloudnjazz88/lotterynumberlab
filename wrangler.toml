@@ -6,4 +6,10 @@ compatibility_date = "2026-08-24"
 [assets]
 directory = "./dist"
 binding = "ASSETS"
-run_worker_first = ["/sitemap.xml", "/favicon.svg", "/ads.txt", "/.well-known/security.txt"]
+# Worker must run first so www → apex redirects are not skipped by static assets.
+run_worker_first = true
+
+routes = [
+  { pattern = "lotterynumberlab.com", custom_domain = true },
+  { pattern = "www.lotterynumberlab.com", custom_domain = true },
+]
