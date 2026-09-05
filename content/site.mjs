@@ -84,7 +84,7 @@ export function callout(title, body, kind = "note") {
 /* ------------------------------ page chrome ------------------------------- */
 
 const NAV = [
-  { id: "home", label: "Home", href: "index.html" },
+  { id: "home", label: "Home", href: "/" },
   { id: "megamillions", label: "Mega Millions", href: "mega-millions.html" },
   { id: "powerball", label: "Powerball", href: "powerball.html" },
   { id: "results", label: "Results", href: "results/index.html" },
@@ -166,6 +166,7 @@ function prefix(depth) {
 
 export function link(href, depth) {
   if (/^(https?:|mailto:|#)/.test(href)) return href;
+  if (href.startsWith("/") && !href.startsWith("//")) return href;
   return prefix(depth) + href;
 }
 
@@ -390,7 +391,7 @@ export function layout(page) {
     <a class="skip-link" href="#main">Skip to content</a>
 
     <header class="topbar">
-      <a class="brand" href="${link("index.html", depth)}">
+      <a class="brand" href="${link("/", depth)}">
         <div class="brand-mark"><span>${page.game === "powerball" ? "PB" : page.game === "megamillions" ? "MM" : "US"}</span></div>
         <div class="brand-text">
           <span class="brand-name">${SITE.name}</span>

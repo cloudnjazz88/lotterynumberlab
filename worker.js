@@ -12,11 +12,13 @@ function canonicalLocation(request) {
   const host = (url.hostname || "").toLowerCase();
   const needsHttps = proto === "http";
   const needsApex = host === `www.${APEX}` || host === `www.${APEX}.`;
-  if (!needsHttps && !needsApex) return null;
+  const needsHome = url.pathname === "/index.html";
+  if (!needsHttps && !needsApex && !needsHome) return null;
 
   url.protocol = "https:";
   url.hostname = APEX;
   url.port = "";
+  if (needsHome) url.pathname = "/";
   return url.href;
 }
 

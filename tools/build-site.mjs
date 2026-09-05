@@ -49,7 +49,7 @@ function guideArticle(guide, index) {
   const others = GUIDES.filter((g) => g.slug !== guide.slug).slice(0, 3);
 
   return `      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="${link("index.html", 1)}">Home</a>
+        <a href="${link("/", 1)}">Home</a>
         <span aria-hidden="true">/</span>
         <a href="index.html">Guides</a>
         <span aria-hidden="true">/</span>

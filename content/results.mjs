@@ -163,7 +163,7 @@ export function yearPage(ctx, gameId, year) {
   const expected = (data.count * config.pick) / config.mainMax;
 
   return `      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="${link("index.html", 1)}">Home</a>
+        <a href="${link("/", 1)}">Home</a>
         <span aria-hidden="true">/</span>
         <a href="index.html">Results</a>
         <span aria-hidden="true">/</span>
