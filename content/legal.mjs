@@ -18,20 +18,11 @@ export function aboutPage(ctx) {
         </p>
 
         <h2>Who runs this</h2>
-        ${
-          SITE.operatorName
-            ? `<p>
-          ${SITE.operatorName} edits ${SITE.name}${SITE.location ? `, based in ${SITE.location}` : ""}.
+        <p>
+          ${SITE.name} is independently researched and edited by a US-based publisher.
           Editorial decisions — what to publish, which eras to analyse, how to word the
           disclaimers — are made here, not by an advertiser or a lottery.
-        </p>`
-            : `<p>
-          This site is independently edited${SITE.location ? ` from ${SITE.location}` : ""}.
-          Before the site is submitted to an advertising network, a named editor will be listed
-          in this paragraph. Until then, the email below is the public contact for corrections,
-          privacy requests and advertising questions.
-        </p>`
-        }
+        </p>
         <p class="contact-line">
           <a class="text-link" href="mailto:${SITE.email}">${SITE.email}</a>
         </p>
@@ -79,10 +70,13 @@ export function aboutPage(ctx) {
           ],
         )}
         <p>
-          Results are cached in this site's own snapshot and can be refreshed live from the
-          open-data feed using the button on either generator page. Even so, an open-data feed
-          can lag or contain errors: <strong>never claim a prize based on numbers shown
-          here</strong>. Verify with your state lottery or the official game website.
+          The published pages use a verified snapshot of those official feeds. The snapshot is
+          rebuilt after drawings when the feed has new rows — at least once a day — and is
+          never replaced by an empty or shorter download. The “Fetch latest results” button on
+          either generator page talks to the same portal in your browser; it does not change
+          the published pages until the next rebuild. An open-data feed can lag or contain
+          errors: <strong>never claim a prize based on numbers shown here</strong>. Verify with
+          your state lottery or the official game website.
         </p>
 
         <h2>Independence</h2>
@@ -96,9 +90,9 @@ export function aboutPage(ctx) {
         <h2>How the site is funded</h2>
         <p>
           Pages may display third-party advertising, which is how the hosting and data costs are
-          covered. Advertising is served by an external network and does not influence what we
-          publish; we do not accept payment for coverage, and we do not run affiliate links to
-          ticket sellers or "lottery system" products. See our
+          covered. Advertisers do not influence what we publish. We do not accept payment for
+          coverage, and we do not run affiliate links to ticket sellers or “lottery system”
+          products. This site does not sell tickets and does not guarantee winnings. See our
           <a href="privacy-policy.html">privacy policy</a> for what advertising means for your
           data.
         </p>
@@ -106,9 +100,9 @@ export function aboutPage(ctx) {
         <h2>Corrections and contact</h2>
         <p>
           If you find a figure you believe is wrong, please tell us — with a source if you have
-          one — and we will check it against
-          <a href="methodology.html">the methodology</a> and correct the page. The same address
-          handles privacy requests, advertising questions and general feedback.
+          one. We check it against the official feed and
+          <a href="methodology.html">the methodology</a> before changing a page. The same
+          address handles privacy requests, advertising questions and general feedback.
         </p>
         <p class="contact-line">
           <a class="text-link" href="mailto:${SITE.email}">${SITE.email}</a>

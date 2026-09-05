@@ -4,15 +4,23 @@
  * data/draws.js (a plain script, so the app also runs straight from file://).
  *
  * Only drawings from each game's current ball matrix are kept:
- *   Mega Millions  5/70 + 1/25  from 2017-10-31 (mega ball became 1-24 in 2025)
- *   Powerball      5/69 + 1/26  from 2015-10-07
+ *   Mega Millions  5/70 + Mega Ball  from 2017-10-31
+ *   Powerball      5/69 + 1/26       from 2015-10-07
+ *
+ * Failed or incomplete feeds never overwrite a previously validated snapshot.
  *
  * Run: node tools/fetch-draws.mjs
  */
 
-import { writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  GAME_RULES,
+  validateGameHistory,
+  shouldReplaceSnapshot,
+  snapshotUnchanged,
+} from "./draw-validate.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT_JSON = resolve(HERE, "..", "data", "draws.json");
@@ -20,20 +28,16 @@ const OUT_JS = resolve(HERE, "..", "data", "draws.js");
 
 const SOURCES = {
   megamillions: {
-    label: "Mega Millions",
     dataset: "5xaw-6ayf",
     title: "Lottery Mega Millions Winning Numbers: Beginning 2002",
     select: "draw_date,winning_numbers,mega_ball",
     specialField: "mega_ball",
-    from: "2017-10-31",
   },
   powerball: {
-    label: "Powerball",
     dataset: "d6yy-54nr",
     title: "Lottery Powerball Winning Numbers: Beginning 2010",
     select: "draw_date,winning_numbers",
     specialField: null,
-    from: "2015-10-07",
   },
 };
 
@@ -47,7 +51,6 @@ function parseRow(row, source) {
   let main = numbers;
   let special = source.specialField ? Number(row[source.specialField]) : NaN;
 
-  // Older rows pack the special ball into winning_numbers as the sixth value.
   if (main.length === 6 && !Number.isInteger(special)) {
     special = main[5];
     main = main.slice(0, 5);
@@ -56,49 +59,93 @@ function parseRow(row, source) {
   }
 
   if (main.length !== 5 || !Number.isInteger(special)) return null;
-  return { d: String(row.draw_date).slice(0, 10), n: main.slice().sort((a, b) => a - b), s: special };
-}
-
-async function fetchGame(key, source) {
-  const url =
-    `https://data.ny.gov/resource/${source.dataset}.json` +
-    `?$select=${encodeURIComponent(source.select)}` +
-    `&$where=${encodeURIComponent(`draw_date >= '${source.from}'`)}` +
-    `&$order=${encodeURIComponent("draw_date DESC")}&$limit=50000`;
-
-  const res = await fetch(url, { headers: { accept: "application/json" } });
-  if (!res.ok) throw new Error(`${key}: source responded ${res.status} ${res.statusText}`);
-
-  const rows = await res.json();
-  const draws = rows
-    .map((row) => parseRow(row, source))
-    .filter(Boolean)
-    .filter((draw) => draw.d >= source.from)
-    .sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : 0));
-
-  if (draws.length < 100) throw new Error(`${key}: suspiciously few draws parsed (${draws.length})`);
-
   return {
-    source: `data.ny.gov · ${source.title} (${source.dataset})`,
-    count: draws.length,
-    latestDraw: draws[0].d,
-    firstDraw: draws[draws.length - 1].d,
-    draws,
+    d: String(row.draw_date).slice(0, 10),
+    n: main.slice().sort((a, b) => a - b),
+    s: special,
   };
 }
 
-const games = {};
-for (const [key, source] of Object.entries(SOURCES)) {
-  games[key] = await fetchGame(key, source);
-  const g = games[key];
-  console.log(
-    `${source.label.padEnd(14)} ${g.count} draws  ${g.firstDraw} .. ${g.latestDraw}` +
-      `  main max ${Math.max(...g.draws.flatMap((d) => d.n))}` +
-      `  special ${Math.min(...g.draws.map((d) => d.s))}-${Math.max(...g.draws.map((d) => d.s))}`,
-  );
+async function loadExisting() {
+  try {
+    return JSON.parse(await readFile(OUT_JSON, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function fetchGame(key, source) {
+  const rules = GAME_RULES[key];
+  const url =
+    `https://data.ny.gov/resource/${source.dataset}.json` +
+    `?$select=${encodeURIComponent(source.select)}` +
+    `&$where=${encodeURIComponent(`draw_date >= '${rules.from}'`)}` +
+    `&$order=${encodeURIComponent("draw_date DESC")}&$limit=50000`;
+
+  const res = await fetch(url, {
+    headers: { accept: "application/json" },
+    signal: AbortSignal.timeout(25000),
+  });
+  if (!res.ok) throw new Error(`${key}: source responded ${res.status} ${res.statusText}`);
+
+  const rows = await res.json();
+  if (!Array.isArray(rows) || rows.length === 0) {
+    throw new Error(`${key}: empty or invalid JSON`);
+  }
+
+  const seen = new Set();
+  const draws = [];
+  for (const row of rows) {
+    const draw = parseRow(row, source);
+    if (!draw || draw.d < rules.from || seen.has(draw.d)) continue;
+    seen.add(draw.d);
+    draws.push(draw);
+  }
+  draws.sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : 0));
+
+  const history = {
+    source: `data.ny.gov · ${source.title} (${source.dataset})`,
+    count: draws.length,
+    latestDraw: draws[0]?.d ?? null,
+    firstDraw: draws[draws.length - 1]?.d ?? null,
+    draws,
+  };
+
+  const error = validateGameHistory(key, history);
+  if (error) throw new Error(error);
+  return history;
+}
+
+const existing = await loadExisting();
+
+let games;
+try {
+  games = {};
+  for (const [key, source] of Object.entries(SOURCES)) {
+    games[key] = await fetchGame(key, source);
+    const g = games[key];
+    console.log(
+      `${GAME_RULES[key].label.padEnd(14)} ${g.count} draws  ${g.firstDraw} .. ${g.latestDraw}` +
+        `  main max ${Math.max(...g.draws.flatMap((d) => d.n))}` +
+        `  special ${Math.min(...g.draws.map((d) => d.s))}-${Math.max(...g.draws.map((d) => d.s))}`,
+    );
+  }
+} catch (error) {
+  console.error(`fetch failed; leaving existing snapshot in place.\n${error.message || error}`);
+  process.exit(1);
 }
 
 const snapshot = { fetchedAt: new Date().toISOString(), games };
+const replace = shouldReplaceSnapshot(existing, snapshot);
+if (!replace.ok) {
+  console.error(`refusing to overwrite snapshot: ${replace.reason}`);
+  process.exit(1);
+}
+
+if (snapshotUnchanged(existing, snapshot)) {
+  console.log("\nno new drawings; existing snapshot kept");
+  process.exit(0);
+}
 
 await mkdir(dirname(OUT_JSON), { recursive: true });
 await writeFile(OUT_JSON, JSON.stringify(snapshot), "utf8");

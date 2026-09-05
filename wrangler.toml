@@ -1,4 +1,4 @@
-# Static site plus a tiny Worker to serve sitemap.xml and favicon.svg.
+# Static site plus a tiny Worker for host redirects and a few asset types.
 name = "lotterynumberlab"
 main = "worker.js"
 compatibility_date = "2026-08-24"
@@ -6,7 +6,10 @@ compatibility_date = "2026-08-24"
 [assets]
 directory = "./dist"
 binding = "ASSETS"
-# Worker must run first so www → apex redirects are not skipped by static assets.
+# Keep .html URLs as the public/canonical form. Cloudflare's default
+# html_handling 307s /page.html → /page, which disagreed with sitemap/canonical.
+html_handling = "none"
+# Worker must see every request so http/www can 301 to https://lotterynumberlab.com.
 run_worker_first = true
 
 routes = [

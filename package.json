@@ -8,8 +8,10 @@
     "start": "node tools/serve.mjs",
     "update-data": "node tools/fetch-draws.mjs && node tools/build-site.mjs",
     "validate": "node tools/validate.mjs",
+    "validate-draws": "node tools/draw-validate-test.mjs",
+    "verify-seo": "node tools/verify-seo.mjs",
     "smoke": "node tools/browser-check.mjs",
-    "check": "node tools/validate.mjs && node tools/browser-check.mjs"
+    "check": "node tools/validate.mjs && node tools/draw-validate-test.mjs && node tools/verify-seo.mjs && node tools/browser-check.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "^24.10.0"

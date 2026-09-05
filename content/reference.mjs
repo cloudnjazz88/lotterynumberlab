@@ -98,7 +98,7 @@ export function faqContent(ctx) {
     },
     {
       q: "Who can I contact?",
-      a: `<p>${SITE.operatorName ? `${SITE.operatorName} edits this site. ` : ""}Email
+      a: `<p>This site is independently researched and edited. Email
         <a href="mailto:${SITE.email}">${SITE.email}</a> for corrections, privacy requests or
         advertising questions. We cannot check tickets, claim prizes, or speak for any lottery.
         If gambling is causing harm, call 1-800-GAMBLER.

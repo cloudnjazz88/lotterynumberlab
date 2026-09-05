@@ -404,6 +404,7 @@ for (const file of publish) {
   await cp(resolve(ROOT, file), to);
 }
 
+await cp(resolve(ROOT, "_headers"), resolve(DIST, "_headers"));
 await cp(resolve(DIST, "sitemap.xml"), resolve(DIST, "sitemap.txt"));
 await cp(resolve(DIST, "favicon.svg"), resolve(DIST, "favicon.svg.txt"));
 await cp(resolve(DIST, ".well-known/security.txt"), resolve(DIST, "security.txt.txt"));

@@ -1,16 +1,33 @@
 /**
- * Custom-domain requests for .xml/.svg were failing at the asset layer.
- * Serve those paths from plain-text copies with the correct Content-Type.
- * www is a custom domain on this same zone — never onboard it as a new site.
+ * Host canonicalization, HTTPS, and a few asset types that the static layer
+ * has served with the wrong Content-Type on the custom domain.
+ * www is a hostname on this same zone — never onboard it as a new site.
  */
+const APEX = "lotterynumberlab.com";
+
+function canonicalLocation(request) {
+  const url = new URL(request.url);
+  const forwarded = request.headers.get("x-forwarded-proto");
+  const proto = (forwarded || url.protocol.replace(":", "")).toLowerCase();
+  const host = (url.hostname || "").toLowerCase();
+  const needsHttps = proto === "http";
+  const needsApex = host === `www.${APEX}` || host === `www.${APEX}.`;
+  if (!needsHttps && !needsApex) return null;
+
+  url.protocol = "https:";
+  url.hostname = APEX;
+  url.port = "";
+  return url.href;
+}
+
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
-
-    if (url.hostname === "www.lotterynumberlab.com") {
-      url.hostname = "lotterynumberlab.com";
-      return Response.redirect(url.href, 301);
+    const canonical = canonicalLocation(request);
+    if (canonical && canonical !== request.url) {
+      return Response.redirect(canonical, 301);
     }
+
+    const url = new URL(request.url);
 
     if (url.pathname === "/sitemap.xml") {
       return serveAsset(env, request, "/sitemap.txt", "application/xml; charset=utf-8");
