@@ -45,6 +45,12 @@ export default {
       return serveAsset(env, request, "/security.txt.txt", "text/plain; charset=utf-8");
     }
 
+    if (url.pathname === "/" || url.pathname.endsWith("/")) {
+      const indexUrl = new URL(url.href);
+      indexUrl.pathname = url.pathname === "/" ? "/index.html" : `${url.pathname}index.html`;
+      return env.ASSETS.fetch(new Request(indexUrl, request));
+    }
+
     return env.ASSETS.fetch(request);
   },
 };
