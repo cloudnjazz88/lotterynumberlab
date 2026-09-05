@@ -11,6 +11,7 @@ import {
   table,
   dateLong,
 } from "./site.mjs";
+import { jackpotMarkup } from "../tools/jackpot-present.mjs";
 
 const pad = (n) => String(n).padStart(2, "0");
 
@@ -34,6 +35,14 @@ function gameHref(config) {
 function latestSpotlight(game) {
   const config = game.config;
   const latest = game.history.draws[0];
+  const estimate = jackpotMarkup(game.jackpot, true);
+  const showSchedule =
+    !game.jackpot || game.jackpot.state === "expired"
+      ? `
+          <p class="latest-card__next">
+            Next drawing ${nextDrawing(config, config.id)} · ${config.drawDaysLabel}, ${config.drawTimeLabel}
+          </p>`
+      : "";
   return `<article class="latest-card" data-game="${config.id}">
           <div class="latest-card__head">
             <span class="latest-card__mark">${config.tag}</span>
@@ -44,9 +53,7 @@ function latestSpotlight(game) {
             </div>
           </div>
           <div class="balls balls--xl">${balls(config, latest)}</div>
-          <p class="latest-card__next">
-            Next drawing ${nextDrawing(config, config.id)} · ${config.drawDaysLabel}, ${config.drawTimeLabel}
-          </p>
+          ${estimate}${showSchedule}
           <a class="latest-card__btn" href="${gameHref(config)}">Open the ${config.name} generator</a>
         </article>`;
 }
@@ -344,6 +351,7 @@ export function gameBody(ctx, gameId, guides) {
         <section class="latest-on-game" aria-label="Latest ${config.name} drawing">
           <p class="latest-on-game__kicker">Latest winning numbers · ${dateLong(latest.d)} ET</p>
           <div class="balls balls--xl">${balls(config, latest)}</div>
+          ${jackpotMarkup(game.jackpot)}
           <ol class="latest-on-game__recent">
             ${game.history.draws
               .slice(1, 6)

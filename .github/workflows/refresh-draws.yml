@@ -19,16 +19,30 @@ jobs:
           node-version: "22"
       - name: Fetch and validate official draws
         run: node tools/fetch-draws.mjs
+      - name: Fetch official jackpot estimates
+        run: node tools/fetch-jackpots.mjs
       - name: Validate snapshot statistics
         run: node tools/validate.mjs
-      - name: Commit only when drawings changed
+      - name: Validate jackpot parsers
+        run: node tools/jackpot-validate-test.mjs
+      - name: Build site
+        run: node tools/build-site.mjs
+      - name: Verify SEO assets
+        run: node tools/verify-seo.mjs
+      - name: Commit only when snapshots changed
         run: |
-          if git diff --quiet -- data/draws.json data/draws.js; then
-            echo "No new drawings."
+          if git diff --quiet -- data/draws.json data/draws.js data/jackpots.json; then
+            echo "No snapshot changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/draws.json data/draws.js
-          git commit -m "chore: refresh verified lottery draw snapshot"
+          git add data/draws.json data/draws.js data/jackpots.json
+          if git diff --cached --quiet -- data/draws.json data/draws.js; then
+            git commit -m "chore: refresh official jackpot estimates"
+          elif git diff --cached --quiet -- data/jackpots.json; then
+            git commit -m "chore: refresh verified lottery draw snapshot"
+          else
+            git commit -m "chore: refresh verified lottery snapshot"
+          fi
           git push

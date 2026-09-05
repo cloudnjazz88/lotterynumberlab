@@ -1,0 +1,35 @@
+{
+  "updatedAt": "2026-09-05T15:37:11.271Z",
+  "games": {
+    "megamillions": {
+      "estimatedJackpot": {
+        "amount": 193000000,
+        "display": "$193 Million",
+        "currency": "USD"
+      },
+      "cashOption": {
+        "amount": 82800000,
+        "display": "$82.8 Million",
+        "currency": "USD"
+      },
+      "nextDrawing": "2026-09-09T03:00:00.000Z",
+      "sourceUrl": "https://www.megamillions.com/",
+      "verifiedAt": "2026-09-05T15:37:11.271Z"
+    },
+    "powerball": {
+      "estimatedJackpot": {
+        "amount": 173000000,
+        "display": "$173 Million",
+        "currency": "USD"
+      },
+      "cashValue": {
+        "amount": 74600000,
+        "display": "$74.6 Million",
+        "currency": "USD"
+      },
+      "nextDrawing": "2026-09-06T02:59:00.000Z",
+      "sourceUrl": "https://www.powerball.com/",
+      "verifiedAt": "2026-09-05T15:37:11.271Z"
+    }
+  }
+}

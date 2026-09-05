@@ -575,6 +575,19 @@
     });
   }
 
+  /** Hide a jackpot estimate once its advertised next drawing has passed. */
+  function applyJackpotFreshness() {
+    document.querySelectorAll("[data-jackpot-until]").forEach((node) => {
+      const until = Date.parse(node.dataset.jackpotUntil);
+      if (!Number.isFinite(until) || until > Date.now()) return;
+      node.dataset.jackpotState = "expired";
+      node.classList.add("jackpot-est--unavailable");
+      node.classList.remove("jackpot-est--stale");
+      node.removeAttribute("data-jackpot-until");
+      node.innerHTML = '<p class="jackpot-est__unavailable">Current estimate unavailable</p>';
+    });
+  }
+
   function startGame(gameId) {
     const config = data.game(gameId);
     state.config = config;
@@ -695,6 +708,7 @@
 
   function init() {
     fillNextDrawings();
+    applyJackpotFreshness();
     if (state.view !== "game") return;
 
     const gameId = el.body.dataset.game;

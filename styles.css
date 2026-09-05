@@ -350,6 +350,75 @@ a {
   color: var(--muted);
 }
 
+.jackpot-est {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 11px 12px 10px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.jackpot-est__kicker {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.jackpot-est__amount {
+  margin: 0;
+  font-size: clamp(1.35rem, 4.8vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.jackpot-est__cash {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.jackpot-est__cash b {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.jackpot-est__cash small {
+  flex: 1 1 100%;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.jackpot-est__next,
+.jackpot-est__meta,
+.jackpot-est__unavailable {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.jackpot-est--stale .jackpot-est__meta {
+  color: #f0d08a;
+}
+
+.jackpot-est__meta a {
+  margin-left: 0.35em;
+}
+
+.latest-on-game .jackpot-est {
+  margin-top: 12px;
+}
+
 .latest-card__btn {
   display: grid;
   place-items: center;
@@ -2149,6 +2218,10 @@ td small {
   .game-card,
   .latest-card {
     padding: 16px;
+  }
+
+  .jackpot-est__amount {
+    font-size: clamp(1.25rem, 7vw, 1.6rem);
   }
 
   .prose--article,

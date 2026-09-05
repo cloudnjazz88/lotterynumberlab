@@ -5,6 +5,7 @@
 
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
+import { presentJackpot } from "./jackpot-present.mjs";
 
 const root = new URL("..", import.meta.url);
 
@@ -268,11 +269,20 @@ export const JACKPOT_RECORDS = [
   { rank: 14, game: "Mega Millions", annuity: 1.05, cash: 776.6, date: "January 22, 2021", where: "Michigan", tickets: 1 },
 ];
 
+function loadJackpots() {
+  try {
+    return JSON.parse(readFileSync(new URL("data/jackpots.json", root), "utf8"));
+  } catch {
+    return { updatedAt: null, games: {} };
+  }
+}
+
 /* -------------------------------- assembly -------------------------------- */
 
 export function buildContext() {
   const APP = loadApp();
   const snapshot = APP.data.loadBundled();
+  const jackpots = loadJackpots();
   const games = {};
 
   for (const config of APP.data.GAMES) {
@@ -292,6 +302,7 @@ export function buildContext() {
     games[config.id] = {
       config,
       history,
+      jackpot: presentJackpot(config.id, jackpots.games?.[config.id]),
       stats,
       matrix: matrixHistory(config.id),
       years: yearlyBreakdown(config, draws),
