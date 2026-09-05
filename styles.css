@@ -2098,8 +2098,8 @@ td small {
 
 .footer__cols {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 18px 40px;
+  grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
+  gap: 18px 48px;
   align-items: start;
   padding-bottom: 16px;
 }
@@ -2111,13 +2111,14 @@ td small {
 
 .footer__cols p {
   margin: 5px 0 0;
-  max-width: 62ch;
+  max-width: 42ch;
 }
 
 .footer__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 8px 20px;
+  min-width: 0;
 }
 
 .footer__links a {
