@@ -22,6 +22,10 @@ const c = contentHash(Buffer.from("footer { display: flex; }\n"));
 check("same bytes keep the same hash", a === b);
 check("hash is 12 lowercase hex chars", /^[a-f0-9]{12}$/.test(a));
 check("different bytes change the hash", a !== c);
+check(
+  "CRLF and LF of the same CSS hash the same",
+  contentHash(Buffer.from("footer { display: grid; }\r\n")) === contentHash(Buffer.from("footer { display: grid; }\n")),
+);
 
 const dir = mkdtempSync(join(tmpdir(), "asset-version-"));
 const file = join(dir, "styles.css");

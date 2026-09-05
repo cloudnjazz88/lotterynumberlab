@@ -10,8 +10,12 @@ import { fileURLToPath } from "node:url";
 const HASH_LENGTH = 12;
 const STYLES = fileURLToPath(new URL("../styles.css", import.meta.url));
 
+export function normalizeNewlines(bytes) {
+  return Buffer.from(Buffer.from(bytes).toString("utf8").replace(/\r\n/g, "\n"));
+}
+
 export function contentHash(bytes, length = HASH_LENGTH) {
-  return createHash("sha256").update(bytes).digest("hex").slice(0, length);
+  return createHash("sha256").update(normalizeNewlines(bytes)).digest("hex").slice(0, length);
 }
 
 export function fileContentHash(path, length = HASH_LENGTH) {
