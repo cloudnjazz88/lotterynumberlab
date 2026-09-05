@@ -6,6 +6,8 @@
  * reminder for anything still left at its placeholder value.
  */
 
+import { stylesheetHref } from "../tools/asset-version.mjs";
+
 export const SITE = {
   name: "Lottery Number Lab",
   shortName: "Lottery Number Lab",
@@ -380,7 +382,7 @@ export function layout(page) {
         : ""
     }
     <link rel="icon" href="${link("favicon.svg", depth)}" type="image/svg+xml" />
-    <link rel="stylesheet" href="${link("styles.css", depth)}" />
+    <link rel="stylesheet" href="${stylesheetHref()}" />
     ${jsonLd(page, depth)}${adsenseHead()}${analyticsHead()}
   </head>
   <body data-view="${page.view || "page"}"${page.game ? ` data-game="${page.game}"` : ' data-game="home"'}>

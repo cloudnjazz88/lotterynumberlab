@@ -3,9 +3,10 @@
  * against a live base URL (VERIFY_BASE=https://lotterynumberlab.com).
  */
 
-import { readFile, access } from "node:fs/promises";
-import { resolve, dirname } from "node:path";
+import { readFile, access, readdir } from "node:fs/promises";
+import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { stylesheetHref } from "./asset-version.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const ADS_LINE = "google.com, pub-9237217026636557, DIRECT, f08c47fec0942fa0";
@@ -50,6 +51,35 @@ check("homepage has the AdSense account meta tag", metaHits === 1, `count=${meta
 check("homepage is index,follow", /name="robots" content="index, follow/.test(home));
 check("homepage canonical is HTTPS apex", home.includes(`rel="canonical" href="${APEX}/"`));
 check("homepage has no empty ad placeholder", !home.includes("Advertisement") && !home.includes('class="ad-slot"'));
+
+const expectedCss = stylesheetHref();
+const stylesheetLinks = [...home.matchAll(/rel="stylesheet" href="([^"]+)"/g)].map((m) => m[1]);
+check("homepage has exactly one stylesheet", stylesheetLinks.length === 1, stylesheetLinks.join(", "));
+check("homepage stylesheet is the current content hash", stylesheetLinks[0] === expectedCss, stylesheetLinks[0] || "missing");
+check("homepage has no unversioned styles.css", !/href="(\.\.\/)*styles\.css"/.test(home));
+
+async function walkHtml(dir) {
+  const out = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    if (entry.name === "dist" || entry.name === "node_modules" || entry.name === ".git") continue;
+    const path = resolve(dir, entry.name);
+    if (entry.isDirectory()) out.push(...(await walkHtml(path)));
+    else if (entry.name.endsWith(".html")) out.push(path);
+  }
+  return out;
+}
+
+const htmlFiles = await walkHtml(ROOT);
+const hashes = new Set();
+for (const file of htmlFiles) {
+  const html = await readFile(file, "utf8");
+  const links = [...html.matchAll(/rel="stylesheet" href="([^"]+)"/g)].map((m) => m[1]);
+  const rel = file.slice(ROOT.length + 1).replaceAll("\\", "/");
+  check(`${rel} has one stylesheet`, links.length === 1, links.join(", "));
+  if (links[0]) hashes.add(links[0]);
+  check(`${rel} uses current CSS hash`, links[0] === expectedCss, links[0] || "missing");
+}
+check("every HTML page uses the same stylesheet URL", hashes.size === 1, [...hashes].join(" | "));
 
 const samplePages = [
   "mega-millions.html",
