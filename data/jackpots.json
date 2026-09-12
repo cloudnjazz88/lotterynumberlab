@@ -1,20 +1,20 @@
 {
-  "updatedAt": "2026-09-11T12:02:29.877Z",
+  "updatedAt": "2026-09-12T12:02:10.712Z",
   "games": {
     "megamillions": {
       "estimatedJackpot": {
-        "amount": 209000000,
-        "display": "$209 Million",
+        "amount": 227000000,
+        "display": "$227 Million",
         "currency": "USD"
       },
       "cashOption": {
-        "amount": 89700000,
-        "display": "$89.7 Million",
+        "amount": 96300000,
+        "display": "$96.3 Million",
         "currency": "USD"
       },
-      "nextDrawing": "2026-09-12T03:00:00.000Z",
+      "nextDrawing": "2026-09-16T03:00:00.000Z",
       "sourceUrl": "https://www.megamillions.com/",
-      "verifiedAt": "2026-09-11T12:02:29.877Z"
+      "verifiedAt": "2026-09-12T12:02:10.712Z"
     },
     "powerball": {
       "estimatedJackpot": {
@@ -23,13 +23,13 @@
         "currency": "USD"
       },
       "cashValue": {
-        "amount": 100000000,
-        "display": "$100.0 Million",
+        "amount": 98600000,
+        "display": "$98.6 Million",
         "currency": "USD"
       },
       "nextDrawing": "2026-09-13T02:59:00.000Z",
       "sourceUrl": "https://www.powerball.com/",
-      "verifiedAt": "2026-09-11T12:02:29.877Z"
+      "verifiedAt": "2026-09-12T12:02:10.712Z"
     }
   }
 }
