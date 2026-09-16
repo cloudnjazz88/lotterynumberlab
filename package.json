@@ -11,9 +11,10 @@
     "validate-draws": "node tools/draw-validate-test.mjs",
     "validate-jackpots": "node tools/jackpot-validate-test.mjs",
     "validate-assets": "node tools/asset-version-test.mjs",
+    "validate-routes": "node tools/worker-routes-test.mjs",
     "verify-seo": "node tools/verify-seo.mjs",
     "smoke": "node tools/browser-check.mjs",
-    "check": "node tools/validate.mjs && node tools/draw-validate-test.mjs && node tools/jackpot-validate-test.mjs && node tools/asset-version-test.mjs && node tools/verify-seo.mjs && node tools/browser-check.mjs"
+    "check": "node tools/validate.mjs && node tools/draw-validate-test.mjs && node tools/jackpot-validate-test.mjs && node tools/asset-version-test.mjs && node tools/worker-routes-test.mjs && node tools/verify-seo.mjs && node tools/browser-check.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "^24.10.0"

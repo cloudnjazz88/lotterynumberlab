@@ -1,8 +1,14 @@
 /**
- * Host canonicalization, HTTPS, and a few asset types that the static layer
- * has served with the wrong Content-Type on the custom domain.
+ * Host canonicalization, HTTPS, directory indexes, and extensionless → .html
+ * aliases for pages that still exist as *.html assets.
  * www is a hostname on this same zone — never onboard it as a new site.
+ *
+ * Canonical public URLs remain *.html (sitemap + rel=canonical). Extensionless
+ * paths that Google or old Cloudflare html_handling advertised must 301 to
+ * those files — not 404 and not soft-redirect to the homepage.
  */
+import { htmlAliasFor } from "./tools/worker-routes.mjs";
+
 const APEX = "lotterynumberlab.com";
 
 function canonicalLocation(request) {
@@ -20,6 +26,22 @@ function canonicalLocation(request) {
   url.port = "";
   if (needsHome) url.pathname = "/";
   return url.href;
+}
+
+async function assetOk(env, request, pathname) {
+  const probe = new URL(request.url);
+  probe.pathname = pathname;
+  const res = await env.ASSETS.fetch(new Request(probe.toString(), { method: "GET" }));
+  return res.ok;
+}
+
+function redirectToPath(request, pathname) {
+  const url = new URL(request.url);
+  url.protocol = "https:";
+  url.hostname = APEX;
+  url.port = "";
+  url.pathname = pathname;
+  return Response.redirect(url.href, 301);
 }
 
 export default {
@@ -50,7 +72,19 @@ export default {
     if (url.pathname === "/" || url.pathname.endsWith("/")) {
       const indexUrl = new URL(url.href);
       indexUrl.pathname = url.pathname === "/" ? "/index.html" : `${url.pathname}index.html`;
-      return env.ASSETS.fetch(new Request(indexUrl, request));
+      const indexRes = await env.ASSETS.fetch(new Request(indexUrl, request));
+      if (indexRes.ok || url.pathname === "/") return indexRes;
+
+      const alias = htmlAliasFor(url.pathname);
+      if (alias && (await assetOk(env, request, alias))) {
+        return redirectToPath(request, alias);
+      }
+      return indexRes;
+    }
+
+    const alias = htmlAliasFor(url.pathname);
+    if (alias && (await assetOk(env, request, alias))) {
+      return redirectToPath(request, alias);
     }
 
     return env.ASSETS.fetch(request);
