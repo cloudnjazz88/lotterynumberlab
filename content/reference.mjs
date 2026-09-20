@@ -183,6 +183,10 @@ export function glossaryPage() {
 export function methodologyPage(ctx) {
   const mm = ctx.mm;
   const pb = ctx.pb;
+  const latestDraw =
+    mm.history.latestDraw > pb.history.latestDraw
+      ? mm.history.latestDraw
+      : pb.history.latestDraw;
 
   return `      <section class="panel prose prose--page">
         <p class="page-kicker">Reference</p>
@@ -193,7 +197,7 @@ export function methodologyPage(ctx) {
           current matrix only. If a number cannot be reproduced from those two inputs, it does
           not appear.
         </p>
-        <p class="note">Last updated: ${dateLong("2026-08-24")}.</p>
+        <p class="note">Last updated: ${dateLong(latestDraw)}.</p>
 
         <h2>1. Odds</h2>
         <p>

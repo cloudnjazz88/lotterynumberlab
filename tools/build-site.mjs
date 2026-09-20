@@ -241,6 +241,7 @@ const pages = [
     title: "Methodology: how lottery odds and statistics are computed here",
     description:
       "How this site calculates prize-tier odds from ball matrices, which drawings are included, why eras are not mixed, the chi-square test, and how to send a correction.",
+    modified: drawsLatest,
     body: methodologyPage(ctx),
   },
   {
