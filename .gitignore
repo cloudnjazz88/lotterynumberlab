@@ -3,3 +3,7 @@ screenshots/
 package-lock.json
 dist/
 .wrangler/
+_phase1_backup/
+_phase1_tmp/
+_phase2_backup/
+_phase3_backup/
