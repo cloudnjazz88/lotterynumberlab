@@ -67,6 +67,36 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://lotterynumberlab.com/tools/</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lotterynumberlab.com/tools/lottery-spending-calculator.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://lotterynumberlab.com/tools/ticket-match-checker.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://lotterynumberlab.com/tools/odds-explorer.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://lotterynumberlab.com/analyze/</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://lotterynumberlab.com/results/</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>

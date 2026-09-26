@@ -84,11 +84,10 @@ export function callout(title, body, kind = "note") {
 /* ------------------------------ page chrome ------------------------------- */
 
 const NAV = [
-  { id: "home", label: "Home", href: "/" },
-  { id: "megamillions", label: "Mega Millions", href: "mega-millions.html" },
-  { id: "powerball", label: "Powerball", href: "powerball.html" },
   { id: "results", label: "Results", href: "results/index.html" },
-  { id: "guides", label: "Guides", href: "guides/index.html" },
+  { id: "analyze", label: "Analyze", href: "analyze/index.html" },
+  { id: "tools", label: "Tools", href: "tools/index.html" },
+  { id: "guides", label: "Learn", href: "guides/index.html" },
   { id: "about", label: "About", href: "about.html" },
 ];
 
@@ -96,6 +95,8 @@ const FOOTER_LINKS = [
   { label: "Mega Millions numbers", href: "mega-millions.html" },
   { label: "Powerball numbers", href: "powerball.html" },
   { label: "Past winning numbers", href: "results/index.html" },
+  { label: "Analyze", href: "analyze/index.html" },
+  { label: "Tools", href: "tools/index.html" },
   { label: "All guides", href: "guides/index.html" },
   { label: "FAQ", href: "faq.html" },
   { label: "Glossary", href: "glossary.html" },
@@ -236,6 +237,16 @@ function breadcrumbLd(page, base) {
       item: `${base}/results/`,
     });
     if (page.slug !== "results/index.html") {
+      items.push({ "@type": "ListItem", position: 3, name: page.title, item: pageUrl });
+    }
+  } else if (page.slug.startsWith("tools/")) {
+    items.push({ "@type": "ListItem", position: 2, name: "Tools", item: `${base}/tools/` });
+    if (page.slug !== "tools/index.html") {
+      items.push({ "@type": "ListItem", position: 3, name: page.title, item: pageUrl });
+    }
+  } else if (page.slug.startsWith("analyze/")) {
+    items.push({ "@type": "ListItem", position: 2, name: "Analyze", item: `${base}/analyze/` });
+    if (page.slug !== "analyze/index.html") {
       items.push({ "@type": "ListItem", position: 3, name: page.title, item: pageUrl });
     }
   } else if (page.slug !== "index.html") {

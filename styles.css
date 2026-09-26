@@ -2342,3 +2342,1436 @@ td small {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ===== Phase 1 redesign: warm panels, utility rail, trust strip, spending ===== */
+
+:root {
+  --panel-warm: #f4efe6;
+  --panel-warm-ink: #1a2238;
+  --panel-warm-muted: #5a6478;
+  --panel-warm-line: rgba(26, 34, 56, 0.12);
+  --analytics: #6b8cce;
+  --analytics-deep: #3d5a8a;
+  --trust-bg: #0e1a33;
+}
+
+.hero--compact {
+  padding-bottom: 8px;
+}
+
+.hero--compact h1 {
+  font-size: clamp(28px, 4vw, 40px);
+  max-width: 18ch;
+}
+
+.hero--compact .hero__lead {
+  max-width: 52ch;
+  font-size: 16px;
+}
+
+.hero-ctas--compact {
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  max-width: none;
+}
+
+.hero-cta--secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  box-shadow: none;
+}
+
+.hero-cta--secondary:hover {
+  border-color: var(--analytics);
+  color: #fff;
+}
+
+.hero--page {
+  max-width: 720px;
+}
+
+.panel--warm {
+  background: var(--panel-warm);
+  color: var(--panel-warm-ink);
+  border: 1px solid var(--panel-warm-line);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.panel--warm .section__title,
+.panel--warm h2,
+.panel--warm h3 {
+  color: var(--panel-warm-ink);
+}
+
+.section__lead--warm,
+.panel--warm .section__lead,
+.panel--warm .section__after,
+.panel--warm p {
+  color: var(--panel-warm-muted);
+}
+
+.panel--warm a {
+  color: var(--analytics-deep);
+}
+
+.panel--warm .text-link {
+  color: var(--analytics-deep);
+}
+
+.utility-rail {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--panel-warm-line);
+}
+
+.utility-rail__item {
+  border-bottom: 1px solid var(--panel-warm-line);
+}
+
+.utility-rail__item a {
+  display: grid;
+  gap: 4px;
+  padding: 14px 4px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.utility-rail__item a:hover .utility-rail__label,
+.utility-rail__item a:focus-visible .utility-rail__label {
+  color: var(--analytics-deep);
+}
+
+.utility-rail__label {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  color: var(--panel-warm-ink);
+}
+
+.utility-rail__hint {
+  font-size: 13.5px;
+  color: var(--panel-warm-muted);
+  line-height: 1.45;
+}
+
+.analysis-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.analysis-feature__main {
+  display: block;
+  padding: 18px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--panel-warm-line);
+  text-decoration: none;
+  color: inherit;
+}
+
+.analysis-feature__main h3 {
+  margin: 6px 0 8px;
+  font-size: 20px;
+}
+
+.analysis-feature__main p {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--panel-warm-muted);
+}
+
+.analysis-feature__related {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.analysis-feature__related li {
+  border-top: 1px solid var(--panel-warm-line);
+}
+
+.analysis-feature__related a {
+  display: grid;
+  gap: 4px;
+  padding: 12px 4px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.analysis-feature__related strong {
+  font-size: 14.5px;
+  color: var(--panel-warm-ink);
+}
+
+.analysis-feature__related span {
+  font-size: 13px;
+  color: var(--panel-warm-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.analysis-feature__related--alone {
+  border-top: 1px solid var(--panel-warm-line);
+}
+
+.trust-strip {
+  margin: 28px 0 8px;
+  padding: 22px 22px 20px;
+  border-radius: var(--radius);
+  background: var(--trust-bg);
+  border: 1px solid rgba(107, 140, 206, 0.28);
+}
+
+.trust-strip__title {
+  font-size: 18px;
+  margin: 0 0 6px;
+  color: #e8eefc;
+}
+
+.trust-strip__dek {
+  margin: 0 0 14px;
+  color: #9aabc9;
+  max-width: 60ch;
+  font-size: 14px;
+}
+
+.trust-strip__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
+
+.trust-strip__links a {
+  color: var(--analytics);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.trust-strip__links a:hover,
+.trust-strip__links a:focus-visible {
+  color: #c5d6f5;
+  text-decoration: underline;
+}
+
+.tool-intent-list {
+  margin: 8px 0 0;
+  padding-left: 1.2em;
+  color: var(--muted);
+}
+
+.tool-intent-list li {
+  margin: 10px 0;
+  max-width: 88ch;
+}
+
+.tool-intent-list strong {
+  color: var(--text);
+}
+
+.tool-intent-list a {
+  color: var(--analytics);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tool-intent-list a:hover,
+.tool-intent-list a:focus-visible {
+  text-decoration: underline;
+}
+
+.coming-list {
+  margin: 8px 0 0;
+  padding-left: 1.2em;
+  color: var(--muted);
+}
+
+.coming-list li {
+  margin: 8px 0;
+}
+
+.coming-list strong {
+  color: var(--text);
+}
+
+/* Spending calculator */
+.spending-page .lede {
+  max-width: 62ch;
+}
+
+.spending-calc {
+  margin: 20px 0 28px;
+}
+
+.spending-form__presets {
+  border: 0;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.spending-form__presets legend {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--panel-warm-ink);
+}
+
+.spending-form__preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preset-btn {
+  appearance: none;
+  border: 1px solid var(--panel-warm-line);
+  background: #fff;
+  color: var(--panel-warm-ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.preset-btn.is-on,
+.preset-btn:hover,
+.preset-btn:focus-visible {
+  border-color: var(--analytics-deep);
+  background: rgba(107, 140, 206, 0.15);
+  outline: none;
+}
+
+.preset-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(107, 140, 206, 0.35);
+}
+
+.spending-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field__label {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--panel-warm-ink);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  border: 1px solid var(--panel-warm-line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #fff;
+  color: var(--panel-warm-ink);
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: none;
+  border-color: var(--analytics-deep);
+  box-shadow: 0 0 0 3px rgba(107, 140, 206, 0.3);
+}
+
+.field__hint {
+  font-size: 12.5px;
+  color: var(--panel-warm-muted);
+}
+
+.spending-form__live {
+  min-height: 1.2em;
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--panel-warm-muted);
+}
+
+.spending-results {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-warm-line);
+}
+
+.spending-results__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  margin: 0;
+}
+
+.spending-results__grid > div {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--panel-warm-line);
+}
+
+.spending-results__grid dt {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--panel-warm-muted);
+  margin: 0 0 4px;
+}
+
+.spending-results__grid dd {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--panel-warm-ink);
+  word-break: break-word;
+}
+
+.spending-results__grid > div:last-child {
+  grid-column: 1 / -1;
+}
+
+.spending-results__grid > div:last-child dd {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.faq-list dt {
+  font-weight: 700;
+  margin-top: 14px;
+}
+
+.faq-list dd {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .analysis-feature {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-ctas--compact {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .spending-form__grid,
+  .spending-results__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .spending-results__grid > div:last-child {
+    grid-column: auto;
+  }
+
+  .trust-strip {
+    padding: 16px;
+  }
+}
+
+/* -------- home Phase-1 polish (home-scoped) -------- */
+
+.latest-card__btn--generator {
+  width: 100%;
+  min-height: 46px;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--accent-ink);
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--accent-glow) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 55%, transparent);
+}
+
+.latest-card__btn--generator:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--accent-glow) 85%, transparent);
+}
+
+.latest-card__btn--generator:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 70%, #fff);
+  outline-offset: 3px;
+}
+
+.home-recent {
+  margin-top: 14px;
+  padding: 14px 16px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
+    rgba(8, 12, 28, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.home-recent__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.home-recent__head .section__title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.home-recent__head .text-link {
+  flex: none;
+  font-size: 13px;
+}
+
+.home-recent__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+
+.home-recent__game {
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.home-recent__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.home-recent__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
+  min-width: 0;
+}
+
+.home-recent__row:first-child {
+  border-top: none;
+  padding-top: 2px;
+}
+
+.home-recent__row time {
+  flex: none;
+  min-width: 7.5em;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.home-recent__row .balls,
+.balls--sm {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.balls--sm .ball {
+  width: 26px;
+  height: 26px;
+  font-size: 11px;
+  flex: none;
+  animation: none;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.28), inset 0 -2px 3px rgba(80, 95, 130, 0.28);
+}
+
+.balls--sm .balls__plus {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.balls--sm .ball--special {
+  box-shadow: 0 2px 10px var(--accent-glow), inset 0 -2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.panel--utility {
+  padding: 14px 16px 12px;
+}
+
+.panel--utility .section__title {
+  margin-bottom: 2px;
+  font-size: 16px;
+}
+
+.panel--utility .section__lead {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.panel--utility .utility-rail {
+  margin-top: 0;
+  border-top: 1px solid var(--panel-warm-line);
+}
+
+.panel--utility .utility-rail__item a {
+  padding: 10px 8px;
+  gap: 2px;
+}
+
+.panel--utility .utility-rail__label {
+  font-size: 14.5px;
+}
+
+.panel--utility .utility-rail__hint {
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+/* Track spending is the only real calculator — keep link weight honest */
+.panel--utility .utility-rail__item:last-child .utility-rail__label {
+  font-weight: 750;
+}
+
+@media (min-width: 1024px) {
+  .panel--utility .utility-rail {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--panel-warm-line);
+    border-bottom: 1px solid var(--panel-warm-line);
+  }
+
+  .panel--utility .utility-rail__item {
+    border-bottom: none;
+    border-right: 1px solid var(--panel-warm-line);
+  }
+
+  .panel--utility .utility-rail__item:last-child {
+    border-right: none;
+  }
+
+  .panel--utility .utility-rail__item a {
+    padding: 10px 12px;
+    min-height: 100%;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 391px) {
+  .panel--utility .utility-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panel--utility .utility-rail__item:nth-child(odd) {
+    border-right: 1px solid var(--panel-warm-line);
+  }
+}
+
+@media (max-width: 390px) {
+  .panel--utility .utility-rail {
+    display: block;
+  }
+
+  .panel--utility .utility-rail__item {
+    border-right: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .home-recent__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px 0;
+  }
+
+  .home-recent__col + .home-recent__col {
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+  }
+}
+
+
+/* Latest-card XL balls: fit 5 white + plus + bonus on one row in tablet band */
+@media (max-width: 900px) and (min-width: 641px) {
+  .latest-card {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .latest-card .balls--xl {
+    gap: 5px;
+    padding: 12px 8px;
+  }
+
+  .latest-card .balls--xl .ball {
+    width: 36px;
+    height: 36px;
+    font-size: 13.5px;
+  }
+
+  .latest-card .balls--xl .balls__plus {
+    padding: 0 1px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero--compact {
+    padding-top: 6px;
+    padding-bottom: 2px;
+  }
+
+  .hero--compact h1 {
+    margin: 4px 0 8px;
+  }
+
+  .latest-card {
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .balls--xl {
+    padding: 12px 10px;
+    gap: 8px;
+  }
+
+  .latest-card__btn--generator {
+    min-height: 48px;
+  }
+
+  .balls--sm .ball {
+    width: 24px;
+    height: 24px;
+    font-size: 10.5px;
+  }
+
+  .home-recent__row time {
+    min-width: 6.8em;
+    font-size: 11.5px;
+  }
+}
+
+/* ===== Ticket Match & History Checker ===== */
+.ticket-match-page .lede {
+  max-width: 62ch;
+}
+
+.ticket-match {
+  margin: 20px 0 28px;
+}
+
+.tm-form__games,
+.tm-form__picks {
+  border: 0;
+  margin: 0 0 16px;
+  padding: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tm-form__games legend,
+.tm-form__picks legend {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--panel-warm-ink);
+}
+
+.tm-form__game-row,
+.tm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tm-game-btn,
+.tm-btn {
+  appearance: none;
+  border: 1px solid var(--panel-warm-line);
+  background: #fff;
+  color: var(--panel-warm-ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tm-game-btn.is-on,
+.tm-game-btn:hover,
+.tm-game-btn:focus-visible {
+  outline: none;
+}
+
+.tm-tool[data-tm-game="megamillions"] .tm-game-btn.is-on,
+#tm-tool[data-tm-game="megamillions"] .tm-game-btn[data-game="megamillions"].is-on {
+  border-color: #c98a10;
+  background: rgba(255, 194, 51, 0.28);
+  color: #241a02;
+}
+
+.tm-tool[data-tm-game="powerball"] .tm-game-btn.is-on,
+#tm-tool[data-tm-game="powerball"] .tm-game-btn[data-game="powerball"].is-on {
+  border-color: #dc2440;
+  background: rgba(255, 85, 102, 0.22);
+  color: #4a0a14;
+}
+
+.tm-game-btn:focus-visible,
+.tm-btn:focus-visible,
+.tm-pick:focus-visible {
+  box-shadow: 0 0 0 3px rgba(107, 140, 206, 0.35);
+  outline: none;
+}
+
+.tm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 6px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.tm-grid--bonus {
+  max-width: min(420px, 100%);
+  width: 100%;
+}
+
+
+
+.tm-pick {
+  appearance: none;
+  width: 100%;
+  min-height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--panel-warm-line);
+  background: #fff;
+  color: var(--panel-warm-ink);
+  font: inherit;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.tm-pick.is-selected {
+  background: rgba(91, 130, 224, 0.2);
+  border-color: var(--analytics-deep);
+  color: var(--analytics-deep);
+}
+
+.tm-grid--mm .tm-pick--bonus.is-selected {
+  background: rgba(255, 194, 51, 0.35);
+  border-color: #c98a10;
+  color: #241a02;
+}
+
+.tm-grid--pb .tm-pick--bonus.is-selected {
+  background: rgba(255, 85, 102, 0.28);
+  border-color: #dc2440;
+  color: #4a0a14;
+}
+
+.tm-selection {
+  margin: 4px 0 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--panel-warm-ink);
+}
+
+.tm-draw-controls {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.tm-draw-field {
+  margin-bottom: 0;
+}
+
+.tm-draw-field--older {
+  margin-top: 2px;
+}
+
+.tm-active-draw {
+  margin: 0;
+  font-size: 13px;
+  color: var(--panel-warm-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.tm-date-msg {
+  margin: 0;
+  font-size: 13px;
+  color: var(--panel-warm-muted);
+}
+
+.tm-date-msg.is-error {
+  color: #8b1e1e;
+}
+
+
+.ticket-match-page,
+.ticket-match,
+.tm-form,
+.tm-draw-controls,
+.tm-draw-field {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.tm-draw-field select,
+.tm-draw-field input[type="date"],
+#tm-draw-select,
+#tm-draw-date {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.tm-hist-mm-note {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--panel-warm-muted);
+}
+
+#tm-draw-date {
+  max-width: 100%;
+}
+
+.tm-btn--primary {
+  background: var(--analytics-deep);
+  border-color: var(--analytics-deep);
+  color: #fff;
+}
+
+.tm-btn--primary:hover,
+.tm-btn--primary:focus-visible {
+  filter: brightness(1.08);
+}
+
+.tm-btn--ghost {
+  background: transparent;
+}
+
+.tm-status {
+  min-height: 1.2em;
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--panel-warm-muted);
+}
+
+.tm-status.is-error {
+  color: #a12b2b;
+}
+
+.tm-selected-result,
+.tm-history-result {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-warm-line);
+}
+
+.tm-selected-result h3,
+.tm-history-result h3 {
+  margin: 0 0 8px;
+  color: var(--panel-warm-ink);
+}
+
+.tm-result__date {
+  margin: 0 0 12px;
+  color: var(--panel-warm-muted);
+  font-size: 14px;
+}
+
+.tm-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.tm-compare__label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--panel-warm-muted);
+}
+
+.tm-result__phrase {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--panel-warm-ink);
+}
+
+.tm-result__hint,
+.tm-result__verify,
+.tm-hist-summary,
+.tm-hist-disclaimer {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--panel-warm-muted);
+  line-height: 1.45;
+}
+
+.ball--tm-hit {
+  background: radial-gradient(circle at 34% 26%, #ffffff, #c5d4f5 58%, #7a9ad8) !important;
+  box-shadow: 0 6px 16px rgba(60, 100, 180, 0.35), inset 0 -3px 6px rgba(40, 70, 130, 0.3);
+}
+
+.ball--tm-bonus-hit {
+  /* identity colors come from data-tm-game via --accent; keep gold/coral for matched bonus */
+  outline: 2px solid color-mix(in srgb, var(--accent) 80%, #000);
+  outline-offset: 2px;
+}
+
+#tm-tool[data-tm-game="megamillions"] {
+  --accent: #ffc233;
+  --accent-deep: #ff9d1c;
+  --accent-ink: #241a02;
+  --accent-glow: rgba(255, 160, 30, 0.4);
+}
+
+#tm-tool[data-tm-game="powerball"] {
+  --accent: #ff5566;
+  --accent-deep: #dc2440;
+  --accent-ink: #ffffff;
+  --accent-glow: rgba(220, 40, 64, 0.45);
+}
+
+.tm-hist-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tm-hist-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--panel-warm-line);
+  min-width: 0;
+}
+
+.tm-hist-row__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tm-hist-row__meta time {
+  font-weight: 700;
+  color: var(--panel-warm-ink);
+  font-size: 13px;
+}
+
+.tm-hist-row__match {
+  font-size: 12px;
+  color: var(--panel-warm-muted);
+}
+
+.tm-hist-row .balls {
+  gap: 4px;
+}
+
+.tm-hist-row .ball {
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+  animation: none;
+}
+
+@media (max-width: 640px) {
+  .tm-compare {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tm-grid {
+    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+  }
+
+  .tm-pick {
+    min-height: 32px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .tm-hist-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tm-grid {
+    grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+    gap: 4px;
+  }
+
+  .tm-pick {
+    min-height: 28px;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+}
+
+
+/* ===== Phase 3: Lottery Odds Explorer ===== */
+.odds-explorer-page .lede {
+  max-width: 42rem;
+}
+
+.odds-explorer {
+  overflow-x: hidden;
+}
+
+.odds-form__modes,
+.odds-form__tickets,
+.odds-form__drawings {
+  border: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.odds-form__modes legend,
+.odds-form__tickets legend,
+.odds-form__drawings legend {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--ink, #0b1c2c);
+}
+
+.odds-form__mode-row,
+.odds-form__chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.odds-mode-btn,
+.odds-tickets-btn,
+.odds-drawings-btn {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, var(--navy, #0b1c2c) 22%, transparent);
+  background: #fff;
+  color: var(--navy, #0b1c2c);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.odds-mode-btn.is-on,
+.odds-tickets-btn.is-on,
+.odds-drawings-btn.is-on,
+.odds-mode-btn:hover,
+.odds-tickets-btn:hover,
+.odds-drawings-btn:hover,
+.odds-mode-btn:focus-visible,
+.odds-tickets-btn:focus-visible,
+.odds-drawings-btn:focus-visible {
+  background: color-mix(in srgb, var(--muted-blue, #3b6ea5) 18%, #fff);
+  border-color: var(--muted-blue, #3b6ea5);
+  color: var(--navy, #0b1c2c);
+}
+
+.odds-mode-btn:focus-visible,
+.odds-tickets-btn:focus-visible,
+.odds-drawings-btn:focus-visible {
+  outline: 2px solid var(--muted-blue, #3b6ea5);
+  outline-offset: 2px;
+}
+
+.odds-custom-field {
+  margin-top: 0.75rem;
+  max-width: 16rem;
+}
+
+.odds-attempts {
+  font-variant-numeric: tabular-nums;
+  margin: 0.75rem 0 0.25rem;
+  color: color-mix(in srgb, var(--ink, #0b1c2c) 78%, transparent);
+}
+
+.odds-form__live {
+  min-height: 1.25rem;
+  margin: 0 0 0.75rem;
+  color: color-mix(in srgb, var(--ink, #0b1c2c) 70%, transparent);
+  font-size: 0.95rem;
+}
+
+.odds-results {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.odds-game-card {
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--navy, #0b1c2c) 12%, transparent);
+  border-radius: 12px;
+  padding: 1rem 1rem 1.1rem;
+}
+
+.odds-game-card h3 {
+  margin: 0 0 0.75rem;
+  color: var(--navy, #0b1c2c);
+}
+
+.odds-results__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem 1rem;
+  margin: 0 0 0.85rem;
+}
+
+.odds-results__grid > div {
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  background: color-mix(in srgb, var(--warm, #f7f1e8) 70%, #fff);
+  border-radius: 8px;
+}
+
+.odds-results__grid dt {
+  margin: 0;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink, #0b1c2c) 65%, transparent);
+}
+
+.odds-results__grid dd {
+  margin: 0.2rem 0 0;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.odds-sub {
+  display: inline;
+  font-weight: 500;
+  font-size: 0.9em;
+  color: color-mix(in srgb, var(--ink, #0b1c2c) 72%, transparent);
+}
+
+.odds-tier-table td .odds-sub {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.odds-interpret,
+.odds-freq {
+  margin: 0 0 0.75rem;
+  max-width: 42rem;
+  line-height: 1.45;
+}
+
+.odds-freq {
+  color: color-mix(in srgb, var(--ink, #0b1c2c) 78%, transparent);
+  font-size: 0.95rem;
+}
+
+.odds-formula {
+  font-variant-numeric: tabular-nums;
+}
+
+.odds-tier-wrap {
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.odds-tier-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-variant-numeric: tabular-nums;
+}
+
+.odds-tier-table caption {
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--navy, #0b1c2c);
+}
+
+.odds-tier-table th,
+.odds-tier-table td {
+  border-bottom: 1px solid color-mix(in srgb, var(--navy, #0b1c2c) 12%, transparent);
+  padding: 0.4rem 0.4rem;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.odds-tier-table th {
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--ink, #0b1c2c) 70%, transparent);
+}
+
+.odds-tier-table td.num,
+.odds-results__grid dd.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.odds-error {
+  color: #8a2f2f;
+}
+
+.odds-explorer-page,
+.odds-explorer,
+.odds-form,
+.odds-results,
+.odds-game-card {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+@media (max-width: 900px) {
+  .odds-results__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .odds-game-card {
+    padding: 0.85rem;
+  }
+
+  /* Compact prize-tier rows (not large cards) for phone + tablet band */
+  .odds-tier-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .odds-tier-table,
+  .odds-tier-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .odds-tier-table tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 0.65rem;
+    row-gap: 0.05rem;
+    width: 100%;
+    margin: 0;
+    padding: 0.28rem 0;
+    border: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--navy, #0b1c2c) 12%, transparent);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .odds-tier-table tr:last-child {
+    border-bottom: 0;
+  }
+
+  .odds-tier-table td {
+    display: block;
+    border: 0;
+    padding: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* Line 1: match pattern + one-ticket odds */
+  .odds-tier-table td:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    font-weight: 650;
+  }
+
+  .odds-tier-table td:nth-child(1)::before {
+    content: none;
+  }
+
+  .odds-tier-table td:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .odds-tier-table td:nth-child(2)::before {
+    content: "1 in ";
+    font-weight: 500;
+    color: color-mix(in srgb, var(--ink, #0b1c2c) 65%, transparent);
+  }
+
+  /* Line 2: chance across attempts */
+  .odds-tier-table td:nth-child(3) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 0.86rem;
+    line-height: 1.35;
+  }
+
+  .odds-tier-table td:nth-child(3)::before {
+    content: attr(data-label) ": ";
+    display: inline;
+    font-size: inherit;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--ink, #0b1c2c) 65%, transparent);
+  }
+
+  /* Expected per 1M as small secondary (same row as chance when space allows) */
+  .odds-tier-table td:nth-child(4) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    font-size: 0.76rem;
+    color: color-mix(in srgb, var(--ink, #0b1c2c) 72%, transparent);
+  }
+
+  .odds-tier-table td:nth-child(4)::before {
+    content: attr(data-label) ": ";
+    display: inline;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--ink, #0b1c2c) 60%, transparent);
+  }
+
+  .odds-tier-wrap {
+    overflow-x: visible;
+  }
+}
+
+@media (max-width: 420px) {
+  .odds-mode-btn,
+  .odds-tickets-btn,
+  .odds-drawings-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.92rem;
+  }
+}

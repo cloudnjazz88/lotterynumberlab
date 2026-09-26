@@ -16,6 +16,8 @@ import { GUIDES } from "../content/guides.mjs";
 import { aboutPage, privacyPage, termsPage, responsiblePage } from "../content/legal.mjs";
 import { faqContent, glossaryPage, methodologyPage } from "../content/reference.mjs";
 import { resultsHub, yearPage, yearPageSpecs, yearHref } from "../content/results.mjs";
+import { toolsHub, spendingCalculatorPage, ticketMatchCheckerPage, oddsExplorerPage } from "../content/tools.mjs";
+import { analyzeHub } from "../content/analyze.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const ctx = buildContext();
@@ -31,6 +33,9 @@ const GAME_SCRIPTS = [
   "src/app.js",
 ];
 const HOME_SCRIPTS = ["src/data.js", "src/app.js"];
+const SPENDING_SCRIPTS = ["src/data.js", "src/tools/spending-calculator.js"];
+const TICKET_MATCH_SCRIPTS = ["data/draws.js", "src/data.js", "src/tools/ticket-match-checker.js"];
+const ODDS_EXPLORER_SCRIPTS = ["src/tools/odds-explorer.js"];
 
 const pad2 = (n) => String(n).padStart(2, "0");
 const drawPlain = (draw) => `${draw.n.map(pad2).join("-")} + ${pad2(draw.s)}`;
@@ -146,9 +151,9 @@ const pages = [
     slug: "index.html",
     view: "home",
     nav: "home",
-    title: "Mega Millions and Powerball winning numbers, odds, and statistics",
+    title: "Understand the numbers before you play",
     description:
-      `Latest Mega Millions (${dateLong(mmLatest.d)}) and Powerball (${dateLong(pbLatest.d)}) winning numbers, jackpot odds, past results, and probability guides. Independent US lottery statistics. This site does not sell tickets.`,
+      `Latest Mega Millions (${dateLong(mmLatest.d)}) and Powerball (${dateLong(pbLatest.d)}) results, honest odds, and tools. Independent US lottery data. This site does not sell tickets.`,
     modified: drawsLatest,
     body: homeBody(ctx, GUIDES),
     scripts: HOME_SCRIPTS,
@@ -157,7 +162,7 @@ const pages = [
     slug: "mega-millions.html",
     view: "game",
     game: "megamillions",
-    nav: "megamillions",
+    nav: "analyze",
     title: `Mega Millions winning numbers for ${dateLong(mmLatest.d)}`,
     description: `Latest Mega Millions winning numbers for ${dateLong(mmLatest.d)}: ${drawPlain(mmLatest)}. Number generator, ball frequencies, and official odds from ${num(ctx.mm.history.count)} drawings. Confirm with your state lottery.`,
     modified: mmLatest.d,
@@ -169,7 +174,7 @@ const pages = [
     slug: "powerball.html",
     view: "game",
     game: "powerball",
-    nav: "powerball",
+    nav: "analyze",
     title: `Powerball winning numbers for ${dateLong(pbLatest.d)}`,
     description: `Latest Powerball winning numbers for ${dateLong(pbLatest.d)}: ${drawPlain(pbLatest)}. Number generator, ball frequencies, and official odds from ${num(ctx.pb.history.count)} drawings. Confirm with your state lottery.`,
     modified: pbLatest.d,
@@ -245,6 +250,90 @@ const pages = [
     body: methodologyPage(ctx),
   },
   {
+    slug: "tools/index.html",
+    nav: "tools",
+    title: "Lottery tools: spending, ticket match, and odds explorer",
+    description:
+      "Three live Mega Millions and Powerball tools: Spending Calculator for repeated-play cost, Ticket Match & History Checker for published draws, and Odds Explorer for prize-tier probability. Browser-only math. No predictions.",
+    modified: "2026-09-26",
+    body: toolsHub(),
+  },
+  {
+    slug: "tools/lottery-spending-calculator.html",
+    nav: "tools",
+    title: "Lottery spending calculator",
+    description:
+      "Estimate weekly, monthly, and multi-year Mega Millions and Powerball ticket costs from plays per drawing. Includes jackpot odds context. No predictions. Runs entirely in your browser.",
+    modified: "2026-09-26",
+    faq: [
+      {
+        q: "Does this tell me if I will win?",
+        a: "No. It only converts play frequency into dollar cost and optional odds context.",
+        plain: "No. It only converts play frequency into dollar cost and optional odds context.",
+      },
+      {
+        q: "Is my data stored?",
+        a: "No. All math runs in your browser. Clearing the page clears the inputs.",
+        plain: "No. All math runs in your browser. Clearing the page clears the inputs.",
+      },
+    ],
+    body: spendingCalculatorPage(ctx),
+    scripts: SPENDING_SCRIPTS,
+  },
+  {
+    slug: "tools/ticket-match-checker.html",
+    nav: "tools",
+    title: "Lottery Ticket Match & History Checker",
+    description:
+      "Compare Mega Millions or Powerball ticket numbers with a published drawing, then search the same numbers across current-matrix history. Browser-only pattern check — not a prize claim.",
+    modified: "2026-09-26",
+    faq: [
+      {
+        q: "Does a full match mean I won money?",
+        a: "No. This tool never states that you won and never shows dollar prizes. Confirm with your state lottery.",
+        plain: "No. This tool never states that you won and never shows dollar prizes. Confirm with your state lottery.",
+      },
+      {
+        q: "Is my ticket sent anywhere?",
+        a: "No. Comparison stays in your browser.",
+        plain: "No. Comparison stays in your browser.",
+      },
+    ],
+    body: ticketMatchCheckerPage(ctx),
+    scripts: TICKET_MATCH_SCRIPTS,
+  },
+  {
+    slug: "tools/odds-explorer.html",
+    nav: "tools",
+    title: "Lottery Odds Explorer",
+    description:
+      "Explore Mega Millions and Powerball jackpot and prize-tier odds across multiple tickets and drawings. Educational probability tool -- not a predictor. Runs in your browser.",
+    modified: "2026-09-26",
+    faq: [
+      {
+        q: "Does buying more tickets make each ticket better?",
+        a: "No. Each ticket remains an independent trial at the same published one-ticket odds.",
+        plain: "No. Each ticket remains an independent trial at the same published one-ticket odds.",
+      },
+      {
+        q: "Is this a prediction or recommendation tool?",
+        a: "No. It only applies the published odds to the number of attempts you enter.",
+        plain: "No. It only applies the published odds to the number of attempts you enter.",
+      },
+    ],
+    body: oddsExplorerPage(ctx),
+    scripts: ODDS_EXPLORER_SCRIPTS,
+  },
+  {
+    slug: "analyze/index.html",
+    nav: "analyze",
+    title: "Analyze Mega Millions and Powerball",
+    description:
+      "Start point for Mega Millions and Powerball analysis: live dashboards, independent trials, hot and cold tests, odds comparison, and expected value guides.",
+    modified: "2026-09-26",
+    body: analyzeHub(ctx, GUIDES),
+  },
+  {
     slug: "results/index.html",
     nav: "results",
     title: "Past Mega Millions and Powerball winning numbers",
@@ -305,7 +394,7 @@ const sitemapUrls = pages
         ? "1.0"
         : page.view === "game"
           ? "0.9"
-          : page.kind === "guide" || page.slug === "results/index.html" || page.slug === "guides/index.html"
+          : page.kind === "guide" || page.slug === "results/index.html" || page.slug === "guides/index.html" || page.slug === "tools/index.html" || page.slug === "analyze/index.html"
             ? "0.8"
             : "0.6";
     const changefreq = page.view === "game" || page.slug === "index.html" ? "daily" : page.kind === "guide" ? "monthly" : "weekly";
@@ -396,6 +485,9 @@ const assets = [
   "src/stats.js",
   "src/generator.js",
   "src/charts.js",
+  "src/tools/spending-calculator.js",
+  "src/tools/ticket-match-checker.js",
+  "src/tools/odds-explorer.js",
   "data/draws.js",
 ];
 const publish = [...new Set([...written, ...assets])];

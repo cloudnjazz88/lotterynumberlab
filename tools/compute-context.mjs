@@ -144,7 +144,28 @@ export function chiSquareTest(counts, expected) {
  * How extreme the most- and least-drawn ball look in *simulated* fair histories
  * of the same length — the honest yardstick for "hot" and "cold" numbers.
  */
-function simulateExtremes(mainMax, pick, drawCount, rounds = 4000) {
+/**
+ * Mulberry32 — tiny 32-bit PRNG. Same seed → same sequence.
+ * Algorithm: public-domain Mulberry32 (tommyettinger / common JS ports).
+ */
+export function createMulberry32(seed) {
+  let t = seed >>> 0;
+  return function next() {
+    t = (t + 0x6d2b79f5) >>> 0;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Stable default seed so guide figures lock across builds. */
+export const SIM_EXTREMES_SEED = 0x4c4f5454; // 'LOTT'
+
+/**
+ * Monte Carlo extremes for hot/cold yardsticks. Deterministic when seed is fixed.
+ */
+export function simulateExtremes(mainMax, pick, drawCount, rounds = 4000, seed = SIM_EXTREMES_SEED) {
+  const random = createMulberry32(seed);
   const maxima = [];
   const minima = [];
   const spreads = [];
@@ -153,7 +174,7 @@ function simulateExtremes(mainMax, pick, drawCount, rounds = 4000) {
     pool.fill(0);
     for (let d = 0; d < drawCount; d++) {
       const seen = new Set();
-      while (seen.size < pick) seen.add(Math.floor(Math.random() * mainMax));
+      while (seen.size < pick) seen.add(Math.floor(random() * mainMax));
       for (const i of seen) pool[i] += 1;
     }
     let hi = 0;
@@ -173,6 +194,7 @@ function simulateExtremes(mainMax, pick, drawCount, rounds = 4000) {
   };
   return {
     rounds,
+    seed,
     maxMean: mean(maxima),
     minMean: mean(minima),
     spreadMean: mean(spreads),

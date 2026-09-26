@@ -213,7 +213,7 @@ export function methodologyPage(ctx) {
           ${oneIn(mm.table.anyPrizeOneIn)} and ${oneIn(pb.table.anyPrizeOneIn)}.
         </p>
 
-        <h2>2. Drawing data</h2>
+        <h2 id="sources">2. Drawing data</h2>
         <p>
           Results come from the New York State Open Data portal, which republishes official
           multi-state drawings. The bundled snapshot currently runs through
@@ -265,7 +265,7 @@ export function methodologyPage(ctx) {
           “pure random” preset is uniform; our test suite checks that with a chi-square test.
         </p>
 
-        <h2>6. Corrections</h2>
+        <h2 id="corrections">6. Corrections</h2>
         <p>
           If a figure is wrong, email <a href="mailto:${SITE.email}">${SITE.email}</a> with a
           source. We will check it against the matrix or the drawing file and correct the page,

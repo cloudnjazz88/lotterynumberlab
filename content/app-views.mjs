@@ -64,7 +64,7 @@ function latestSpotlight(game) {
           <div class="balls balls--xl">${balls(config, latest)}</div>
           ${awaitingBanner(game)}
           ${estimate}${showSchedule}
-          <a class="latest-card__btn" href="${gameHref(config)}">Open the ${config.name} generator</a>
+          <a class="latest-card__btn latest-card__btn--generator" href="${gameHref(config)}">Open the ${config.name} generator</a>
         </article>`;
 }
 
@@ -133,181 +133,161 @@ export function guideCards(guides, depth, limit) {
     .join("\n        ");
 }
 
+
+function homeRecentRows(game) {
+  const config = game.config;
+  return game.history.draws
+    .slice(0, 5)
+    .map(
+      (draw) => `<li class="home-recent__row">
+              <time datetime="${draw.d}">${dateLong(draw.d)}</time>
+              <div class="balls balls--sm" aria-label="Winning numbers">${balls(config, draw)}</div>
+            </li>`,
+    )
+    .join("\n            ");
+}
+
+function homeRecentPanel(mm, pb) {
+  const col = (game) => {
+    const config = game.config;
+    return `<div class="home-recent__col" data-game="${config.id}">
+            <h3 class="home-recent__game">${config.name}</h3>
+            <ol class="home-recent__list">
+            ${homeRecentRows(game)}
+            </ol>
+          </div>`;
+  };
+  return `<section class="home-recent" aria-labelledby="home-recent-heading">
+        <div class="home-recent__head">
+          <h2 class="section__title" id="home-recent-heading">Recent drawings</h2>
+          <a class="text-link" href="results/index.html">Full archive</a>
+        </div>
+        <div class="home-recent__grid">
+          ${col(mm)}
+          ${col(pb)}
+        </div>
+      </section>`;
+}
+
 export function homeBody(ctx, guides) {
   const mm = ctx.mm;
   const pb = ctx.pb;
-  const featured = [guides[0], guides[1], guides.find((g) => g.slug === "mega-millions-2025-rule-change") || guides[6]];
+  const featured =
+    guides.find((g) => g.slug === "independent-trials") || guides[1];
+  const related = [
+    guides.find((g) => g.slug === "mega-millions-vs-powerball-odds") || guides[0],
+    guides.find((g) => g.slug === "hot-and-cold-numbers-tested") || guides[6],
+    guides.find((g) => g.slug === "record-jackpots-and-taxes") || guides[2],
+  ].filter(Boolean);
 
-  return `      <section class="hero">
-        <p class="hero__eyebrow">Independent lottery statistics</p>
-        <h1>Mega Millions and Powerball winning numbers, odds, and statistics</h1>
+  return `      <section class="hero hero--compact">
+        <p class="hero__eyebrow">INDEPENDENT LOTTERY DATA</p>
+        <h1>Understand the numbers before you play.</h1>
         <p class="hero__lead">
-          Latest US Mega Millions and Powerball winning numbers, plus every drawing since each
-          game's current ball matrix began —
-          ${num(mm.history.count)} Mega Millions and ${num(pb.history.count)} Powerball results —
-          analysed ball by ball. The odds tables reproduce the official prize charts. The guides
-          explain what those numbers actually mean, including why past drawings cannot predict
-          the next one.
+          Verified Mega Millions and Powerball results, honest odds, and tools that
+          explain what the numbers mean — without hype or predictions.
         </p>
-        <div class="hero-ctas">
-          <a class="hero-cta" data-game="megamillions" href="mega-millions.html">Mega Millions winning numbers</a>
-          <a class="hero-cta" data-game="powerball" href="powerball.html">Powerball winning numbers</a>
+        <div class="hero-ctas hero-ctas--compact">
+          <a class="hero-cta" href="tools/index.html">Explore the tools</a>
+          <a class="hero-cta hero-cta--secondary" href="results/index.html">Browse results</a>
         </div>
-        <p class="hero__actions">
-          <a class="text-link" href="guides/index.html">Read the guides</a>
-          <a class="text-link" href="results/index.html">Browse past winning numbers</a>
-          <a class="text-link" href="faq.html">FAQ</a>
-        </p>
         <p class="hero__note">${SITE.timeZoneNote} This site does not sell tickets.</p>
       </section>
 
       <section class="latest-strip" aria-labelledby="latest-heading">
         <div class="latest-strip__head">
-          <h2 class="section__title" id="latest-heading">Latest winning numbers</h2>
+          <h2 class="section__title" id="latest-heading">Latest results</h2>
           <p>
-            The most recent Mega Millions and Powerball drawings. Confirm a ticket with your
-            state lottery before you claim.
+            Most recent drawings. Confirm a ticket with your state lottery before you claim.
+            <a class="text-link" href="results/index.html">Full archive</a>
           </p>
         </div>
         <div class="latest-grid">
         ${latestSpotlight(mm)}
         ${latestSpotlight(pb)}
         </div>
+        ${homeRecentPanel(mm, pb)}
       </section>
 
-      <section class="panel" aria-labelledby="recent-heading">
-        <div class="recent-head">
-          <h2 class="section__title" id="recent-heading">Last 8 drawings</h2>
-          <p>
-            Official results from the New York State open-data feed. Dates are the ET drawing
-            dates.
-            <a class="text-link" href="results/index.html">Full archive by year →</a>
-          </p>
-        </div>
-        <div class="recent-grid">
-        ${recentColumn(mm)}
-        ${recentColumn(pb)}
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="featured-heading">
-        <h2 class="section__title" id="featured-heading">Start with the evidence</h2>
-        <p class="section__lead">
-          Three of the questions people actually ask: how the two games compare, why “due”
-          numbers are a fallacy, and what the April 2025 Mega Millions overhaul changed.
+      <section class="panel panel--warm panel--utility" aria-labelledby="tools-rail-heading">
+        <h2 class="section__title" id="tools-rail-heading">What do you want to know?</h2>
+        <p class="section__lead section__lead--warm">
+          Four starting points — each link is a real page, not a fake checker.
         </p>
-        <div class="guide-cards">
-        ${guideCards(featured, 0)}
-        </div>
+        <ul class="utility-rail">
+          <li class="utility-rail__item">
+            <a href="tools/ticket-match-checker.html">
+              <span class="utility-rail__label">Check numbers</span>
+              <span class="utility-rail__hint">Compare your numbers with a published drawing or search past results</span>
+            </a>
+          </li>
+          <li class="utility-rail__item">
+            <a href="tools/odds-explorer.html">
+              <span class="utility-rail__label">Compare odds</span>
+              <span class="utility-rail__hint">Odds explorer: jackpot and prize-tier chances across tickets</span>
+            </a>
+          </li>
+          <li class="utility-rail__item">
+            <a href="guides/record-jackpots-and-taxes.html">
+              <span class="utility-rail__label">Estimate take-home</span>
+              <span class="utility-rail__hint">Tax guide: cash option and what winners actually receive</span>
+            </a>
+          </li>
+          <li class="utility-rail__item">
+            <a href="tools/lottery-spending-calculator.html">
+              <span class="utility-rail__label">Track spending</span>
+              <span class="utility-rail__hint">Spending calculator: weekly to multi-year ticket cost</span>
+            </a>
+          </li>
+        </ul>
       </section>
 
-      <section class="panel panel--flat" aria-labelledby="odds-heading">
-        <h2 class="section__title" id="odds-heading">The two games side by side</h2>
-        <p class="section__lead">
-          Both jackpots are advertised in the hundreds of millions, and both are about equally
-          unlikely. The differences are in ticket price, how often the smaller tiers pay, and
-          how many drawings there are each week.
+      <section class="panel panel--warm" aria-labelledby="analysis-heading">
+        <h2 class="section__title" id="analysis-heading">Analysis &amp; explanations</h2>
+        <p class="section__lead section__lead--warm">
+          Start with the evidence. More guides live under Learn.
         </p>
-        ${table(
-          ["", "Mega Millions", "Powerball"],
-          [
-            ["Ball matrix", mm.config.matrixLabel, pb.config.matrixLabel],
-            ["Ticket price", mm.config.ticketPrice, pb.config.ticketPrice],
-            ["Jackpot odds", oneIn(mm.config.jackpotOdds), oneIn(pb.config.jackpotOdds)],
-            [
-              "Odds of any prize",
-              oneIn(mm.table.anyPrizeOneIn),
-              oneIn(pb.table.anyPrizeOneIn),
-            ],
-            [
-              "Drawings",
-              `${mm.config.drawDaysLabel}<br>${mm.config.drawTimeLabel}`,
-              `${pb.config.drawDaysLabel}<br>${pb.config.drawTimeLabel}`,
-            ],
-            [
-              "Current matrix since",
-              dateLong(mm.config.matrixSince),
-              dateLong(pb.config.matrixSince),
-            ],
-            [
-              "Fixed-prize return per ticket",
-              `${pct(mm.breakEvenBase.fixedReturn)} of the ticket price<br><small>before the built-in 2X–10X multiplier</small>`,
-              `${pct(pb.breakEvenBase.fixedReturn)} of the ticket price<br><small>before the optional Power Play</small>`,
-            ],
-          ],
-          { className: "table--compare" },
-        )}
+        <div class="analysis-feature">
+          <a class="analysis-feature__main" href="guides/${featured.slug}.html">
+            <span class="guide-card__kicker">${featured.kicker}</span>
+            <h3>${featured.title}</h3>
+            <p>${featured.dek}</p>
+            <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+          </a>
+          <ul class="analysis-feature__related">
+            ${related
+              .map(
+                (g) => `<li>
+              <a href="guides/${g.slug}.html">
+                <strong>${g.title}</strong>
+                <span>${g.dek}</span>
+              </a>
+            </li>`,
+              )
+              .join("")}
+          </ul>
+        </div>
         <p class="section__after">
-          <a class="text-link" href="guides/mega-millions-vs-powerball-odds.html"
-            >Read the full odds comparison, tier by tier →</a
-          >
+          <a class="text-link" href="guides/index.html">Browse all guides →</a>
+          ·
+          <a class="text-link" href="analyze/index.html">Open Analyze hub →</a>
         </p>
       </section>
 
-      ${adSlot("home-mid")}
+${adSlot("home-mid")}
 
-      <section class="section" aria-labelledby="guides-heading">
-        <h2 class="section__title" id="guides-heading">Guides &amp; analysis</h2>
-        <p class="section__lead">
-          Plain-English explanations of the probability, the prize structures, the tax
-          arithmetic and the history of rule changes — every figure computed from published
-          rules and the drawing record, not copied from a listicle.
+      <section class="trust-strip" aria-labelledby="trust-heading">
+        <h2 class="trust-strip__title" id="trust-heading">Verified data. Transparent methods.</h2>
+        <p class="trust-strip__dek">
+          Drawing records come from public open-data feeds. Odds are computed from published
+          matrices. Corrections are welcome.
         </p>
-        <div class="guide-cards">
-        ${guideCards(guides, 0)}
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="ref-heading">
-        <h2 class="section__title" id="ref-heading">Reference</h2>
-        <p class="section__lead">
-          How the numbers on this site are produced, what the jargon means, and answers to the
-          questions that come up every drawing night.
-        </p>
-        <div class="guide-cards">
-          <a class="guide-card" href="faq.html">
-            <span class="guide-card__kicker">FAQ</span>
-            <h3>Frequently asked questions</h3>
-            <p>Odds, taxes, independence, and what this site will and will not do.</p>
-            <span class="guide-card__more">Read the FAQ <span aria-hidden="true">→</span></span>
-          </a>
-          <a class="guide-card" href="glossary.html">
-            <span class="guide-card__kicker">Glossary</span>
-            <h3>Lottery terms, defined</h3>
-            <p>Annuity, cash option, matrix, Power Play, Megaplier and the rest of the jargon.</p>
-            <span class="guide-card__more">Open the glossary <span aria-hidden="true">→</span></span>
-          </a>
-          <a class="guide-card" href="methodology.html">
-            <span class="guide-card__kicker">Methods</span>
-            <h3>How the figures are computed</h3>
-            <p>Data sources, era boundaries, the chi-square test, and how to send a correction.</p>
-            <span class="guide-card__more">Read the methodology <span aria-hidden="true">→</span></span>
-          </a>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="games-heading">
-        <h2 class="section__title" id="games-heading">Drawing data, on the dashboard</h2>
-        <p class="section__lead">
-          Frequencies, dry spells, sum charts and an optional number generator that samples
-          from that history. The generator is for exploring the data. It does not improve your
-          odds.
-        </p>
-        <div class="game-cards">
-        ${gameCard(mm, 0)}
-        ${gameCard(pb, 0)}
-        </div>
-      </section>
-
-      <section class="panel panel--disclaimer" aria-labelledby="disclaimer-heading">
-        <h2 id="disclaimer-heading">A note before you play anything</h2>
-        <p class="disclaimer-text">${CORE_DISCLAIMER}</p>
-        <p>
-          Nothing on this site is financial advice, and no statistical method can shift the
-          odds printed above. If you play, treat the ticket price as the cost of the
-          entertainment and nothing more.
-          <a class="text-link" href="responsible-play.html">Read our responsible play page →</a>
-        </p>
+        <nav class="trust-strip__links" aria-label="Trust and policy">
+          <a href="methodology.html">Methodology</a>
+          <a href="methodology.html#sources">Sources</a>
+          <a href="methodology.html#corrections">Corrections</a>
+          <a href="responsible-play.html">Responsible play</a>
+        </nav>
       </section>
 `;
 }

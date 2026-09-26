@@ -14,9 +14,14 @@
     "validate-routes": "node tools/worker-routes-test.mjs",
     "verify-seo": "node tools/verify-seo.mjs",
     "smoke": "node tools/browser-check.mjs",
-    "check": "node tools/validate.mjs && node tools/draw-validate-test.mjs && node tools/methodology-updated-test.mjs && node tools/jackpot-validate-test.mjs && node tools/awaiting-update-test.mjs && node tools/asset-version-test.mjs && node tools/worker-routes-test.mjs && node tools/verify-seo.mjs && node tools/browser-check.mjs",
+    "check": "node tools/validate.mjs && node tools/draw-validate-test.mjs && node tools/methodology-updated-test.mjs && node tools/jackpot-validate-test.mjs && node tools/awaiting-update-test.mjs && node tools/asset-version-test.mjs && node tools/worker-routes-test.mjs && node tools/spending-calculator-test.mjs && node tools/ticket-match-test.mjs && node tools/odds-explorer-test.mjs && node tools/simulate-extremes-test.mjs && node tools/home-recent-test.mjs && node tools/verify-seo.mjs && node tools/browser-check.mjs",
     "validate-methodology": "node tools/methodology-updated-test.mjs",
-    "verify-production": "node tools/verify-production.mjs"
+    "verify-production": "node tools/verify-production.mjs",
+    "validate-spending": "node tools/spending-calculator-test.mjs",
+    "validate-sim": "node tools/simulate-extremes-test.mjs",
+    "validate-home-recent": "node tools/home-recent-test.mjs",
+    "validate-ticket-match": "node tools/ticket-match-test.mjs",
+    "validate-odds": "node tools/odds-explorer-test.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "^24.10.0"

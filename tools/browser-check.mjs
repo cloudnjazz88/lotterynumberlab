@@ -62,6 +62,11 @@ const PAGES = [
   "guides/mega-millions-2025-rule-change.html",
   "guides/how-lottery-odds-are-calculated.html",
   "results/index.html",
+  "tools/index.html",
+  "tools/lottery-spending-calculator.html",
+  "tools/ticket-match-checker.html",
+  "tools/odds-explorer.html",
+  "analyze/index.html",
   "results/mega-millions-2026.html",
   "results/powerball-2026.html",
   "faq.html",
@@ -101,7 +106,11 @@ page.on("console", (msg) => {
   }
 });
 page.on("pageerror", (err) => problems.push(`[${context}] pageerror: ${err.message}`));
-page.on("requestfailed", (req) => problems.push(`[${context}] requestfailed: ${req.url()}`));
+page.on("requestfailed", (req) => {
+  const url = req.url();
+  if (/google-analytics|googletagmanager|googlesyndication|google.com\/recaptcha|doubleclick|pagead2/i.test(url)) return;
+  problems.push(`[${context}] requestfailed: ${url}`);
+});
 
 /* ------------------------- every page: head + links ------------------------ */
 
@@ -174,54 +183,64 @@ await page.waitForFunction(() =>
 );
 
 const home = await page.evaluate(() =>
-  [...document.querySelectorAll(".game-card")].map((card) => ({
+  [...document.querySelectorAll(".latest-card")].map((card) => ({
     game: card.dataset.game,
-    title: card.querySelector("h3").textContent.trim(),
-    href: card.getAttribute("href"),
+    title: card.querySelector("h2")?.textContent.trim() || "",
     balls: [...card.querySelectorAll(".ball")].map((b) => b.textContent.trim()),
-    facts: [...card.querySelectorAll(".game-card__facts div")].map((row) =>
-      row.textContent.replace(/\s+/g, " ").trim(),
-    ),
+    hasJackpot: !!card.querySelector(".jackpot-est, .latest-card__next"),
+    utilityRail: !!document.querySelector(".utility-rail"),
+    trustStrip: !!document.querySelector(".trust-strip"),
   })),
 );
 
-console.log("\nhome cards:");
+console.log("\nhome latest cards:");
+if (home.length !== 2) problems.push(`home: expected 2 latest cards, found ${home.length}`);
 for (const card of home) {
-  console.log(`  ${card.title} → ${card.href}: ${card.balls.join(" ")}`);
-  for (const fact of card.facts) console.log(`    ${fact}`);
-  if (card.balls.length !== 6) problems.push(`${card.game}: home card should show 6 balls`);
-  if (!card.facts.some((f) => f.includes("ET"))) {
-    problems.push(`${card.game}: home card is missing an Eastern Time next drawing`);
-  }
+  console.log(`  ${card.title}: ${card.balls.join(" ")}`);
+  if (card.balls.length !== 6) problems.push(`${card.game}: home latest card should show 6 balls`);
 }
-
-const recent = await page.evaluate(() =>
-  [...document.querySelectorAll(".recent-col")].map((col) => ({
-    game: col.dataset.game,
-    title: col.querySelector("h3").textContent.trim(),
-    rows: [...col.querySelectorAll(".draw-row")].map((row) => ({
-      date: row.querySelector(".draw-row__date").textContent.trim(),
-      balls: [...row.querySelectorAll(".ball")].map((b) => b.textContent.trim()),
-    })),
-  })),
-);
-
-console.log("\nlatest winning numbers:");
-for (const col of recent) {
-  console.log(`  ${col.title}`);
-  for (const row of col.rows) console.log(`    ${row.date}  ${row.balls.join(" ")}`);
-  if (col.rows.length !== 8) problems.push(`${col.game}: expected 8 recent drawings`);
-  const spec = GAMES[col.game];
-  for (const row of col.rows) {
-    const nums = row.balls.map(Number);
-    if (nums.slice(0, 5).some((n) => n < 1 || n > spec.mainMax)) {
-      problems.push(`${col.game}: recent draw outside 1-${spec.mainMax}: ${row.balls.join(",")}`);
-    }
-    if (nums[5] < 1 || nums[5] > spec.specialMax + 1) {
-      problems.push(`${col.game}: recent bonus ball out of range: ${nums[5]}`);
-    }
-  }
+const homeChrome = await page.evaluate(() => {
+  const recent = document.querySelector(".home-recent");
+  const mmRows = [...(recent?.querySelectorAll('.home-recent__col[data-game="megamillions"] .home-recent__row') || [])];
+  const pbRows = [...(recent?.querySelectorAll('.home-recent__col[data-game="powerball"] .home-recent__row') || [])];
+  const cardLatest = Object.fromEntries(
+    [...document.querySelectorAll(".latest-card")].map((card) => [
+      card.dataset.game,
+      {
+        generatorCta: card.querySelector(".latest-card__btn--generator")?.textContent.trim() || "",
+      },
+    ]),
+  );
+  return {
+    utilityRail: document.querySelectorAll(".utility-rail__item").length,
+    trustStrip: !!document.querySelector(".trust-strip"),
+    recentArchive: document.querySelectorAll(".recent-col").length,
+    homeRecent: !!recent,
+    mmCount: mmRows.length,
+    pbCount: pbRows.length,
+    mmLatest: mmRows[0]?.querySelector("time")?.getAttribute("datetime") || "",
+    pbLatest: pbRows[0]?.querySelector("time")?.getAttribute("datetime") || "",
+    cardLatest,
+    hero: document.querySelector(".hero--compact h1")?.textContent.trim() || "",
+    overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+});
+console.log(`  hero: ${homeChrome.hero}`);
+console.log(`  utility rail items: ${homeChrome.utilityRail} · trust strip: ${homeChrome.trustStrip}`);
+console.log(`  home-recent MM=${homeChrome.mmCount} PB=${homeChrome.pbCount} (latest MM ${homeChrome.mmLatest}, PB ${homeChrome.pbLatest})`);
+if (homeChrome.utilityRail !== 4) problems.push(`home: utility rail should have 4 items, has ${homeChrome.utilityRail}`);
+if (!homeChrome.trustStrip) problems.push("home: missing trust strip");
+if (homeChrome.recentArchive !== 0) problems.push("home: last-8 archive should be removed");
+if (!homeChrome.homeRecent) problems.push("home: missing Recent drawings panel");
+if (homeChrome.mmCount !== 5) problems.push(`home: Mega Millions recent draws should be 5, has ${homeChrome.mmCount}`);
+if (homeChrome.pbCount !== 5) problems.push(`home: Powerball recent draws should be 5, has ${homeChrome.pbCount}`);
+if (!homeChrome.cardLatest.megamillions?.generatorCta.includes("Mega Millions generator")) {
+  problems.push("home: Mega Millions generator CTA missing");
 }
+if (!homeChrome.cardLatest.powerball?.generatorCta.includes("Powerball generator")) {
+  problems.push("home: Powerball generator CTA missing");
+}
+if (homeChrome.overflowX) problems.push("home: horizontal overflow detected");
 
 await page.screenshot({ path: resolve(SHOTS, "01-home.png"), fullPage: true });
 
@@ -336,7 +355,7 @@ for (const [gameId, spec] of Object.entries(GAMES)) {
   }
   if (!info.nextDraw.includes("ET")) problems.push(`${gameId}: next drawing missing ET`);
   if (info.prizeRows !== 9) problems.push(`${gameId}: expected 9 prize tiers, got ${info.prizeRows}`);
-  if (info.navActive !== spec.name) problems.push(`${gameId}: nav highlight is "${info.navActive}"`);
+  if (info.navActive !== "Analyze") problems.push(`${gameId}: nav highlight is "${info.navActive}" (expected Analyze)`);
 
   inspect(gameId, await generateAndRead(), `${spec.name} · balanced`);
   await page.screenshot({ path: resolve(SHOTS, `02-${gameId}.png`), fullPage: true });

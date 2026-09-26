@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lottery tools: spending, ticket match, and odds explorer | Lottery Number Lab</title>
+    <meta name="description" content="Three live Mega Millions and Powerball tools: Spending Calculator for repeated-play cost, Ticket Match & History Checker for published draws, and Odds Explorer for prize-tier probability. Browser-only math. No predictions." />
+    <meta name="author" content="Lottery Number Lab" />
+    <link rel="canonical" href="https://lotterynumberlab.com/tools/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lottery Number Lab" />
+    <meta property="og:title" content="Lottery tools: spending, ticket match, and odds explorer | Lottery Number Lab" />
+    <meta property="og:description" content="Three live Mega Millions and Powerball tools: Spending Calculator for repeated-play cost, Ticket Match & History Checker for published draws, and Odds Explorer for prize-tier probability. Browser-only math. No predictions." />
+    <meta property="og:url" content="https://lotterynumberlab.com/tools/" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Lottery tools: spending, ticket match, and odds explorer | Lottery Number Lab" />
+    <meta name="twitter:description" content="Three live Mega Millions and Powerball tools: Spending Calculator for repeated-play cost, Ticket Match & History Checker for published draws, and Odds Explorer for prize-tier probability. Browser-only math. No predictions." />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css?v=52aeee8967bd" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://lotterynumberlab.com/tools/"}]}</script>
+    <meta name="google-adsense-account" content="ca-pub-9237217026636557" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9237217026636557"
+      crossorigin="anonymous"
+    ></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KG9C04QZWT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KG9C04QZWT');
+    </script>
+  </head>
+  <body data-view="page" data-game="home">
+    <div class="backdrop" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="/">
+        <div class="brand-mark"><span>US</span></div>
+        <div class="brand-text">
+          <span class="brand-name">Lottery Number Lab</span>
+          <span class="brand-sub" id="brandSub">Odds, drawing history and probability for Mega Millions and Powerball</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="../results/index.html">Results</a>
+        <a href="../analyze/index.html">Analyze</a>
+        <a href="../tools/index.html" class="is-on" aria-current="page">Tools</a>
+        <a href="../guides/index.html">Learn</a>
+        <a href="../about.html">About</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero hero--compact hero--page">
+        <p class="hero__eyebrow">Tools</p>
+        <h1>Practical lottery tools</h1>
+        <p class="hero__lead">
+          Three browser-based utilities for Mega Millions and Powerball: estimate what
+          repeated play costs, compare your picks with published drawings, and explore how
+          prize-tier odds change with tickets and drawings. Each page shows its formulas.
+          None predict winners or advise purchases.
+        </p>
+      </section>
+
+      <section class="panel panel--warm" aria-labelledby="tools-available">
+        <h2 class="section__title" id="tools-available">Available now</h2>
+        <p class="section__lead">
+          These three tools are live. Open any card for the form, worked examples, and assumptions.
+        </p>
+        <ul class="utility-rail">
+          <li class="utility-rail__item">
+            <a href="lottery-spending-calculator.html">
+              <span class="utility-rail__label">Lottery Spending Calculator</span>
+              <span class="utility-rail__hint">
+                Turn plays per drawing, drawings per week, and ticket price into weekly,
+                monthly, and yearly cost. Optional jackpot-odds context shows how small the
+                chance stays after hundreds of plays. Arithmetic only — not a forecast.
+              </span>
+            </a>
+          </li>
+          <li class="utility-rail__item">
+            <a href="ticket-match-checker.html">
+              <span class="utility-rail__label">Ticket Match &amp; History Checker</span>
+              <span class="utility-rail__hint">
+                Enter five white balls and a bonus, pick a published drawing date, and see
+                which numbers matched. Search the loaded history for the same combination.
+                Pattern check only — not a prize claim.
+              </span>
+            </a>
+          </li>
+          <li class="utility-rail__item">
+            <a href="odds-explorer.html">
+              <span class="utility-rail__label">Lottery Odds Explorer</span>
+              <span class="utility-rail__hint">
+                See how each prize tier&apos;s probability changes when you scale tickets and
+                drawings. Compare Mega Millions and Powerball on the same attempt count.
+                Educational combinatorics — not a predictor.
+              </span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="panel" aria-labelledby="tools-choose">
+        <h2 class="section__title" id="tools-choose">Choose the right tool</h2>
+        <p class="section__lead">
+          Start from the question you have. Each tool answers a different one.
+        </p>
+        <ul class="tool-intent-list">
+          <li>
+            <strong>“I want to understand what repeated play costs”</strong>
+            → <a href="lottery-spending-calculator.html">Lottery Spending Calculator</a>.
+            Use this when a weekly habit feels abstract and you want a concrete dollar total.
+          </li>
+          <li>
+            <strong>“I want to compare my numbers with published results”</strong>
+            → <a href="ticket-match-checker.html">Ticket Match &amp; History Checker</a>.
+            Use this after a drawing posts, or to see whether a set appears in this site&apos;s history.
+          </li>
+          <li>
+            <strong>“I want to understand how unlikely each prize tier is”</strong>
+            → <a href="odds-explorer.html">Lottery Odds Explorer</a>.
+            Use this when “more tickets” sounds meaningful and you want at-least-one probabilities in plain numbers.
+          </li>
+        </ul>
+      </section>
+
+      <section class="panel" aria-labelledby="tools-how">
+        <h2 class="section__title" id="tools-how">How the tools fit together</h2>
+        <p>
+          Lottery Number Lab keeps <em>cost</em>, <em>match checking</em>, and <em>probability</em>
+          on separate pages so each formula stays checkable. Spending multiplies cost × plays ×
+          drawings and can apply the published jackpot denominator. Ticket Match validates the
+          selected game&apos;s ranges, resolves a drawing by date (including dates older than the
+          latest-20 list), and ranks identical white-ball sets across the loaded history.
+          Odds Explorer treats each ticket as an independent trial and evaluates
+          1 − (1 − p)<sup>n</sup> with stable browser math so tiny jackpot probabilities do not
+          round to zero.
+        </p>
+        <p>
+          Prices, schedules, and ball matrices match the same published rules used on the
+          methodology and game pages. When an official matrix or price changes, rebuild the site
+          so every tool picks up the same numbers as the rest of Lottery Number Lab.
+        </p>
+      </section>
+
+      <section class="trust-strip" aria-labelledby="tools-trust">
+        <h2 class="trust-strip__title" id="tools-trust">Privacy, data, and limits</h2>
+        <p class="trust-strip__dek">
+          All calculator math runs in your browser. Ticket Match does not upload your picks to a
+          server — numbers stay on the device where you type them. Match results and history
+          rankings use the published drawing records this site ships with. These tools are not
+          purchase advice, not win/loss prediction, and not official winner verification. To claim
+          a prize, follow your state lottery&apos;s official process with the ticket they recognize.
+        </p>
+        <nav class="trust-strip__links" aria-label="Related policies">
+          <a href="../methodology.html">Methodology</a>
+          <a href="../responsible-play.html">Responsible play</a>
+          <a href="../privacy-policy.html">Privacy</a>
+        </nav>
+      </section>
+
+      
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <h2>Lottery Number Lab</h2>
+          <p>Odds, drawing history and probability for Mega Millions and Powerball. All drawing dates and times on this site are US Eastern Time (ET).</p>
+        </div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="../mega-millions.html">Mega Millions numbers</a>
+          <a href="../powerball.html">Powerball numbers</a>
+          <a href="../results/index.html">Past winning numbers</a>
+          <a href="../analyze/index.html">Analyze</a>
+          <a href="../tools/index.html">Tools</a>
+          <a href="../guides/index.html">All guides</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../glossary.html">Glossary</a>
+          <a href="../methodology.html">Methodology & corrections</a>
+          <a href="../about.html">About & contact</a>
+          <a href="../privacy-policy.html">Privacy policy</a>
+          <a href="../terms.html">Terms & disclaimer</a>
+          <a href="../responsible-play.html">Responsible play</a>
+        </nav>
+      </div>
+      <p class="footer__disclaimer"><strong>Disclaimer.</strong> The numbers this site produces are reference figures for
+<strong>entertainment purposes only</strong>, based on historical statistics and a random
+sampling algorithm. Every lottery drawing is a perfectly independent event, so nothing here
+guarantees or improves a win. Please do not buy lottery tickets excessively.</p>
+      <p class="footer__warn">
+        This site is an independent statistics project. It is not affiliated with, endorsed by
+        or connected to the Mega Millions Consortium, the Multi-State Lottery Association
+        (MUSL), or any state lottery. It does not sell lottery tickets and cannot pay prizes.
+        Official results must always be verified with your state lottery.
+        Play only where legal and only if you are old enough — 18+, or 21+ in some states.
+        If gambling stops being fun, call 1-800-GAMBLER or visit
+        <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener nofollow">ncpgambling.org</a>.
+      </p>
+      <p class="footer__meta">© 2026–present Lottery Number Lab. Drawing data from the
+        New York State Open Data portal.</p>
+    </footer>
+    
+  </body>
+</html>

@@ -61,7 +61,7 @@ check("homepage has no unversioned styles.css", !/href="(\.\.\/)*styles\.css"/.t
 async function walkHtml(dir) {
   const out = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
-    if (entry.name === "dist" || entry.name === "node_modules" || entry.name === ".git") continue;
+    if (entry.name === "dist" || entry.name === "node_modules" || entry.name === ".git" || entry.name === "_phase1_backup" || entry.name === "_phase1_tmp" || entry.name === "_phase2_backup" || entry.name === "_phase3_backup" || entry.name === "screenshots") continue;
     const path = resolve(dir, entry.name);
     if (entry.isDirectory()) out.push(...(await walkHtml(path)));
     else if (entry.name.endsWith(".html")) out.push(path);

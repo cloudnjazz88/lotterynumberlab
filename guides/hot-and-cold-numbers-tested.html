@@ -18,7 +18,7 @@
     <meta name="twitter:title" content="Are hot and cold numbers real? Testing the full drawing record | Lottery Number Lab" />
     <meta name="twitter:description" content="A statistical test of hot and cold lottery numbers using every Mega Millions and Powerball drawing of the current matrices: chi-square goodness of fit, Monte Carlo extremes and window stability." />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/styles.css?v=4dcc1e901961" />
+    <link rel="stylesheet" href="/styles.css?v=52aeee8967bd" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Are hot and cold numbers real? Testing the full drawing record","description":"A statistical test of hot and cold lottery numbers using every Mega Millions and Powerball drawing of the current matrices: chi-square goodness of fit, Monte Carlo extremes and window stability.","datePublished":"2026-08-24","dateModified":"2026-08-24","author":{"@type":"Organization","name":"Lottery Number Lab"},"publisher":{"@type":"Organization","name":"Lottery Number Lab"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://lotterynumberlab.com/guides/hot-and-cold-numbers-tested.html"},"isAccessibleForFree":true}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://lotterynumberlab.com/guides/"},{"@type":"ListItem","position":3,"name":"Are hot and cold numbers real? Testing the full drawing record","item":"https://lotterynumberlab.com/guides/hot-and-cold-numbers-tested.html"}]}</script>
     <meta name="google-adsense-account" content="ca-pub-9237217026636557" />
@@ -48,11 +48,10 @@
         </div>
       </a>
       <nav class="nav" aria-label="Main">
-        <a href="/">Home</a>
-        <a href="../mega-millions.html">Mega Millions</a>
-        <a href="../powerball.html">Powerball</a>
         <a href="../results/index.html">Results</a>
-        <a href="../guides/index.html" class="is-on" aria-current="page">Guides</a>
+        <a href="../analyze/index.html">Analyze</a>
+        <a href="../tools/index.html">Tools</a>
+        <a href="../guides/index.html" class="is-on" aria-current="page">Learn</a>
         <a href="../about.html">About</a>
       </nav>
     </header>
@@ -73,7 +72,7 @@
           <p class="article-dek">Every lottery site publishes a hot-numbers table. We ran the two tests that decide whether those tables contain any information at all.</p>
           <p class="article-meta">
             <time datetime="2026-08-24">Published August 24, 2026</time>
-            · figures computed from 2,321 drawings
+            · figures computed from 2,336 drawings
             and the published game rules
           </p>
         </header>
@@ -85,14 +84,14 @@
 </p>
 
 <h2>The current tables</h2>
-<div class="table-wrap"><table><caption>Counts cover 924 Mega Millions drawings since October 31, 2017 and 1,397 Powerball drawings since October 7, 2015.</caption>
+<div class="table-wrap"><table><caption>Counts cover 930 Mega Millions drawings since October 31, 2017 and 1,406 Powerball drawings since October 7, 2015.</caption>
   <thead><tr><th>Game</th><th>Most drawn</th><th>Least drawn</th><th>Longest current dry spell</th></tr></thead>
-  <tbody><tr><td>Mega Millions</td><td><b>10</b>&nbsp;(86), <b>17</b>&nbsp;(83), <b>31</b>&nbsp;(80), <b>3</b>&nbsp;(78), <b>42</b>&nbsp;(78)</td><td><b>67</b>&nbsp;(52), <b>51</b>&nbsp;(52), <b>65</b>&nbsp;(53), <b>45</b>&nbsp;(53), <b>23</b>&nbsp;(55)</td><td>ball <b>11</b>, 49 drawings</td></tr>
-  <tr><td>Powerball</td><td><b>21</b>&nbsp;(124), <b>61</b>&nbsp;(124), <b>64</b>&nbsp;(124), <b>28</b>&nbsp;(119), <b>27</b>&nbsp;(118)</td><td><b>13</b>&nbsp;(76), <b>26</b>&nbsp;(81), <b>49</b>&nbsp;(83), <b>46</b>&nbsp;(83), <b>34</b>&nbsp;(84)</td><td>ball <b>23</b>, 77 drawings</td></tr></tbody></table></div>
+  <tbody><tr><td>Mega Millions</td><td><b>10</b>&nbsp;(86), <b>17</b>&nbsp;(84), <b>31</b>&nbsp;(80), <b>3</b>&nbsp;(79), <b>42</b>&nbsp;(78)</td><td><b>51</b>&nbsp;(52), <b>67</b>&nbsp;(53), <b>65</b>&nbsp;(53), <b>45</b>&nbsp;(53), <b>23</b>&nbsp;(55)</td><td>ball <b>11</b>, 55 drawings</td></tr>
+  <tr><td>Powerball</td><td><b>21</b>&nbsp;(125), <b>61</b>&nbsp;(125), <b>64</b>&nbsp;(125), <b>28</b>&nbsp;(120), <b>27</b>&nbsp;(118)</td><td><b>13</b>&nbsp;(76), <b>26</b>&nbsp;(82), <b>49</b>&nbsp;(83), <b>46</b>&nbsp;(83), <b>34</b>&nbsp;(84)</td><td>ball <b>51</b>, 52 drawings</td></tr></tbody></table></div>
 <p>
   In Powerball the gap between the top and bottom of that table is
-  48 appearances — ball 21 has
-  been drawn 124 times and ball 13 only
+  49 appearances — ball 21 has
+  been drawn 125 times and ball 13 only
   76. Presented as a bar chart it looks like a clear signal.
 </p>
 
@@ -104,11 +103,11 @@
 </p>
 <div class="table-wrap"><table>
   <thead><tr><th>Game</th><th>Expected per ball</th><th>Chi-square</th><th>df</th><th>p-value</th><th>Verdict</th></tr></thead>
-  <tbody><tr><td>Mega Millions</td><td>66.0</td><td>60.8</td><td>69</td><td>0.75</td><td>consistent with a fair game</td></tr>
-  <tr><td>Powerball</td><td>101.2</td><td>78.1</td><td>68</td><td>0.19</td><td>consistent with a fair game</td></tr></tbody></table></div>
+  <tbody><tr><td>Mega Millions</td><td>66.4</td><td>61.8</td><td>69</td><td>0.72</td><td>consistent with a fair game</td></tr>
+  <tr><td>Powerball</td><td>101.9</td><td>78.1</td><td>68</td><td>0.19</td><td>consistent with a fair game</td></tr></tbody></table></div>
 <p>
-  A p-value of 0.75 means that if the game is perfectly fair, you would see
-  counts at least this uneven about 75% of the time. That is not evidence of
+  A p-value of 0.72 means that if the game is perfectly fair, you would see
+  counts at least this uneven about 72% of the time. That is not evidence of
   anything. Both games pass comfortably.
 </p>
 
@@ -122,10 +121,10 @@
 </p>
 <div class="table-wrap"><table>
   <thead><tr><th>Statistic</th><th>Real record</th><th>Fair simulation</th><th>Simulated 95th percentile</th></tr></thead>
-  <tbody><tr><td>Mega Millions: highest ball count</td><td>86</td><td>85.4</td><td>92</td></tr>
+  <tbody><tr><td>Mega Millions: highest ball count</td><td>86</td><td>85.9</td><td>93</td></tr>
   <tr><td>Mega Millions: hottest-minus-coldest</td><td>34</td><td>37.4</td><td>46</td></tr>
-  <tr><td>Powerball: highest ball count</td><td>124</td><td>125.1</td><td>133</td></tr>
-  <tr><td>Powerball: hottest-minus-coldest</td><td>48</td><td>46.3</td><td>57</td></tr></tbody></table></div>
+  <tr><td>Powerball: highest ball count</td><td>125</td><td>125.8</td><td>134</td></tr>
+  <tr><td>Powerball: hottest-minus-coldest</td><td>49</td><td>46.4</td><td>57</td></tr></tbody></table></div>
 <p>
   The real extremes sit right on the simulated averages. Randomness is lumpy: spreading a few
   thousand appearances over seventy slots reliably produces a leader several appearances clear
@@ -228,6 +227,8 @@
           <a href="../mega-millions.html">Mega Millions numbers</a>
           <a href="../powerball.html">Powerball numbers</a>
           <a href="../results/index.html">Past winning numbers</a>
+          <a href="../analyze/index.html">Analyze</a>
+          <a href="../tools/index.html">Tools</a>
           <a href="../guides/index.html">All guides</a>
           <a href="../faq.html">FAQ</a>
           <a href="../glossary.html">Glossary</a>
