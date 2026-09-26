@@ -567,24 +567,104 @@
 
   /* ---------------- page boot ---------------- */
 
-  /** Fills every "next drawing" placeholder the static HTML left behind. */
+  /** Fills every "next drawing" placeholder the static HTML left behind.
+   *  Spans inside an active jackpot amount card are skipped — those labels are
+   *  bound to data-jackpot-until so dollars cannot be retargeted onto a newer draw.
+   */
   function fillNextDrawings() {
     document.querySelectorAll("[data-next-drawing]").forEach((node) => {
+      if (node.closest("[data-jackpot-until]")) return;
       const config = data.game(node.dataset.nextDrawing);
       if (config) node.textContent = nextDrawingLabel(config);
     });
   }
 
-  /** Hide a jackpot estimate once its advertised next drawing has passed. */
+  function renderJackpotUnavailable(node, gameId, state) {
+    node.dataset.jackpotState = state;
+    node.classList.add("jackpot-est--unavailable");
+    node.classList.remove("jackpot-est--stale");
+    node.removeAttribute("data-jackpot-until");
+    node.removeAttribute("data-jackpot-verified");
+    const next = gameId
+      ? '<p class="jackpot-est__next">Next drawing <span data-next-drawing="' +
+        gameId +
+        '"></span></p>'
+      : "";
+    node.innerHTML =
+      '<p class="jackpot-est__unavailable">Current estimate unavailable</p>' + next;
+  }
+
+  /**
+   * Validate amount + target drawing + verifiedAt on the client. Hide dollars when
+   * expired, stale-mismatched against the live schedule, or missing verifiedAt.
+   */
   function applyJackpotFreshness() {
-    document.querySelectorAll("[data-jackpot-until]").forEach((node) => {
-      const until = Date.parse(node.dataset.jackpotUntil);
-      if (!Number.isFinite(until) || until > Date.now()) return;
-      node.dataset.jackpotState = "expired";
-      node.classList.add("jackpot-est--unavailable");
-      node.classList.remove("jackpot-est--stale");
-      node.removeAttribute("data-jackpot-until");
-      node.innerHTML = '<p class="jackpot-est__unavailable">Current estimate unavailable</p>';
+    const now = Date.now();
+    document.querySelectorAll("[data-jackpot-game]").forEach((node) => {
+      const gameId = node.dataset.jackpotGame || "";
+      const until = Date.parse(node.dataset.jackpotUntil || "");
+      const verified = Date.parse(node.dataset.jackpotVerified || "");
+      const config = gameId ? data.game(gameId) : null;
+      const scheduleNext = config ? data.nextDrawing(config) : null;
+      const hasAmount = Boolean(node.querySelector(".jackpot-est__amount"));
+
+      if (!hasAmount) {
+        // Already unavailable — still allow schedule next-drawing fill below.
+        return;
+      }
+
+      let invalid = false;
+      let state = "expired";
+      if (!Number.isFinite(until) || until <= now) {
+        invalid = true;
+        state = "expired";
+      } else if (!Number.isFinite(verified) || verified > until || verified > now + 5 * 60 * 1000) {
+        invalid = true;
+        state = "mismatched";
+      } else if (scheduleNext && Math.abs(scheduleNext.getTime() - until) > 2 * 60 * 1000) {
+        // Schedule moved on (new drawing) but baked dollars still target the old until.
+        invalid = true;
+        state = "mismatched";
+      } else if (now - verified > 48 * 3600 * 1000) {
+        node.dataset.jackpotState = "stale";
+        node.classList.add("jackpot-est--stale");
+      }
+
+      if (invalid) renderJackpotUnavailable(node, gameId, state);
+    });
+    fillNextDrawings();
+  }
+
+  function applyAwaitingUpdateState() {
+    const snapshot = data.loadBundled();
+    if (!snapshot?.games) return;
+    document.querySelectorAll("[data-awaiting-update]").forEach((node) => {
+      const gameId = node.dataset.awaitingUpdate;
+      const config = data.game(gameId);
+      const latest = snapshot.games[gameId]?.latestDraw || node.dataset.latestDraw;
+      const awaiting = config && data.isAwaitingOfficialResult(config, latest);
+      node.hidden = !awaiting;
+    });
+    document.querySelectorAll(".latest-on-game, .latest-card").forEach((section) => {
+      const gameId =
+        section.dataset.game ||
+        section.closest("[data-game]")?.dataset.game ||
+        document.body.dataset.game;
+      if (!gameId || section.querySelector("[data-awaiting-update]")) return;
+      const config = data.game(gameId);
+      const latest = snapshot.games[gameId]?.latestDraw;
+      if (!config || !latest || !data.isAwaitingOfficialResult(config, latest)) return;
+      const note = document.createElement("p");
+      note.className = "latest-status latest-status--awaiting";
+      note.dataset.awaitingUpdate = gameId;
+      note.dataset.latestDraw = latest;
+      note.innerHTML =
+        "<strong>Last confirmed result:</strong> " +
+        drawDate(latest, dateLong) +
+        ". A newer drawing should already have been posted; this page updates when the official feed refreshes. Numbers are never invented here.";
+      const balls = section.querySelector(".balls");
+      if (balls) balls.insertAdjacentElement("afterend", note);
+      else section.prepend(note);
     });
   }
 
@@ -709,6 +789,7 @@
   function init() {
     fillNextDrawings();
     applyJackpotFreshness();
+    applyAwaitingUpdateState();
     if (state.view !== "game") return;
 
     const gameId = el.body.dataset.game;

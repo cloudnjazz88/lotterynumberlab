@@ -132,6 +132,14 @@ check(
   "expired after next draw",
   freshness({ ...freshRow, nextDrawing: "2026-09-05T02:59:00.000Z" }, now) === "expired",
 );
+check(
+  "schedule mismatch is mismatched",
+  freshness(freshRow, now, "2026-09-11T03:00:00.000Z") === "mismatched",
+);
+check(
+  "verifiedAt after nextDrawing is mismatched",
+  freshness({ ...freshRow, verifiedAt: "2026-09-09T03:00:00.000Z" }, now) === "mismatched",
+);
 check("missing", freshness(null, now) === "missing");
 
 const freshUi = presentJackpot("megamillions", freshRow, now);
@@ -141,6 +149,19 @@ check("no data renders nothing", jackpotMarkup(null) === "");
 check("fresh shows amount", jackpotMarkup(freshUi).includes("$193 Million") && !jackpotMarkup(freshUi).includes("unavailable"));
 check("stale still shows amount", jackpotMarkup(staleUi).includes("$193 Million") && jackpotMarkup(staleUi).includes("jackpot-est--stale"));
 check("expired hides amount", !jackpotMarkup(expiredUi).includes("$193 Million") && jackpotMarkup(expiredUi).includes("Current estimate unavailable"));
+const mismatchedUi = presentJackpot("megamillions", freshRow, now, "2026-09-11T03:00:00.000Z");
+check(
+  "mismatched hides amount",
+  mismatchedUi.state === "mismatched" &&
+    !jackpotMarkup(mismatchedUi).includes("$193 Million") &&
+    jackpotMarkup(mismatchedUi).includes("Current estimate unavailable"),
+);
+check(
+  "fresh amount card binds until not free next-drawing retarget",
+  jackpotMarkup(freshUi).includes('data-jackpot-until="2026-09-08T03:00:00.000Z"') &&
+    jackpotMarkup(freshUi).includes("data-jackpot-verified=") &&
+    !jackpotMarkup(freshUi).includes('data-next-drawing="megamillions"'),
+);
 check("missing row is omitted", presentJackpot("megamillions", null, now) === null);
 
 const same = { ...freshRow, verifiedAt: "2026-09-05T16:00:00.000Z" };

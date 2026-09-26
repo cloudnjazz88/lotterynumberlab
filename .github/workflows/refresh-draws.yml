@@ -2,9 +2,48 @@ name: Refresh lottery snapshot
 
 on:
   schedule:
-    # 12:00 UTC is 8:00 a.m. EDT / 7:00 a.m. EST — after overnight official posts.
-    - cron: "0 12 * * *"
+    # =====================================================================
+    # All crons are UTC. Draw nights are America/New_York; the UTC calendar
+    # day of each post-draw poll is the day AFTER the Eastern draw night.
+    #
+    # Mega Millions: Tue & Fri 11:00 p.m. ET
+    #   -> first UTC instant is Wed/Sat 03:00 (EDT, UTC-4) or 04:00 (EST, UTC-5)
+    # Powerball: Mon, Wed, Sat 10:59 p.m. ET
+    #   -> first UTC instant is Tue/Thu/Sun 02:59 (EDT) or 03:59 (EST)
+    #
+    # UTC weekdays that follow a draw night (cron DOW: 0=Sun ... 6=Sat):
+    #   0 Sun <- Sat PB | 2 Tue <- Mon PB | 3 Wed <- Tue MM
+    #   4 Thu <- Wed PB | 6 Sat <- Fri MM
+    # Mon(1) and Fri(5) UTC are skipped - no MM/PB draw the prior ET night.
+    #
+    # EDT clock = UTC-4; EST clock = UTC-5. Early slots (03:10/03:30) can fall
+    # before the EST draw instant; those runs are idempotent no-ops until the
+    # official feed publishes. Later slots + 12:00 UTC catch up feed lag.
+    # =====================================================================
+    - cron: "10 3 * * 0,2,3,4,6"   # 03:10 UTC = 11:10 p.m. EDT / 10:10 p.m. EST
+    - cron: "30 3 * * 0,2,3,4,6"   # 03:30 UTC = 11:30 p.m. EDT / 10:30 p.m. EST
+    - cron: "0 4 * * 0,2,3,4,6"    # 04:00 UTC = 12:00 a.m. EDT / 11:00 p.m. EST
+    - cron: "30 4 * * 0,2,3,4,6"   # 04:30 UTC = 12:30 a.m. EDT / 11:30 p.m. EST
+    - cron: "0 5 * * 0,2,3,4,6"    # 05:00 UTC = 1:00 a.m. EDT / 12:00 a.m. EST
+    - cron: "0 6 * * 0,2,3,4,6"    # 06:00 UTC = 2:00 a.m. EDT / 1:00 a.m. EST
+    - cron: "0 12 * * 0,2,3,4,6"   # 12:00 UTC = 8:00 a.m. EDT / 7:00 a.m. EST catch-up
   workflow_dispatch:
+    inputs:
+      force_publish:
+        description: >-
+          Force build + wrangler deploy + production verify even when there is
+          no snapshot/page diff and no pending-deploy marker. Scheduled runs
+          ignore this input.
+        type: boolean
+        default: false
+
+# Overlapping schedule/dispatch retries must not race on data commit or deploy.
+# cancel-in-progress: false - prefer waiting over killing a run mid fetch/commit/
+# deploy, which could leave a pushed snapshot without a matching Worker publish
+# (or a half-written pending marker). A queued run will pick up pending-deploy.
+concurrency:
+  group: refresh-lottery-snapshot
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -17,6 +56,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+
       - name: Fetch and validate official draws
         run: node tools/fetch-draws.mjs
       - name: Fetch official jackpot estimates
@@ -25,24 +65,197 @@ jobs:
         run: node tools/validate.mjs
       - name: Validate jackpot parsers
         run: node tools/jackpot-validate-test.mjs
+      - name: Validate awaiting-update helpers
+        run: node tools/awaiting-update-test.mjs
       - name: Build site
         run: node tools/build-site.mjs
       - name: Verify SEO assets
         run: node tools/verify-seo.mjs
-      - name: Commit only when snapshots changed
+
+      - name: Detect publishable changes or pending deploy
+        id: changes
         run: |
-          if git diff --quiet -- data/draws.json data/draws.js data/jackpots.json; then
-            echo "No snapshot changes."
-            exit 0
+          set -euo pipefail
+          # Snapshot data + static pages that embed latest draws & jackpots.
+          # guides/*.html omitted to avoid unrelated guide churn.
+          PATHS="data/draws.json data/draws.js data/jackpots.json index.html mega-millions.html powerball.html methodology.html sitemap.xml results"
+          PENDING=data/pending-deploy.json
+          CHANGED=false
+          if ! git diff --quiet -- $PATHS; then
+            CHANGED=true
+            echo "Snapshot or page changes detected:"
+            git diff --stat -- $PATHS
+          else
+            echo "No snapshot or page changes (idempotent; missing upstream results are not a failure)."
           fi
+          PENDING_EXISTS=false
+          if [ -f "$PENDING" ]; then
+            PENDING_EXISTS=true
+            echo "Pending deploy marker present:"
+            cat "$PENDING"
+          fi
+          # force_publish applies only to workflow_dispatch. Scheduled runs ignore
+          # the input and keep need_publish = changed || pending.
+          FORCE_PUBLISH=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force_publish }}" = "true" ]; then
+            FORCE_PUBLISH=true
+            echo "force_publish=true (workflow_dispatch): will build + deploy + verify even without data diff/pending."
+          fi
+          if [ "$CHANGED" = true ] || [ "$PENDING_EXISTS" = true ] || [ "$FORCE_PUBLISH" = true ]; then
+            echo "need_publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "need_publish=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "pending=$PENDING_EXISTS" >> "$GITHUB_OUTPUT"
+          echo "force_publish=$FORCE_PUBLISH" >> "$GITHUB_OUTPUT"
+
+      - name: Commit snapshot, rebuilt pages, and pending-deploy marker
+        id: commit
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/draws.json data/draws.js data/jackpots.json
-          if git diff --cached --quiet -- data/draws.json data/draws.js; then
-            git commit -m "chore: refresh official jackpot estimates"
-          elif git diff --cached --quiet -- data/jackpots.json; then
-            git commit -m "chore: refresh verified lottery draw snapshot"
-          else
-            git commit -m "chore: refresh verified lottery snapshot"
+
+          BASE_SHA="$(git rev-parse HEAD)"
+          SNAPSHOT_ID="$(node -e '
+            const fs = require("fs");
+            const draws = JSON.parse(fs.readFileSync("data/draws.json", "utf8"));
+            const jackpots = JSON.parse(fs.readFileSync("data/jackpots.json", "utf8"));
+            const mm = draws.games?.megamillions?.latestDraw || "";
+            const pb = draws.games?.powerball?.latestDraw || "";
+            const jp = jackpots.updatedAt || "";
+            process.stdout.write(`mm:${mm}|pb:${pb}|jp:${jp}`);
+          ')"
+          export BASE_SHA SNAPSHOT_ID
+          # Marker is written with snapshotId first; targetCommit filled after the
+          # data commit SHA is known (second small commit, before deploy).
+          node -e '
+            const fs = require("fs");
+            const now = new Date().toISOString();
+            const prev = fs.existsSync("data/pending-deploy.json")
+              ? JSON.parse(fs.readFileSync("data/pending-deploy.json", "utf8"))
+              : {};
+            fs.writeFileSync("data/pending-deploy.json", JSON.stringify({
+              reason: "data-or-pages-updated",
+              baseCommit: process.env.BASE_SHA,
+              targetCommit: null,
+              snapshotId: process.env.SNAPSHOT_ID,
+              createdAt: prev.createdAt || now,
+              updatedAt: now,
+              retries: Number(prev.retries || 0)
+            }, null, 2) + "\n");
+          '
+
+          git add data/draws.json data/draws.js data/jackpots.json data/pending-deploy.json \
+            index.html mega-millions.html powerball.html methodology.html \
+            sitemap.xml results/
+          if git diff --cached --quiet; then
+            echo "Nothing staged after add."
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          if git diff --cached --quiet -- data/draws.json data/draws.js; then
+            MSG="chore: refresh official jackpot estimates"
+          elif git diff --cached --quiet -- data/jackpots.json; then
+            MSG="chore: refresh verified lottery draw snapshot"
+          else
+            MSG="chore: refresh verified lottery snapshot"
+          fi
+          git commit -m "$MSG"
+          DATA_SHA="$(git rev-parse HEAD)"
+
+          # Record the published commit SHA in the marker (content-stable snapshotId
+          # already present). Separate commit so targetCommit matches an existing SHA.
+          export DATA_SHA
+          node -e '
+            const fs = require("fs");
+            const p = "data/pending-deploy.json";
+            const prev = JSON.parse(fs.readFileSync(p, "utf8"));
+            fs.writeFileSync(p, JSON.stringify({
+              ...prev,
+              targetCommit: process.env.DATA_SHA,
+              updatedAt: new Date().toISOString()
+            }, null, 2) + "\n");
+          '
+          git add data/pending-deploy.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: record pending deploy target [skip ci]"
+          fi
+
           git push
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+          echo "publish_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Bump pending-deploy retry counter when republishing
+        if: steps.changes.outputs.changed != 'true' && steps.changes.outputs.pending == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node -e '
+            const fs = require("fs");
+            const p = "data/pending-deploy.json";
+            const prev = JSON.parse(fs.readFileSync(p, "utf8"));
+            const now = new Date().toISOString();
+            // Keep targetCommit/snapshotId so verify still checks the intended version.
+            fs.writeFileSync(p, JSON.stringify({
+              ...prev,
+              reason: "retry-after-failed-or-missed-deploy",
+              updatedAt: now,
+              retries: Number(prev.retries || 0) + 1
+            }, null, 2) + "\n");
+          '
+          git add data/pending-deploy.json
+          if ! git diff --cached --quiet; then
+            # [skip ci] is defense-in-depth if a push trigger is added later;
+            # this workflow itself only runs on schedule / workflow_dispatch.
+            git commit -m "chore: retry pending Worker deploy [skip ci]"
+            git push
+          fi
+          echo "Pending deploy retry prepared at $(git rev-parse HEAD)"
+
+      - name: Deploy rebuilt dist to Cloudflare Workers
+        id: deploy
+        if: steps.changes.outputs.need_publish == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN}" ] || [ -z "${CLOUDFLARE_ACCOUNT_ID}" ]; then
+            echo "::error::Worker deploy required (new data, pending-deploy marker, and/or force_publish) but CLOUDFLARE_API_TOKEN and/or CLOUDFLARE_ACCOUNT_ID repo secrets are missing. This is NOT a successful publish - add secrets so the next run can deploy. Pending marker (if any) is kept for retry."
+            exit 1
+          fi
+          npm install --no-save wrangler@4
+          npx wrangler deploy
+          echo "deployed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Verify production reflects published snapshot
+        id: verify
+        if: steps.deploy.outputs.deployed == 'true'
+        run: |
+          set -euo pipefail
+          node tools/verify-production.mjs
+
+      - name: Clear pending-deploy marker after successful deploy + verify
+        # Only after prod verify passes. Deploy-ok + verify-fail keeps the marker.
+        # Failure of deploy keeps the marker (this step is skipped).
+        if: steps.deploy.outputs.deployed == 'true' && steps.verify.outcome == 'success'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase --autostash || git pull --rebase
+          if [ -f data/pending-deploy.json ]; then
+            git rm -f data/pending-deploy.json
+            # [skip ci]: marker-only cleanup must not re-trigger any future push-based CI.
+            # This workflow has no on.push, so clear cannot loop on schedule either
+            # (next run sees no pending + no data diff → need_publish=false).
+            git commit -m "chore: clear pending deploy after Worker publish [skip ci]"
+            git push
+            echo "Pending marker removed and pushed."
+          else
+            echo "No pending-deploy marker to clear."
+          fi

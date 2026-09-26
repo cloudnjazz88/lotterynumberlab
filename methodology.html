@@ -18,7 +18,7 @@
     <meta name="twitter:title" content="Methodology: how lottery odds and statistics are computed here | Lottery Number Lab" />
     <meta name="twitter:description" content="How this site calculates prize-tier odds from ball matrices, which drawings are included, why eras are not mixed, the chi-square test, and how to send a correction." />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/styles.css?v=4dcc1e901961" />
+    <link rel="stylesheet" href="/styles.css?v=8df735de98d1" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Methodology: how lottery odds and statistics are computed here","item":"https://lotterynumberlab.com/methodology.html"}]}</script>
     <meta name="google-adsense-account" content="ca-pub-9237217026636557" />
     <script
@@ -66,7 +66,7 @@
           current matrix only. If a number cannot be reproduced from those two inputs, it does
           not appear.
         </p>
-        <p class="note">Last updated: September 19, 2026.</p>
+        <p class="note">Last updated: September 25, 2026.</p>
 
         <h2>1. Odds</h2>
         <p>
@@ -86,15 +86,15 @@
         <p>
           Results come from the New York State Open Data portal, which republishes official
           multi-state drawings. The bundled snapshot currently runs through
-          September 18, 2026 (Mega Millions) and
-          September 19, 2026 (Powerball). The “Fetch latest results” button on
+          September 25, 2026 (Mega Millions) and
+          September 23, 2026 (Powerball). The “Fetch latest results” button on
           each dashboard talks to that portal directly. Feeds can lag or contain errors;
           <strong>this site is not an official record</strong>.
         </p>
         <div class="table-wrap"><table>
   <thead><tr><th>Game</th><th>Drawings used</th><th>First drawing</th><th>Why that start date</th></tr></thead>
-  <tbody><tr><td>Mega Millions</td><td>928</td><td>October 31, 2017</td><td>White balls became 1–70; earlier pools were 75, 56, 52…</td></tr>
-  <tr><td>Powerball</td><td>1,404</td><td>October 7, 2015</td><td>Current 5/69 + 1/26 matrix; earlier white balls stopped at 59</td></tr></tbody></table></div>
+  <tbody><tr><td>Mega Millions</td><td>930</td><td>October 31, 2017</td><td>White balls became 1–70; earlier pools were 75, 56, 52…</td></tr>
+  <tr><td>Powerball</td><td>1,406</td><td>October 7, 2015</td><td>Current 5/69 + 1/26 matrix; earlier white balls stopped at 59</td></tr></tbody></table></div>
 
         <h2>3. The April 2025 Mega Ball change</h2>
         <p>
@@ -106,9 +106,9 @@
         <h2>4. Tests we publish</h2>
         <p>
           A chi-square goodness-of-fit test compares each ball's count with the uniform
-          expectation (66.3 Mega Millions appearances per ball,
-          101.7 Powerball). Current p-values are
-          0.69 and 0.16 — consistent with a fair game.
+          expectation (66.4 Mega Millions appearances per ball,
+          101.9 Powerball). Current p-values are
+          0.72 and 0.19 — consistent with a fair game.
           Monte Carlo simulations of the same length produce “hot” and “cold” extremes as large
           as the real record. Details:
           <a href="guides/hot-and-cold-numbers-tested.html">hot and cold numbers tested</a>.

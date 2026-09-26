@@ -103,10 +103,25 @@ export function gameContentEqual(a, b) {
   );
 }
 
-export function freshness(estimate, now = new Date()) {
+/**
+ * Validate amount + target drawing + verifiedAt together.
+ * scheduleNextIso (optional): the live schedule's next drawing instant. When the
+ * advertised nextDrawing disagrees with the schedule, treat as mismatched so UI
+ * never shows dollars as if they belong to a different drawing.
+ */
+export function freshness(estimate, now = new Date(), scheduleNextIso = null) {
   if (!estimate) return "missing";
-  if (Date.parse(estimate.nextDrawing) <= now.getTime()) return "expired";
-  const age = now.getTime() - Date.parse(estimate.verifiedAt);
+  const until = Date.parse(estimate.nextDrawing);
+  const verified = Date.parse(estimate.verifiedAt);
+  if (!Number.isFinite(until) || !Number.isFinite(verified)) return "missing";
+  if (until <= now.getTime()) return "expired";
+  // verifiedAt must not be after the target drawing, and not wildly in the future.
+  if (verified > until || verified > now.getTime() + 5 * 60 * 1000) return "mismatched";
+  if (scheduleNextIso) {
+    const sched = Date.parse(scheduleNextIso);
+    if (Number.isFinite(sched) && Math.abs(sched - until) > 2 * 60 * 1000) return "mismatched";
+  }
+  const age = now.getTime() - verified;
   if (!Number.isFinite(age) || age < 0) return "stale";
   if (age > 48 * 3600 * 1000) return "stale";
   return "fresh";

@@ -419,6 +419,21 @@ a {
   margin-top: 12px;
 }
 
+.latest-status--awaiting {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, #f0d08a 45%, var(--line));
+  background: color-mix(in srgb, #f0d08a 12%, rgba(0, 0, 0, 0.22));
+  color: #f5e6bf;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.latest-status--awaiting strong {
+  color: var(--text);
+}
+
 .latest-card__btn {
   display: grid;
   place-items: center;

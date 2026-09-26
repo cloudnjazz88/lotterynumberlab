@@ -146,6 +146,38 @@ edits to the generated pages are overwritten.
 
 ---
 
+
+## Automated refresh & deploy
+
+GitHub Actions workflow `.github/workflows/refresh-draws.yml` polls the official feeds
+**after** Mega Millions (Tue/Fri 11:00 p.m. ET) and Powerball (Mon/Wed/Sat 10:59 p.m. ET)
+draw nights. Crons are UTC on the calendar day *after* the Eastern draw night, on
+UTC weekdays Sun/Tue/Wed/Thu/Sat only (Mon and Fri UTC are skipped).
+
+Retry slots (EDT = UTC−4, EST = UTC−5): 03:10, 03:30, 04:00, 04:30, 05:00, 06:00 UTC,
+plus a 12:00 UTC morning catch-up. Runs are idempotent: if the snapshot is already
+current, the job exits successfully with no commit.
+
+Publish path: fetch → validate → `tools/build-site.mjs` → commit data + rebuilt HTML →
+`wrangler deploy` (Cloudflare Worker from `wrangler.toml`) → `tools/verify-production.mjs`.
+Requires repo secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Missing secrets
+fail the deploy step when a publish is needed (not a silent skip). If data commits but
+deploy fails, `data/pending-deploy.json` keeps the next run retrying deploy even when
+feeds have no newer rows.
+
+Concurrency: `group: refresh-lottery-snapshot` with `cancel-in-progress: false` so overlapping
+retries queue instead of cancelling mid fetch/commit/deploy (avoids partial publish state).
+Pending marker `data/pending-deploy.json` records `snapshotId` (latest draws + jackpot
+`updatedAt`) and `targetCommit` (data commit SHA). Deploy runs `tools/verify-production.mjs`;
+the marker is removed in a follow-up commit only after verify succeeds (`[skip ci]` in that
+commit message so a future push trigger cannot loop). Deploy or verify failure leaves the
+marker for the next scheduled retry.
+
+
+There is no Cloudflare Pages project for this site; production is the Workers + assets
+setup in `wrangler.toml`. Do not enable a second Git-connected Pages deploy alongside
+Actions `wrangler deploy` or publishes will race.
+
 ## Testing
 
 `npm run validate` checks the statistics and generator engine: ball ranges, era boundaries,

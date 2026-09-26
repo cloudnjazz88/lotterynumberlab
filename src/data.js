@@ -236,6 +236,47 @@ window.LOTTO = window.LOTTO || {};
     return guess;
   }
 
+
+  /** Calendar YYYY-MM-DD in America/New_York for an instant. */
+  function easternDateISO(instant) {
+    const fmt = new Intl.DateTimeFormat("en-CA", {
+      timeZone: TZ,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    return fmt.format(instant);
+  }
+
+  /**
+   * True when the bundled latestDraw is older than the most recent scheduled
+   * drawing that should already have been posted (draw time + grace).
+   * Callers must show "last confirmed" + awaiting — never invent numbers.
+   */
+  function isAwaitingOfficialResult(
+    config,
+    latestDraw,
+    now = new Date(),
+    graceMs = 4 * 3600 * 1000,
+  ) {
+    if (!config || !latestDraw) return false;
+    const easternNow = new Date(now.getTime() + tzOffsetMs(now));
+    for (let back = 0; back < 10; back++) {
+      const probe = new Date(easternNow.getTime() - back * 86400000);
+      if (!config.drawDays.includes(probe.getUTCDay())) continue;
+      const instant = easternTimeToInstant(
+        probe.getUTCFullYear(),
+        probe.getUTCMonth() + 1,
+        probe.getUTCDate(),
+        config.drawTime.hour,
+        config.drawTime.minute,
+      );
+      if (instant.getTime() + graceMs > now.getTime()) continue;
+      return latestDraw < easternDateISO(instant);
+    }
+    return false;
+  }
+
   function nextDrawing(config, now = new Date()) {
     const easternNow = new Date(now.getTime() + tzOffsetMs(now));
     for (let add = 0; add < 9; add++) {
@@ -272,6 +313,8 @@ window.LOTTO = window.LOTTO || {};
     loadBundled,
     fetchLive,
     nextDrawing,
+    easternDateISO,
+    isAwaitingOfficialResult,
     easternDateTime,
   };
 })(window.LOTTO);

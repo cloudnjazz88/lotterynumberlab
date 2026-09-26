@@ -302,7 +302,12 @@ export function buildContext() {
     games[config.id] = {
       config,
       history,
-      jackpot: presentJackpot(config.id, jackpots.games?.[config.id]),
+      jackpot: (() => {
+        const row = jackpots.games?.[config.id];
+        const next = APP.data.nextDrawing(config);
+        return presentJackpot(config.id, row, new Date(), next ? next.toISOString() : null);
+      })(),
+      awaitingUpdate: APP.data.isAwaitingOfficialResult(config, history.latestDraw),
       stats,
       matrix: matrixHistory(config.id),
       years: yearlyBreakdown(config, draws),

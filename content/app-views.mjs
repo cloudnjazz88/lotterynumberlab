@@ -27,6 +27,15 @@ function balls(config, draw) {
 function nextDrawing(config, gameId) {
   return `<span data-next-drawing="${gameId}">see below</span>`;
 }
+function awaitingBanner(game) {
+  if (!game.awaitingUpdate) return "";
+  const latest = game.history.draws[0];
+  return `<p class="latest-status latest-status--awaiting" data-awaiting-update="${game.config.id}" data-latest-draw="${latest.d}">
+            <strong>Last confirmed result:</strong> ${dateLong(latest.d)}.
+            A newer drawing should already have been posted; this page updates when the official feed refreshes. Numbers are never invented here.
+          </p>`;
+}
+
 
 function gameHref(config) {
   return config.id === "megamillions" ? "mega-millions.html" : "powerball.html";
@@ -53,6 +62,7 @@ function latestSpotlight(game) {
             </div>
           </div>
           <div class="balls balls--xl">${balls(config, latest)}</div>
+          ${awaitingBanner(game)}
           ${estimate}${showSchedule}
           <a class="latest-card__btn" href="${gameHref(config)}">Open the ${config.name} generator</a>
         </article>`;
@@ -349,8 +359,9 @@ export function gameBody(ctx, gameId, guides) {
         </div>
 
         <section class="latest-on-game" aria-label="Latest ${config.name} drawing">
-          <p class="latest-on-game__kicker">Latest winning numbers · ${dateLong(latest.d)} ET</p>
+          <p class="latest-on-game__kicker">${game.awaitingUpdate ? "Last confirmed winning numbers" : "Latest winning numbers"} · ${dateLong(latest.d)} ET</p>
           <div class="balls balls--xl">${balls(config, latest)}</div>
+          ${awaitingBanner(game)}
           ${jackpotMarkup(game.jackpot)}
           <ol class="latest-on-game__recent">
             ${game.history.draws
