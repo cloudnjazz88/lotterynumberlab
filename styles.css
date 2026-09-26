@@ -1,12 +1,22 @@
 :root {
   --bg: #06091a;
   --bg-2: #0b1128;
+  --surface-page: #06091a;
+  --surface-panel: #0f172a;
+  --surface-panel-raised: #131e34;
+  --surface-data: #182238;
+  --border-panel: #2a3855;
+  --text-primary: #e8edf7;
+  --text-secondary: #aab6cc;
+  --text-muted: #8290aa;
+  --input-bg: #e8eef8;
+  --input-ink: #0f172a;
   --panel: rgba(255, 255, 255, 0.045);
   --line: rgba(255, 255, 255, 0.09);
   --line-strong: rgba(255, 255, 255, 0.16);
-  --text: #e9edfb;
-  --muted: #93a0c0;
-  --muted-dim: #6b779a;
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --muted-dim: var(--text-muted);
   --blue: #5b82e0;
   --hot: #ff7a6b;
   --cold: #58c9ff;
@@ -173,8 +183,8 @@ a {
 /* ---------------- panels ---------------- */
 
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-panel) 72%, transparent);
+  border: 1px solid var(--border-panel);
   border-radius: var(--radius);
   padding: 22px;
   backdrop-filter: blur(14px);
@@ -2344,15 +2354,17 @@ td small {
 }
 
 
-/* ===== Phase 1 redesign: warm panels, utility rail, trust strip, spending ===== */
+/* ===== Phase 1 redesign: cool navy/slate panels, utility rail, trust strip, spending ===== */
 
 :root {
-  --panel-warm: #f4efe6;
-  --panel-warm-ink: #1a2238;
-  --panel-warm-muted: #5a6478;
-  --panel-warm-line: rgba(26, 34, 56, 0.12);
+  /* Legacy aliases -> navy surface system (no ivory/warm large panels) */
+  --panel-warm: var(--surface-panel);
+  --panel-warm-ink: var(--text-primary);
+  --panel-warm-muted: var(--text-secondary);
+  --panel-warm-line: var(--border-panel);
   --analytics: #6b8cce;
-  --analytics-deep: #3d5a8a;
+  --analytics-deep: #8eabdf;
+  --analytics-fill: #3d5a8a;
   --trust-bg: #0e1a33;
 }
 
@@ -2392,31 +2404,31 @@ td small {
 }
 
 .panel--warm {
-  background: var(--panel-warm);
-  color: var(--panel-warm-ink);
-  border: 1px solid var(--panel-warm-line);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  background: var(--surface-panel);
+  color: var(--text-primary);
+  border: 1px solid var(--border-panel);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
 }
 
 .panel--warm .section__title,
 .panel--warm h2,
 .panel--warm h3 {
-  color: var(--panel-warm-ink);
+  color: var(--text-primary);
 }
 
 .section__lead--warm,
 .panel--warm .section__lead,
 .panel--warm .section__after,
 .panel--warm p {
-  color: var(--panel-warm-muted);
+  color: var(--text-secondary);
 }
 
 .panel--warm a {
-  color: var(--analytics-deep);
+  color: var(--analytics);
 }
 
 .panel--warm .text-link {
-  color: var(--analytics-deep);
+  color: var(--analytics);
 }
 
 .utility-rail {
@@ -2440,7 +2452,7 @@ td small {
 
 .utility-rail__item a:hover .utility-rail__label,
 .utility-rail__item a:focus-visible .utility-rail__label {
-  color: var(--analytics-deep);
+  color: var(--analytics);
 }
 
 .utility-rail__label {
@@ -2467,8 +2479,8 @@ td small {
   display: block;
   padding: 18px 16px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid var(--panel-warm-line);
+  background: var(--surface-panel-raised);
+  border: 1px solid var(--border-panel);
   text-decoration: none;
   color: inherit;
 }
@@ -2631,9 +2643,9 @@ td small {
 
 .preset-btn {
   appearance: none;
-  border: 1px solid var(--panel-warm-line);
-  background: #fff;
-  color: var(--panel-warm-ink);
+  border: 1px solid var(--border-panel);
+  background: var(--surface-data);
+  color: var(--text-primary);
   border-radius: 999px;
   padding: 8px 14px;
   font: inherit;
@@ -2645,8 +2657,8 @@ td small {
 .preset-btn.is-on,
 .preset-btn:hover,
 .preset-btn:focus-visible {
-  border-color: var(--analytics-deep);
-  background: rgba(107, 140, 206, 0.15);
+  border-color: var(--analytics);
+  background: color-mix(in srgb, var(--analytics) 22%, var(--surface-data));
   outline: none;
 }
 
@@ -2674,12 +2686,12 @@ td small {
 .field input,
 .field select {
   width: 100%;
-  border: 1px solid var(--panel-warm-line);
+  border: 1px solid var(--border-panel);
   border-radius: 10px;
   padding: 10px 12px;
   font: inherit;
-  background: #fff;
-  color: var(--panel-warm-ink);
+  background: var(--input-bg);
+  color: var(--input-ink);
 }
 
 .field input:focus-visible,
@@ -2701,10 +2713,19 @@ td small {
   color: var(--panel-warm-muted);
 }
 
+.spending-form {
+  padding: 14px 14px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-panel-raised);
+  border: 1px solid var(--border-panel);
+}
+
 .spending-results {
   margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px solid var(--panel-warm-line);
+  padding: 16px 14px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-data);
+  border: 1px solid var(--border-panel);
 }
 
 .spending-results__grid {
@@ -2717,8 +2738,8 @@ td small {
 .spending-results__grid > div {
   padding: 10px 12px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid var(--panel-warm-line);
+  background: var(--surface-data);
+  border: 1px solid var(--border-panel);
 }
 
 .spending-results__grid dt {
@@ -3095,9 +3116,9 @@ td small {
 .tm-game-btn,
 .tm-btn {
   appearance: none;
-  border: 1px solid var(--panel-warm-line);
-  background: #fff;
-  color: var(--panel-warm-ink);
+  border: 1px solid var(--border-panel);
+  background: var(--surface-data);
+  color: var(--text-primary);
   border-radius: 999px;
   padding: 8px 14px;
   font: inherit;
@@ -3114,16 +3135,16 @@ td small {
 
 .tm-tool[data-tm-game="megamillions"] .tm-game-btn.is-on,
 #tm-tool[data-tm-game="megamillions"] .tm-game-btn[data-game="megamillions"].is-on {
-  border-color: #c98a10;
-  background: rgba(255, 194, 51, 0.28);
-  color: #241a02;
+  border-color: #ffc233;
+  background: color-mix(in srgb, #ffc233 32%, var(--surface-data));
+  color: #ffe9a8;
 }
 
 .tm-tool[data-tm-game="powerball"] .tm-game-btn.is-on,
 #tm-tool[data-tm-game="powerball"] .tm-game-btn[data-game="powerball"].is-on {
-  border-color: #dc2440;
-  background: rgba(255, 85, 102, 0.22);
-  color: #4a0a14;
+  border-color: #ff5566;
+  background: color-mix(in srgb, #ff5566 28%, var(--surface-data));
+  color: #ffc4ca;
 }
 
 .tm-game-btn:focus-visible,
@@ -3155,9 +3176,9 @@ td small {
   width: 100%;
   min-height: 36px;
   border-radius: 10px;
-  border: 1px solid var(--panel-warm-line);
-  background: #fff;
-  color: var(--panel-warm-ink);
+  border: 1px solid var(--border-panel);
+  background: #dce4f2;
+  color: var(--input-ink);
   font: inherit;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -3167,21 +3188,21 @@ td small {
 }
 
 .tm-pick.is-selected {
-  background: rgba(91, 130, 224, 0.2);
-  border-color: var(--analytics-deep);
-  color: var(--analytics-deep);
+  background: color-mix(in srgb, var(--analytics) 35%, #dce4f2);
+  border-color: var(--analytics);
+  color: #0b1c3a;
 }
 
 .tm-grid--mm .tm-pick--bonus.is-selected {
-  background: rgba(255, 194, 51, 0.35);
+  background: #ffc233;
   border-color: #c98a10;
   color: #241a02;
 }
 
 .tm-grid--pb .tm-pick--bonus.is-selected {
-  background: rgba(255, 85, 102, 0.28);
+  background: #ff5566;
   border-color: #dc2440;
-  color: #4a0a14;
+  color: #ffffff;
 }
 
 .tm-selection {
@@ -3219,7 +3240,7 @@ td small {
 }
 
 .tm-date-msg.is-error {
-  color: #8b1e1e;
+  color: #ff8e8e;
 }
 
 
@@ -3241,6 +3262,12 @@ td small {
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  border: 1px solid var(--border-panel);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: var(--input-bg);
+  color: var(--input-ink);
 }
 
 .tm-hist-mm-note {
@@ -3254,8 +3281,8 @@ td small {
 }
 
 .tm-btn--primary {
-  background: var(--analytics-deep);
-  border-color: var(--analytics-deep);
+  background: var(--analytics-fill);
+  border-color: var(--analytics-fill);
   color: #fff;
 }
 
@@ -3276,7 +3303,7 @@ td small {
 }
 
 .tm-status.is-error {
-  color: #a12b2b;
+  color: #ff8e8e;
 }
 
 .tm-selected-result,
@@ -3372,8 +3399,8 @@ td small {
   gap: 8px 12px;
   padding: 8px 10px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid var(--panel-warm-line);
+  background: var(--surface-data);
+  border: 1px solid var(--border-panel);
   min-width: 0;
 }
 
@@ -3440,13 +3467,20 @@ td small {
 }
 
 
-/* ===== Phase 3: Lottery Odds Explorer ===== */
+/* ===== Phase 3: Lottery Odds Explorer (navy surface system) ===== */
 .odds-explorer-page .lede {
   max-width: 42rem;
 }
 
 .odds-explorer {
   overflow-x: hidden;
+}
+
+.odds-form {
+  padding: 14px 14px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-panel-raised);
+  border: 1px solid var(--border-panel);
 }
 
 .odds-form__modes,
@@ -3462,7 +3496,7 @@ td small {
 .odds-form__drawings legend {
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--ink, #0b1c2c);
+  color: var(--text-primary);
 }
 
 .odds-form__mode-row,
@@ -3476,9 +3510,9 @@ td small {
 .odds-tickets-btn,
 .odds-drawings-btn {
   appearance: none;
-  border: 1px solid color-mix(in srgb, var(--navy, #0b1c2c) 22%, transparent);
-  background: #fff;
-  color: var(--navy, #0b1c2c);
+  border: 1px solid var(--border-panel);
+  background: var(--surface-data);
+  color: var(--text-primary);
   border-radius: 999px;
   padding: 0.45rem 0.9rem;
   font: inherit;
@@ -3495,15 +3529,15 @@ td small {
 .odds-mode-btn:focus-visible,
 .odds-tickets-btn:focus-visible,
 .odds-drawings-btn:focus-visible {
-  background: color-mix(in srgb, var(--muted-blue, #3b6ea5) 18%, #fff);
-  border-color: var(--muted-blue, #3b6ea5);
-  color: var(--navy, #0b1c2c);
+  background: color-mix(in srgb, var(--analytics) 22%, var(--surface-data));
+  border-color: var(--analytics);
+  color: var(--text-primary);
 }
 
 .odds-mode-btn:focus-visible,
 .odds-tickets-btn:focus-visible,
 .odds-drawings-btn:focus-visible {
-  outline: 2px solid var(--muted-blue, #3b6ea5);
+  outline: 2px solid var(--analytics);
   outline-offset: 2px;
 }
 
@@ -3512,34 +3546,45 @@ td small {
   max-width: 16rem;
 }
 
+.odds-custom-field input {
+  width: 100%;
+  border: 1px solid var(--border-panel);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: var(--input-bg);
+  color: var(--input-ink);
+}
+
 .odds-attempts {
   font-variant-numeric: tabular-nums;
   margin: 0.75rem 0 0.25rem;
-  color: color-mix(in srgb, var(--ink, #0b1c2c) 78%, transparent);
+  color: var(--text-secondary);
 }
 
 .odds-form__live {
   min-height: 1.25rem;
   margin: 0 0 0.75rem;
-  color: color-mix(in srgb, var(--ink, #0b1c2c) 70%, transparent);
+  color: var(--text-secondary);
   font-size: 0.95rem;
 }
 
 .odds-results {
   display: grid;
   gap: 1.25rem;
+  margin-top: 1rem;
 }
 
 .odds-game-card {
-  background: #fff;
-  border: 1px solid color-mix(in srgb, var(--navy, #0b1c2c) 12%, transparent);
+  background: var(--surface-panel-raised);
+  border: 1px solid var(--border-panel);
   border-radius: 12px;
   padding: 1rem 1rem 1.1rem;
 }
 
 .odds-game-card h3 {
   margin: 0 0 0.75rem;
-  color: var(--navy, #0b1c2c);
+  color: var(--text-primary);
 }
 
 .odds-results__grid {
@@ -3552,32 +3597,38 @@ td small {
 .odds-results__grid > div {
   margin: 0;
   padding: 0.55rem 0.65rem;
-  background: color-mix(in srgb, var(--warm, #f7f1e8) 70%, #fff);
+  background: var(--surface-data);
+  border: 1px solid var(--border-panel);
   border-radius: 8px;
 }
 
 .odds-results__grid dt {
   margin: 0;
   font-size: 0.8rem;
-  color: color-mix(in srgb, var(--ink, #0b1c2c) 65%, transparent);
+  color: var(--text-muted);
 }
 
 .odds-results__grid dd {
   margin: 0.2rem 0 0;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
 }
 
+/* About / one-in: separate line with clear gap — never glued as 0.03%(About...) */
 .odds-sub {
-  display: inline;
+  display: block;
+  margin-top: 0.2rem;
   font-weight: 500;
   font-size: 0.9em;
-  color: color-mix(in srgb, var(--ink, #0b1c2c) 72%, transparent);
+  color: var(--text-secondary);
+  line-height: 1.35;
 }
 
 .odds-tier-table td .odds-sub {
-  display: inline-block;
+  display: block;
   max-width: 100%;
+  margin-top: 0.15rem;
 }
 
 .odds-interpret,
@@ -3585,10 +3636,10 @@ td small {
   margin: 0 0 0.75rem;
   max-width: 42rem;
   line-height: 1.45;
+  color: var(--text-secondary);
 }
 
 .odds-freq {
-  color: color-mix(in srgb, var(--ink, #0b1c2c) 78%, transparent);
   font-size: 0.95rem;
 }
 
@@ -3601,6 +3652,9 @@ td small {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--border-panel);
+  background: var(--surface-data);
 }
 
 .odds-tier-table {
@@ -3608,19 +3662,23 @@ td small {
   border-collapse: collapse;
   table-layout: fixed;
   font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
 }
 
 .odds-tier-table caption {
   text-align: left;
   font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--navy, #0b1c2c);
+  margin: 0;
+  padding: 0.65rem 0.7rem 0.45rem;
+  color: var(--text-primary);
+  background: var(--surface-panel-raised);
+  border-bottom: 1px solid var(--border-panel);
 }
 
 .odds-tier-table th,
 .odds-tier-table td {
-  border-bottom: 1px solid color-mix(in srgb, var(--navy, #0b1c2c) 12%, transparent);
-  padding: 0.4rem 0.4rem;
+  border-bottom: 1px solid var(--border-panel);
+  padding: 0.45rem 0.55rem;
   text-align: left;
   vertical-align: top;
   overflow-wrap: anywhere;
@@ -3630,16 +3688,22 @@ td small {
 
 .odds-tier-table th {
   font-size: 0.82rem;
-  color: color-mix(in srgb, var(--ink, #0b1c2c) 70%, transparent);
+  color: var(--text-secondary);
+  background: var(--surface-panel-raised);
+}
+
+.odds-tier-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--surface-panel-raised) 55%, var(--surface-data));
 }
 
 .odds-tier-table td.num,
 .odds-results__grid dd.num {
   font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
 }
 
 .odds-error {
-  color: #8a2f2f;
+  color: #ff8e8e;
 }
 
 .odds-explorer-page,
@@ -3680,16 +3744,20 @@ td small {
     width: 100%;
   }
 
+  .odds-tier-table caption {
+    display: block;
+  }
+
   .odds-tier-table tr {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     column-gap: 0.65rem;
-    row-gap: 0.05rem;
+    row-gap: 0.15rem;
     width: 100%;
     margin: 0;
-    padding: 0.28rem 0;
+    padding: 0.4rem 0.55rem;
     border: 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--navy, #0b1c2c) 12%, transparent);
+    border-bottom: 1px solid var(--border-panel);
     border-radius: 0;
     background: transparent;
   }
@@ -3711,6 +3779,7 @@ td small {
     grid-column: 1;
     grid-row: 1;
     font-weight: 650;
+    color: var(--text-primary);
   }
 
   .odds-tier-table td:nth-child(1)::before {
@@ -3723,12 +3792,13 @@ td small {
     text-align: right;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
   }
 
   .odds-tier-table td:nth-child(2)::before {
     content: "1 in ";
     font-weight: 500;
-    color: color-mix(in srgb, var(--ink, #0b1c2c) 65%, transparent);
+    color: var(--text-muted);
   }
 
   /* Line 2: chance across attempts */
@@ -3736,7 +3806,8 @@ td small {
     grid-column: 1 / -1;
     grid-row: 2;
     font-size: 0.86rem;
-    line-height: 1.35;
+    line-height: 1.4;
+    color: var(--text-primary);
   }
 
   .odds-tier-table td:nth-child(3)::before {
@@ -3744,22 +3815,28 @@ td small {
     display: inline;
     font-size: inherit;
     font-weight: 600;
-    color: color-mix(in srgb, var(--ink, #0b1c2c) 65%, transparent);
+    color: var(--text-muted);
   }
 
-  /* Expected per 1M as small secondary (same row as chance when space allows) */
+  .odds-tier-table td:nth-child(3) .odds-sub {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--text-secondary);
+  }
+
+  /* Expected per 1M as small secondary */
   .odds-tier-table td:nth-child(4) {
     grid-column: 1 / -1;
     grid-row: 3;
     font-size: 0.76rem;
-    color: color-mix(in srgb, var(--ink, #0b1c2c) 72%, transparent);
+    color: var(--text-secondary);
   }
 
   .odds-tier-table td:nth-child(4)::before {
     content: attr(data-label) ": ";
     display: inline;
     font-weight: 600;
-    color: color-mix(in srgb, var(--ink, #0b1c2c) 60%, transparent);
+    color: var(--text-muted);
   }
 
   .odds-tier-wrap {

@@ -160,7 +160,7 @@ window.LOTTO = window.LOTTO || {};
           "</td>" +
           '<td class="num" data-label="Chance across attempts">' +
           across.text +
-          (acrossOne ? '<span class="odds-sub"> (' + acrossOne + ")</span>" : "") +
+          (acrossOne ? '<span class="odds-sub">' + acrossOne + "</span>" : "") +
           "</td>" +
           '<td class="num" data-label="Expected per 1M">' +
           exp +
@@ -217,11 +217,11 @@ window.LOTTO = window.LOTTO || {};
       "</dd></div>" +
       "<div><dt>P(at least one jackpot)</dt><dd class=\"num\">" +
       jFmt.text +
-      (jOne ? '<span class="odds-sub"> (' + jOne + ")</span>" : "") +
+      (jOne ? '<span class="odds-sub">' + jOne + "</span>" : "") +
       "</dd></div>" +
       "<div><dt>P(at least one prize)</dt><dd class=\"num\">" +
       aFmt.text +
-      (aOne ? '<span class="odds-sub"> (' + aOne + ")</span>" : "") +
+      (aOne ? '<span class="odds-sub">' + aOne + "</span>" : "") +
       "</dd></div>" +
       "</dl>" +
       '<p class="odds-interpret">' +
