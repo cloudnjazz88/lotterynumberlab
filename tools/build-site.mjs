@@ -258,7 +258,7 @@ const pages = [
     title: "Lottery tools: spending, ticket match, and odds explorer",
     description:
       "Four live Mega Millions and Powerball tools: Spending Calculator, Ticket Match, What If historical replay, and Odds Explorer. Browser-only math. No predictions.",
-    modified: "2026-09-26",
+    modified: "2026-09-27",
     body: toolsHub(),
   },
   {
