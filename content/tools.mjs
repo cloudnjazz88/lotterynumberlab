@@ -19,7 +19,7 @@ export function toolsHub() {
       <section class="panel panel--warm" aria-labelledby="tools-available">
         <h2 class="section__title" id="tools-available">Available now</h2>
         <p class="section__lead">
-          These three tools are live. Open any card for the form, worked examples, and assumptions.
+          These tools are live. Open any card for the form, worked examples, and assumptions.
         </p>
         <ul class="utility-rail">
           <li class="utility-rail__item">
@@ -43,6 +43,16 @@ export function toolsHub() {
             </a>
           </li>
           <li class="utility-rail__item">
+            <a href="lottery-what-if-calculator.html">
+              <span class="utility-rail__label">What If Calculator</span>
+              <span class="utility-rail__hint">
+                Hold the same Mega Millions or Powerball numbers fixed and walk them across
+                bundled current-matrix history. See match tiers and estimated base prizes versus
+                hypothetical spend. Historical pattern tool only — not a prediction.
+              </span>
+            </a>
+          </li>
+          <li class="utility-rail__item">
             <a href="odds-explorer.html">
               <span class="utility-rail__label">Lottery Odds Explorer</span>
               <span class="utility-rail__hint">
@@ -61,6 +71,12 @@ export function toolsHub() {
           Start from the question you have. Each tool answers a different one.
         </p>
         <ul class="tool-intent-list">
+          <li>
+            <strong>I want to see how these numbers would have done historically</strong>
+            → <a href="lottery-what-if-calculator.html">What If Calculator</a>.
+            Use this to replay one fixed set across many drawings (not a single drawing check).
+          </li>
+
           <li>
             <strong>“I want to understand what repeated play costs”</strong>
             → <a href="lottery-spending-calculator.html">Lottery Spending Calculator</a>.
@@ -82,7 +98,7 @@ export function toolsHub() {
       <section class="panel" aria-labelledby="tools-how">
         <h2 class="section__title" id="tools-how">How the tools fit together</h2>
         <p>
-          Lottery Number Lab keeps <em>cost</em>, <em>match checking</em>, and <em>probability</em>
+          Lottery Number Lab keeps <em>cost</em>, <em>match checking</em>, <em>historical what-if</em>, and <em>probability</em>
           on separate pages so each formula stays checkable. Spending multiplies cost × plays ×
           drawings and can apply the published jackpot denominator. Ticket Match validates the
           selected game&apos;s ranges, resolves a drawing by date (including dates older than the
@@ -436,6 +452,8 @@ export function ticketMatchCheckerPage(ctx) {
           ·
           <a class="text-link" href="${link("tools/odds-explorer.html", depth)}">Odds explorer</a>
           ·
+          <a class="text-link" href="${link("tools/lottery-what-if-calculator.html", depth)}">What If calculator</a>
+          ·
           <a class="text-link" href="${link("guides/independent-trials.html", depth)}">Independent trials</a>
           ·
           <a class="text-link" href="${link("results/index.html", depth)}">Past winning numbers</a>
@@ -654,6 +672,8 @@ export function oddsExplorerPage(ctx) {
           ·
           <a class="text-link" href="${link("tools/ticket-match-checker.html", depth)}">Ticket match</a>
           ·
+          <a class="text-link" href="${link("tools/lottery-what-if-calculator.html", depth)}">What If calculator</a>
+          ·
           <a class="text-link" href="${link("guides/how-lottery-odds-are-calculated.html", depth)}">How odds are calculated</a>
           ·
           <a class="text-link" href="${link("guides/mega-millions-vs-powerball-odds.html", depth)}">MM vs PB odds guide</a>
@@ -662,4 +682,272 @@ export function oddsExplorerPage(ctx) {
         </p>
       </article>
 `;
+}
+
+export function whatIfCalculatorPage(ctx) {
+  const mm = ctx.mm;
+  const pb = ctx.pb;
+  const depth = 1;
+  const mmFirst = mm.history.draws[mm.history.draws.length - 1];
+  const pbFirst = pb.history.draws[pb.history.draws.length - 1];
+  const mmLatest = mm.history.draws[0];
+  const pbLatest = pb.history.draws[0];
+
+  return `      <article class="prose prose--page what-if-page">
+        <p class="eyebrow"><a href="${link("tools/index.html", depth)}">Tools</a> / What If</p>
+        <h1>What If I Played These Lottery Numbers?</h1>
+        <p class="lede">
+          Replay the same Mega Millions or Powerball numbers across this site&apos;s bundled
+          current-matrix history. See how often those picks would have matched published
+          prize tiers, and estimate fixed base prizes versus hypothetical ticket cost.
+          This is a historical pattern tool  --  not a prediction, not advice to play, and
+          not official claim verification.
+        </p>
+
+        <aside class="callout callout--note">
+  <h3>Different from Ticket Match</h3>
+  <p>
+            <a href="${link("tools/ticket-match-checker.html", depth)}">Ticket Match</a>
+            compares your picks with <em>one</em> drawing. What If holds the same numbers
+            fixed and walks them across many drawings. Multi-ticket input only scales cost
+            and fixed base prizes; it never improves odds per ticket.
+          </p>
+</aside>
+
+        <aside class="callout callout--warn">
+  <h3>Estimated and hypothetical only</h3>
+  <p>
+            Dollar figures use the official base prize table only. Megaplier, Power Play,
+            taxes, and jurisdiction rules are excluded. Jackpot-tier patterns are counted
+            but historical jackpot cash is <strong>not</strong> estimated. Nothing here means
+            you are owed a prize.
+          </p>
+</aside>
+
+        <noscript>
+          <aside class="callout callout--warn">
+            <h3>Interactive calculator needs JavaScript</h3>
+            <p>
+              Your browser has JavaScript disabled, so the number grids and live results
+              cannot run. Purpose, method, assumptions, worked example, FAQs, and related
+              links below remain available. Enable JavaScript to replay picks across the
+              bundled history in this browser.
+            </p>
+          </aside>
+        </noscript>
+
+        <section class="panel panel--warm what-if" id="wi-tool" data-wi-game="megamillions" aria-labelledby="wi-heading">
+          <h2 id="wi-heading">What If calculator</h2>
+          <p class="wi-js-needed" hidden>
+            Interactive results require JavaScript. Explanations on this page still work without it.
+          </p>
+          <form id="wi-form" class="wi-form" novalidate>
+            <fieldset class="wi-form__games">
+              <legend>Game</legend>
+              <div class="wi-form__game-row" role="group" aria-label="Lottery game">
+                <button type="button" class="wi-game-btn is-on" data-game="megamillions" aria-pressed="true">Mega Millions</button>
+                <button type="button" class="wi-game-btn" data-game="powerball" aria-pressed="false">Powerball</button>
+              </div>
+            </fieldset>
+
+            <fieldset class="wi-form__picks">
+              <legend id="wi-white-legend">White balls (pick 5 from 1–70)</legend>
+              <div id="wi-white-grid" class="tm-grid" role="group" aria-labelledby="wi-white-legend"></div>
+            </fieldset>
+
+            <fieldset class="wi-form__picks">
+              <legend id="wi-bonus-legend">Mega Ball (pick 1 from 1–24)</legend>
+              <div id="wi-bonus-grid" class="tm-grid tm-grid--bonus tm-grid--mm" role="group" aria-labelledby="wi-bonus-legend"></div>
+            </fieldset>
+
+            <p class="wi-selection" id="wi-selection" aria-live="polite">Select 5 white balls and 1 Mega Ball</p>
+
+            <fieldset class="wi-form__period">
+              <legend>Period (Eastern Time drawing dates)</legend>
+              <div class="wi-period-row">
+                <label class="wi-period-opt"><input type="radio" name="wi-period" value="last1y" checked /> Last 1 year</label>
+                <label class="wi-period-opt"><input type="radio" name="wi-period" value="last5y" /> Last 5 years</label>
+                <label class="wi-period-opt"><input type="radio" name="wi-period" value="all" /> All current-matrix</label>
+                <label class="wi-period-opt"><input type="radio" name="wi-period" value="custom" /> Custom dates</label>
+              </div>
+              <div class="wi-custom-row" id="wi-custom-row" hidden>
+                <label class="field">
+                  <span class="field__label">Start (ET)</span>
+                  <input type="date" id="wi-start" name="start" />
+                </label>
+                <label class="field">
+                  <span class="field__label">End (ET)</span>
+                  <input type="date" id="wi-end" name="end" />
+                </label>
+              </div>
+            </fieldset>
+
+            <label class="field wi-tickets-field">
+              <span class="field__label">Tickets per drawing</span>
+              <input id="wi-tickets" name="tickets" type="number" inputmode="numeric" min="1" max="100" step="1" value="1" required
+                aria-describedby="wi-tickets-hint" />
+              <span class="field__hint" id="wi-tickets-hint">
+                Same numbers on every drawing. Scales cost and fixed base prizes only — does not improve odds per ticket. Max 100.
+              </span>
+            </label>
+
+            <p class="wi-status" id="wi-status" role="status" hidden></p>
+
+            <div class="wi-actions">
+              <button type="submit" class="btn btn--primary">Analyze history</button>
+              <button type="button" class="btn btn--ghost" id="wi-clear">Clear picks</button>
+            </div>
+          </form>
+
+          <div id="wi-results" class="wi-results" hidden></div>
+        </section>
+
+        <section aria-labelledby="wi-value">
+          <h2 id="wi-value">What this tells you</h2>
+          <p>
+            Each drawing is an independent trial. Holding the same five whites and bonus ball
+            fixed does not create a streak, a debt, or a pattern the next draw must repay.
+            Hot and cold counts describe the past; they do not raise or lower the published
+            odds on the next ticket.
+          </p>
+          <p>
+            Cost scales linearly with tickets and drawings. A jackpot match remains extremely
+            rare even after hundreds of identical plays. Fixed-prize tiers can occasionally
+            appear in a long window; that still does not turn lottery play into a reliable return.
+          </p>
+          <p>
+            Figures here are historical and hypothetical. They use the official base prize
+            table and current ticket prices (${mm.config.ticketPrice} Mega Millions,
+            ${pb.config.ticketPrice} Powerball). They are not a prediction and not a way to
+            verify a claim with your state lottery.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-how">
+          <h2 id="wi-how">How it works</h2>
+          <ol>
+            <li>Choose Mega Millions or Powerball (current matrix ranges).</li>
+            <li>Pick five unique white balls and one bonus ball (bonus may equal a white).</li>
+            <li>Select Last 1 year, Last 5 years, All current-matrix history, or custom ET dates.</li>
+            <li>Optionally set tickets per drawing (identical numbers each drawing).</li>
+            <li>Review drawings analyzed, hypothetical spend, estimated base prizes, net, tier counts, and up to about 20 strongest matches.</li>
+          </ol>
+          <p>
+            Scope: bundled current-matrix history only
+            (Mega Millions from October 31, 2017, Powerball from October 7, 2015;
+            latest MM September 25, 2026, PB September 23, 2026).
+            Older incompatible matrices are not merged. Megaplier and Power Play are not included in V1.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-assumptions">
+          <h2 id="wi-assumptions">Assumptions</h2>
+          <ul>
+            <li>Official base prize amounts only; jackpot cash is never invented.</li>
+            <li>Current published ticket prices for hypothetical spend.</li>
+            <li>Eastern Time drawing dates as shipped in this site&apos;s snapshot.</li>
+            <li>Identical tickets on a drawing scale fixed prizes and cost; they do not change per-ticket odds.</li>
+            <li>Empty ranges show an empty state instead of inventing drawings.</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="wi-example">
+          <h2 id="wi-example">Worked example</h2>
+          <p>
+            Suppose you replay Powerball picks 01-02-03-04-05 + PB 07 across five synthetic
+            drawings and buy two identical tickets each time. A 5+0 hit contributes
+            2 × $1,000,000 in estimated base prizes; a jackpot-tier 5+1 hit is counted but
+            its cash value is left unestimated. Spend is 2 × $2 × 5 drawings = $20. Net uses
+            only the estimated fixed prizes minus spend.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-fixed">
+          <h2 id="wi-fixed">Fixed numbers vs changing numbers</h2>
+          <p>
+            Replaying one fixed set across history measures that set&apos;s past matches. Changing
+            numbers every drawing would produce a different path, but each individual ticket
+            still faces the same published per-draw odds. Fixing the numbers does not create
+            an edge; it only makes the historical path easy to inspect.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-limits">
+          <h2 id="wi-limits">Limitations</h2>
+          <ul>
+            <li>No Megaplier / Power Play multipliers.</li>
+            <li>No tax withholding or annuity vs cash modeling.</li>
+            <li>No jurisdiction-specific prize rules or promotions.</li>
+            <li>Jackpot advertised amounts vary; they are not estimated here.</li>
+            <li>Snapshot history may lag the official feeds until the next refresh.</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="wi-responsible">
+          <h2 id="wi-responsible">Responsible play</h2>
+          <p>
+            Lottery tickets are entertainment spending with long odds. Set a budget you can
+            afford to lose, and stop if play stops being fun. See
+            <a href="${link("responsible-play.html", depth)}">responsible play</a>.
+            Help: 1-800-GAMBLER.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-privacy">
+          <h2 id="wi-privacy">Privacy</h2>
+          <p>
+            Picks and results stay in your browser. This page does not upload your numbers to
+            a server. See the <a href="../privacy-policy.html">privacy policy</a>.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-method">
+          <h2 id="wi-method">Methodology and sources</h2>
+          <p>
+            Matching uses order-independent white-ball overlap plus bonus equality — the same
+            pattern logic as Ticket Match. Prize labels and fixed values come from the same
+            official base tables used elsewhere on this site (via shared compute helpers).
+            Drawing dates and numbers come from the bundled NY Open Data–sourced snapshot.
+            Full method: <a href="${link("methodology.html", depth)}">methodology</a>.
+          </p>
+          <p>
+            Snapshot basis: Mega Millions 930 drawings
+            (October 31, 2017  – September 25, 2026);
+            Powerball 1,406 drawings
+            (October 7, 2015  – September 23, 2026).
+          </p>
+        </section>
+
+                <section aria-labelledby="wi-faq">
+          <h2 id="wi-faq">Frequently asked questions</h2>
+          <h3>Is this the same as Ticket Match?</h3>
+          <p>No. Ticket Match compares one drawing. What If replays the same numbers across many drawings in the bundled history.</p>
+          <h3>Does buying more identical tickets improve my odds?</h3>
+          <p>No. Tickets per drawing only scales cost and fixed base prizes. Each ticket remains an independent trial at the same published odds.</p>
+          <h3>Why is the jackpot not given a dollar amount?</h3>
+          <p>Advertised jackpots change by drawing. A jackpot-tier pattern is counted, but historical jackpot cash is not estimated here.</p>
+          <h3>Are Megaplier and Power Play included?</h3>
+          <p>No. V1 uses the official base prize table only, without multipliers, taxes, or jurisdiction rules.</p>
+          <h3>Can I use dates outside the bundled matrix?</h3>
+          <p>No. Only current-matrix history shipped with this site is analyzed. Future dates and incompatible older matrices are excluded.</p>
+          <h3>Is this official winner verification?</h3>
+          <p>No. Results are hypothetical and educational. Verify any real ticket with your state lottery.</p>
+          <h3>Do hot or cold numbers change the result?</h3>
+          <p>No. Frequency notes do not change per-draw odds. This tool only counts how a fixed set matched past published draws.</p>
+        </section>
+
+<section aria-labelledby="wi-related">
+          <h2 id="wi-related">Related</h2>
+          <ul class="year-related__list">
+            <li><a href="${link("tools/ticket-match-checker.html", depth)}">Ticket Match &amp; History Checker</a></li>
+            <li><a href="${link("tools/odds-explorer.html", depth)}">Lottery Odds Explorer</a></li>
+            <li><a href="${link("tools/lottery-spending-calculator.html", depth)}">Lottery Spending Calculator</a></li>
+            <li><a href="${link("results/index.html", depth)}">Winning numbers archive</a></li>
+            <li><a href="${link("guides/independent-trials.html", depth)}">Independent trials</a></li>
+            <li><a href="${link("guides/hot-and-cold-numbers-tested.html", depth)}">Hot and cold numbers tested</a></li>
+            <li><a href="${link("methodology.html", depth)}">Methodology</a></li>
+            <li><a href="${link("responsible-play.html", depth)}">Responsible play</a></li>
+          </ul>
+        </section>
+      </article>`;
 }

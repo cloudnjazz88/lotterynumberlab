@@ -36,7 +36,7 @@ export function tierProbability(mainMax, pick, specialMax, main, withSpecial) {
   return whiteP * (withSpecial ? 1 / specialMax : (specialMax - 1) / specialMax);
 }
 
-const MM_PRIZES = {
+export const MM_PRIZES = {
   "5+1": { label: "Jackpot", value: null },
   "5+0": { label: "$1,000,000", value: 1_000_000 },
   "4+1": { label: "$10,000", value: 10_000 },
@@ -48,7 +48,7 @@ const MM_PRIZES = {
   "0+1": { label: "$5", value: 5 },
 };
 
-const PB_PRIZES = {
+export const PB_PRIZES = {
   "5+1": { label: "Jackpot", value: null },
   "5+0": { label: "$1,000,000", value: 1_000_000 },
   "4+1": { label: "$50,000", value: 50_000 },

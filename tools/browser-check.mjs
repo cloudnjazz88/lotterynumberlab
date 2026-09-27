@@ -66,6 +66,7 @@ const PAGES = [
   "tools/lottery-spending-calculator.html",
   "tools/ticket-match-checker.html",
   "tools/odds-explorer.html",
+  "tools/lottery-what-if-calculator.html",
   "analyze/index.html",
   "results/mega-millions-2026.html",
   "results/powerball-2026.html",
@@ -228,7 +229,7 @@ const homeChrome = await page.evaluate(() => {
 console.log(`  hero: ${homeChrome.hero}`);
 console.log(`  utility rail items: ${homeChrome.utilityRail} · trust strip: ${homeChrome.trustStrip}`);
 console.log(`  home-recent MM=${homeChrome.mmCount} PB=${homeChrome.pbCount} (latest MM ${homeChrome.mmLatest}, PB ${homeChrome.pbLatest})`);
-if (homeChrome.utilityRail !== 4) problems.push(`home: utility rail should have 4 items, has ${homeChrome.utilityRail}`);
+if (homeChrome.utilityRail !== 5) problems.push(`home: utility rail should have 5 items, has ${homeChrome.utilityRail}`);
 if (!homeChrome.trustStrip) problems.push("home: missing trust strip");
 if (homeChrome.recentArchive !== 0) problems.push("home: last-8 archive should be removed");
 if (!homeChrome.homeRecent) problems.push("home: missing Recent drawings panel");

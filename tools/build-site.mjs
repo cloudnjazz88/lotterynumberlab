@@ -16,7 +16,7 @@ import { GUIDES } from "../content/guides.mjs";
 import { aboutPage, privacyPage, termsPage, responsiblePage } from "../content/legal.mjs";
 import { faqContent, glossaryPage, methodologyPage } from "../content/reference.mjs";
 import { resultsHub, yearPage, yearPageSpecs, yearHref } from "../content/results.mjs";
-import { toolsHub, spendingCalculatorPage, ticketMatchCheckerPage, oddsExplorerPage } from "../content/tools.mjs";
+import { toolsHub, spendingCalculatorPage, ticketMatchCheckerPage, oddsExplorerPage, whatIfCalculatorPage } from "../content/tools.mjs";
 import { analyzeHub } from "../content/analyze.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
@@ -36,6 +36,7 @@ const HOME_SCRIPTS = ["src/data.js", "src/app.js"];
 const SPENDING_SCRIPTS = ["src/data.js", "src/tools/spending-calculator.js"];
 const TICKET_MATCH_SCRIPTS = ["data/draws.js", "src/data.js", "src/tools/ticket-match-checker.js"];
 const ODDS_EXPLORER_SCRIPTS = ["src/tools/odds-explorer.js"];
+const WHAT_IF_SCRIPTS = ["data/draws.js", "src/data.js", "src/tools/lottery-what-if-calculator.js"];
 
 const pad2 = (n) => String(n).padStart(2, "0");
 const drawPlain = (draw) => `${draw.n.map(pad2).join("-")} + ${pad2(draw.s)}`;
@@ -254,7 +255,7 @@ const pages = [
     nav: "tools",
     title: "Lottery tools: spending, ticket match, and odds explorer",
     description:
-      "Three live Mega Millions and Powerball tools: Spending Calculator for repeated-play cost, Ticket Match & History Checker for published draws, and Odds Explorer for prize-tier probability. Browser-only math. No predictions.",
+      "Four live Mega Millions and Powerball tools: Spending Calculator, Ticket Match, What If historical replay, and Odds Explorer. Browser-only math. No predictions.",
     modified: "2026-09-26",
     body: toolsHub(),
   },
@@ -301,6 +302,54 @@ const pages = [
     ],
     body: ticketMatchCheckerPage(ctx),
     scripts: TICKET_MATCH_SCRIPTS,
+  },
+    {
+    slug: "tools/lottery-what-if-calculator.html",
+    title: "What If I Played These Lottery Numbers?",
+    description:
+      "Replay the same Mega Millions or Powerball numbers across bundled current-matrix history. Estimated official base prizes versus hypothetical spend. Not a prediction or claim check.",
+    section: "Tools",
+    kind: "tool",
+    depth: 1,
+    faq: [
+      {
+        q: "Is this the same as Ticket Match?",
+        a: "No. Ticket Match compares one drawing. What If replays the same numbers across many drawings in the bundled history.",
+        plain: "No. Ticket Match compares one drawing. What If replays the same numbers across many drawings in the bundled history.",
+      },
+      {
+        q: "Does buying more identical tickets improve my odds?",
+        a: "No. Tickets per drawing only scales cost and fixed base prizes. Each ticket remains an independent trial at the same published odds.",
+        plain: "No. Tickets per drawing only scales cost and fixed base prizes. Each ticket remains an independent trial at the same published odds.",
+      },
+      {
+        q: "Why is the jackpot not given a dollar amount?",
+        a: "Advertised jackpots change by drawing. A jackpot-tier pattern is counted, but historical jackpot cash is not estimated here.",
+        plain: "Advertised jackpots change by drawing. A jackpot-tier pattern is counted, but historical jackpot cash is not estimated here.",
+      },
+      {
+        q: "Are Megaplier and Power Play included?",
+        a: "No. V1 uses the official base prize table only, without multipliers, taxes, or jurisdiction rules.",
+        plain: "No. V1 uses the official base prize table only, without multipliers, taxes, or jurisdiction rules.",
+      },
+      {
+        q: "Can I use dates outside the bundled matrix?",
+        a: "No. Only current-matrix history shipped with this site is analyzed. Future dates and incompatible older matrices are excluded.",
+        plain: "No. Only current-matrix history shipped with this site is analyzed. Future dates and incompatible older matrices are excluded.",
+      },
+      {
+        q: "Is this official winner verification?",
+        a: "No. Results are hypothetical and educational. Verify any real ticket with your state lottery.",
+        plain: "No. Results are hypothetical and educational. Verify any real ticket with your state lottery.",
+      },
+      {
+        q: "Do hot or cold numbers change the result?",
+        a: "No. Frequency notes do not change per-draw odds. This tool only counts how a fixed set matched past published draws.",
+        plain: "No. Frequency notes do not change per-draw odds. This tool only counts how a fixed set matched past published draws.",
+      },
+    ],
+    body: whatIfCalculatorPage(ctx),
+    scripts: WHAT_IF_SCRIPTS,
   },
   {
     slug: "tools/odds-explorer.html",

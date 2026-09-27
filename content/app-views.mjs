@@ -212,13 +212,19 @@ export function homeBody(ctx, guides) {
       <section class="panel panel--warm panel--utility" aria-labelledby="tools-rail-heading">
         <h2 class="section__title" id="tools-rail-heading">What do you want to know?</h2>
         <p class="section__lead section__lead--warm">
-          Four starting points — each link is a real page, not a fake checker.
+          Five starting points — each link is a real page, not a fake checker.
         </p>
         <ul class="utility-rail">
           <li class="utility-rail__item">
             <a href="tools/ticket-match-checker.html">
               <span class="utility-rail__label">Check numbers</span>
               <span class="utility-rail__hint">Compare your numbers with a published drawing or search past results</span>
+            </a>
+          </li>
+          <li class="utility-rail__item">
+            <a href="tools/lottery-what-if-calculator.html">
+              <span class="utility-rail__label">What if I played these?</span>
+              <span class="utility-rail__hint">Replay the same numbers across past drawings — hypothetical only</span>
             </a>
           </li>
           <li class="utility-rail__item">

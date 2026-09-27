@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>What If I Played These Lottery Numbers? | Lottery Number Lab</title>
+    <meta name="description" content="Replay the same Mega Millions or Powerball numbers across bundled current-matrix history. Estimated official base prizes versus hypothetical spend. Not a prediction or claim check." />
+    <meta name="author" content="Lottery Number Lab" />
+    <link rel="canonical" href="https://lotterynumberlab.com/tools/lottery-what-if-calculator.html" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lottery Number Lab" />
+    <meta property="og:title" content="What If I Played These Lottery Numbers? | Lottery Number Lab" />
+    <meta property="og:description" content="Replay the same Mega Millions or Powerball numbers across bundled current-matrix history. Estimated official base prizes versus hypothetical spend. Not a prediction or claim check." />
+    <meta property="og:url" content="https://lotterynumberlab.com/tools/lottery-what-if-calculator.html" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="What If I Played These Lottery Numbers? | Lottery Number Lab" />
+    <meta name="twitter:description" content="Replay the same Mega Millions or Powerball numbers across bundled current-matrix history. Estimated official base prizes versus hypothetical spend. Not a prediction or claim check." />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css?v=366d0da11ba7" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://lotterynumberlab.com/tools/"},{"@type":"ListItem","position":3,"name":"What If I Played These Lottery Numbers?","item":"https://lotterynumberlab.com/tools/lottery-what-if-calculator.html"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this the same as Ticket Match?","acceptedAnswer":{"@type":"Answer","text":"No. Ticket Match compares one drawing. What If replays the same numbers across many drawings in the bundled history."}},{"@type":"Question","name":"Does buying more identical tickets improve my odds?","acceptedAnswer":{"@type":"Answer","text":"No. Tickets per drawing only scales cost and fixed base prizes. Each ticket remains an independent trial at the same published odds."}},{"@type":"Question","name":"Why is the jackpot not given a dollar amount?","acceptedAnswer":{"@type":"Answer","text":"Advertised jackpots change by drawing. A jackpot-tier pattern is counted, but historical jackpot cash is not estimated here."}},{"@type":"Question","name":"Are Megaplier and Power Play included?","acceptedAnswer":{"@type":"Answer","text":"No. V1 uses the official base prize table only, without multipliers, taxes, or jurisdiction rules."}},{"@type":"Question","name":"Can I use dates outside the bundled matrix?","acceptedAnswer":{"@type":"Answer","text":"No. Only current-matrix history shipped with this site is analyzed. Future dates and incompatible older matrices are excluded."}},{"@type":"Question","name":"Is this official winner verification?","acceptedAnswer":{"@type":"Answer","text":"No. Results are hypothetical and educational. Verify any real ticket with your state lottery."}},{"@type":"Question","name":"Do hot or cold numbers change the result?","acceptedAnswer":{"@type":"Answer","text":"No. Frequency notes do not change per-draw odds. This tool only counts how a fixed set matched past published draws."}}]}</script>
+    <meta name="google-adsense-account" content="ca-pub-9237217026636557" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9237217026636557"
+      crossorigin="anonymous"
+    ></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KG9C04QZWT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KG9C04QZWT');
+    </script>
+  </head>
+  <body data-view="page" data-game="home">
+    <div class="backdrop" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="/">
+        <div class="brand-mark"><span>US</span></div>
+        <div class="brand-text">
+          <span class="brand-name">Lottery Number Lab</span>
+          <span class="brand-sub" id="brandSub">Odds, drawing history and probability for Mega Millions and Powerball</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="../results/index.html">Results</a>
+        <a href="../analyze/index.html">Analyze</a>
+        <a href="../tools/index.html">Tools</a>
+        <a href="../guides/index.html">Learn</a>
+        <a href="../about.html">About</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <article class="prose prose--page what-if-page">
+        <p class="eyebrow"><a href="../tools/index.html">Tools</a> / What If</p>
+        <h1>What If I Played These Lottery Numbers?</h1>
+        <p class="lede">
+          Replay the same Mega Millions or Powerball numbers across this site&apos;s bundled
+          current-matrix history. See how often those picks would have matched published
+          prize tiers, and estimate fixed base prizes versus hypothetical ticket cost.
+          This is a historical pattern tool  --  not a prediction, not advice to play, and
+          not official claim verification.
+        </p>
+
+        <aside class="callout callout--note">
+  <h3>Different from Ticket Match</h3>
+  <p>
+            <a href="../tools/ticket-match-checker.html">Ticket Match</a>
+            compares your picks with <em>one</em> drawing. What If holds the same numbers
+            fixed and walks them across many drawings. Multi-ticket input only scales cost
+            and fixed base prizes; it never improves odds per ticket.
+          </p>
+</aside>
+
+        <aside class="callout callout--warn">
+  <h3>Estimated and hypothetical only</h3>
+  <p>
+            Dollar figures use the official base prize table only. Megaplier, Power Play,
+            taxes, and jurisdiction rules are excluded. Jackpot-tier patterns are counted
+            but historical jackpot cash is <strong>not</strong> estimated. Nothing here means
+            you are owed a prize.
+          </p>
+</aside>
+
+        <noscript>
+          <aside class="callout callout--warn">
+            <h3>Interactive calculator needs JavaScript</h3>
+            <p>
+              Your browser has JavaScript disabled, so the number grids and live results
+              cannot run. Purpose, method, assumptions, worked example, FAQs, and related
+              links below remain available. Enable JavaScript to replay picks across the
+              bundled history in this browser.
+            </p>
+          </aside>
+        </noscript>
+
+        <section class="panel panel--warm what-if" id="wi-tool" data-wi-game="megamillions" aria-labelledby="wi-heading">
+          <h2 id="wi-heading">What If calculator</h2>
+          <p class="wi-js-needed" hidden>
+            Interactive results require JavaScript. Explanations on this page still work without it.
+          </p>
+          <form id="wi-form" class="wi-form" novalidate>
+            <fieldset class="wi-form__games">
+              <legend>Game</legend>
+              <div class="wi-form__game-row" role="group" aria-label="Lottery game">
+                <button type="button" class="wi-game-btn is-on" data-game="megamillions" aria-pressed="true">Mega Millions</button>
+                <button type="button" class="wi-game-btn" data-game="powerball" aria-pressed="false">Powerball</button>
+              </div>
+            </fieldset>
+
+            <fieldset class="wi-form__picks">
+              <legend id="wi-white-legend">White balls (pick 5 from 1–70)</legend>
+              <div id="wi-white-grid" class="tm-grid" role="group" aria-labelledby="wi-white-legend"></div>
+            </fieldset>
+
+            <fieldset class="wi-form__picks">
+              <legend id="wi-bonus-legend">Mega Ball (pick 1 from 1–24)</legend>
+              <div id="wi-bonus-grid" class="tm-grid tm-grid--bonus tm-grid--mm" role="group" aria-labelledby="wi-bonus-legend"></div>
+            </fieldset>
+
+            <p class="wi-selection" id="wi-selection" aria-live="polite">Select 5 white balls and 1 Mega Ball</p>
+
+            <fieldset class="wi-form__period">
+              <legend>Period (Eastern Time drawing dates)</legend>
+              <div class="wi-period-row">
+                <label class="wi-period-opt"><input type="radio" name="wi-period" value="last1y" checked /> Last 1 year</label>
+                <label class="wi-period-opt"><input type="radio" name="wi-period" value="last5y" /> Last 5 years</label>
+                <label class="wi-period-opt"><input type="radio" name="wi-period" value="all" /> All current-matrix</label>
+                <label class="wi-period-opt"><input type="radio" name="wi-period" value="custom" /> Custom dates</label>
+              </div>
+              <div class="wi-custom-row" id="wi-custom-row" hidden>
+                <label class="field">
+                  <span class="field__label">Start (ET)</span>
+                  <input type="date" id="wi-start" name="start" />
+                </label>
+                <label class="field">
+                  <span class="field__label">End (ET)</span>
+                  <input type="date" id="wi-end" name="end" />
+                </label>
+              </div>
+            </fieldset>
+
+            <label class="field wi-tickets-field">
+              <span class="field__label">Tickets per drawing</span>
+              <input id="wi-tickets" name="tickets" type="number" inputmode="numeric" min="1" max="100" step="1" value="1" required
+                aria-describedby="wi-tickets-hint" />
+              <span class="field__hint" id="wi-tickets-hint">
+                Same numbers on every drawing. Scales cost and fixed base prizes only — does not improve odds per ticket. Max 100.
+              </span>
+            </label>
+
+            <p class="wi-status" id="wi-status" role="status" hidden></p>
+
+            <div class="wi-actions">
+              <button type="submit" class="btn btn--primary">Analyze history</button>
+              <button type="button" class="btn btn--ghost" id="wi-clear">Clear picks</button>
+            </div>
+          </form>
+
+          <div id="wi-results" class="wi-results" hidden></div>
+        </section>
+
+        <section aria-labelledby="wi-value">
+          <h2 id="wi-value">What this tells you</h2>
+          <p>
+            Each drawing is an independent trial. Holding the same five whites and bonus ball
+            fixed does not create a streak, a debt, or a pattern the next draw must repay.
+            Hot and cold counts describe the past; they do not raise or lower the published
+            odds on the next ticket.
+          </p>
+          <p>
+            Cost scales linearly with tickets and drawings. A jackpot match remains extremely
+            rare even after hundreds of identical plays. Fixed-prize tiers can occasionally
+            appear in a long window; that still does not turn lottery play into a reliable return.
+          </p>
+          <p>
+            Figures here are historical and hypothetical. They use the official base prize
+            table and current ticket prices ($5 Mega Millions,
+            $2 Powerball). They are not a prediction and not a way to
+            verify a claim with your state lottery.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-how">
+          <h2 id="wi-how">How it works</h2>
+          <ol>
+            <li>Choose Mega Millions or Powerball (current matrix ranges).</li>
+            <li>Pick five unique white balls and one bonus ball (bonus may equal a white).</li>
+            <li>Select Last 1 year, Last 5 years, All current-matrix history, or custom ET dates.</li>
+            <li>Optionally set tickets per drawing (identical numbers each drawing).</li>
+            <li>Review drawings analyzed, hypothetical spend, estimated base prizes, net, tier counts, and up to about 20 strongest matches.</li>
+          </ol>
+          <p>
+            Scope: bundled current-matrix history only
+            (Mega Millions from October 31, 2017, Powerball from October 7, 2015;
+            latest MM September 25, 2026, PB September 23, 2026).
+            Older incompatible matrices are not merged. Megaplier and Power Play are not included in V1.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-assumptions">
+          <h2 id="wi-assumptions">Assumptions</h2>
+          <ul>
+            <li>Official base prize amounts only; jackpot cash is never invented.</li>
+            <li>Current published ticket prices for hypothetical spend.</li>
+            <li>Eastern Time drawing dates as shipped in this site&apos;s snapshot.</li>
+            <li>Identical tickets on a drawing scale fixed prizes and cost; they do not change per-ticket odds.</li>
+            <li>Empty ranges show an empty state instead of inventing drawings.</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="wi-example">
+          <h2 id="wi-example">Worked example</h2>
+          <p>
+            Suppose you replay Powerball picks 01-02-03-04-05 + PB 07 across five synthetic
+            drawings and buy two identical tickets each time. A 5+0 hit contributes
+            2 × $1,000,000 in estimated base prizes; a jackpot-tier 5+1 hit is counted but
+            its cash value is left unestimated. Spend is 2 × $2 × 5 drawings = $20. Net uses
+            only the estimated fixed prizes minus spend.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-fixed">
+          <h2 id="wi-fixed">Fixed numbers vs changing numbers</h2>
+          <p>
+            Replaying one fixed set across history measures that set&apos;s past matches. Changing
+            numbers every drawing would produce a different path, but each individual ticket
+            still faces the same published per-draw odds. Fixing the numbers does not create
+            an edge; it only makes the historical path easy to inspect.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-limits">
+          <h2 id="wi-limits">Limitations</h2>
+          <ul>
+            <li>No Megaplier / Power Play multipliers.</li>
+            <li>No tax withholding or annuity vs cash modeling.</li>
+            <li>No jurisdiction-specific prize rules or promotions.</li>
+            <li>Jackpot advertised amounts vary; they are not estimated here.</li>
+            <li>Snapshot history may lag the official feeds until the next refresh.</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="wi-responsible">
+          <h2 id="wi-responsible">Responsible play</h2>
+          <p>
+            Lottery tickets are entertainment spending with long odds. Set a budget you can
+            afford to lose, and stop if play stops being fun. See
+            <a href="../responsible-play.html">responsible play</a>.
+            Help: 1-800-GAMBLER.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-privacy">
+          <h2 id="wi-privacy">Privacy</h2>
+          <p>
+            Picks and results stay in your browser. This page does not upload your numbers to
+            a server. See the <a href="../privacy-policy.html">privacy policy</a>.
+          </p>
+        </section>
+
+        <section aria-labelledby="wi-method">
+          <h2 id="wi-method">Methodology and sources</h2>
+          <p>
+            Matching uses order-independent white-ball overlap plus bonus equality — the same
+            pattern logic as Ticket Match. Prize labels and fixed values come from the same
+            official base tables used elsewhere on this site (via shared compute helpers).
+            Drawing dates and numbers come from the bundled NY Open Data–sourced snapshot.
+            Full method: <a href="../methodology.html">methodology</a>.
+          </p>
+          <p>
+            Snapshot basis: Mega Millions 930 drawings
+            (October 31, 2017  – September 25, 2026);
+            Powerball 1,406 drawings
+            (October 7, 2015  – September 23, 2026).
+          </p>
+        </section>
+
+                <section aria-labelledby="wi-faq">
+          <h2 id="wi-faq">Frequently asked questions</h2>
+          <h3>Is this the same as Ticket Match?</h3>
+          <p>No. Ticket Match compares one drawing. What If replays the same numbers across many drawings in the bundled history.</p>
+          <h3>Does buying more identical tickets improve my odds?</h3>
+          <p>No. Tickets per drawing only scales cost and fixed base prizes. Each ticket remains an independent trial at the same published odds.</p>
+          <h3>Why is the jackpot not given a dollar amount?</h3>
+          <p>Advertised jackpots change by drawing. A jackpot-tier pattern is counted, but historical jackpot cash is not estimated here.</p>
+          <h3>Are Megaplier and Power Play included?</h3>
+          <p>No. V1 uses the official base prize table only, without multipliers, taxes, or jurisdiction rules.</p>
+          <h3>Can I use dates outside the bundled matrix?</h3>
+          <p>No. Only current-matrix history shipped with this site is analyzed. Future dates and incompatible older matrices are excluded.</p>
+          <h3>Is this official winner verification?</h3>
+          <p>No. Results are hypothetical and educational. Verify any real ticket with your state lottery.</p>
+          <h3>Do hot or cold numbers change the result?</h3>
+          <p>No. Frequency notes do not change per-draw odds. This tool only counts how a fixed set matched past published draws.</p>
+        </section>
+
+<section aria-labelledby="wi-related">
+          <h2 id="wi-related">Related</h2>
+          <ul class="year-related__list">
+            <li><a href="../tools/ticket-match-checker.html">Ticket Match &amp; History Checker</a></li>
+            <li><a href="../tools/odds-explorer.html">Lottery Odds Explorer</a></li>
+            <li><a href="../tools/lottery-spending-calculator.html">Lottery Spending Calculator</a></li>
+            <li><a href="../results/index.html">Winning numbers archive</a></li>
+            <li><a href="../guides/independent-trials.html">Independent trials</a></li>
+            <li><a href="../guides/hot-and-cold-numbers-tested.html">Hot and cold numbers tested</a></li>
+            <li><a href="../methodology.html">Methodology</a></li>
+            <li><a href="../responsible-play.html">Responsible play</a></li>
+          </ul>
+        </section>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <h2>Lottery Number Lab</h2>
+          <p>Odds, drawing history and probability for Mega Millions and Powerball. All drawing dates and times on this site are US Eastern Time (ET).</p>
+        </div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="../mega-millions.html">Mega Millions numbers</a>
+          <a href="../powerball.html">Powerball numbers</a>
+          <a href="../results/index.html">Past winning numbers</a>
+          <a href="../analyze/index.html">Analyze</a>
+          <a href="../tools/index.html">Tools</a>
+          <a href="../guides/index.html">All guides</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../glossary.html">Glossary</a>
+          <a href="../methodology.html">Methodology & corrections</a>
+          <a href="../about.html">About & contact</a>
+          <a href="../privacy-policy.html">Privacy policy</a>
+          <a href="../terms.html">Terms & disclaimer</a>
+          <a href="../responsible-play.html">Responsible play</a>
+        </nav>
+      </div>
+      <p class="footer__disclaimer"><strong>Disclaimer.</strong> The numbers this site produces are reference figures for
+<strong>entertainment purposes only</strong>, based on historical statistics and a random
+sampling algorithm. Every lottery drawing is a perfectly independent event, so nothing here
+guarantees or improves a win. Please do not buy lottery tickets excessively.</p>
+      <p class="footer__warn">
+        This site is an independent statistics project. It is not affiliated with, endorsed by
+        or connected to the Mega Millions Consortium, the Multi-State Lottery Association
+        (MUSL), or any state lottery. It does not sell lottery tickets and cannot pay prizes.
+        Official results must always be verified with your state lottery.
+        Play only where legal and only if you are old enough — 18+, or 21+ in some states.
+        If gambling stops being fun, call 1-800-GAMBLER or visit
+        <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener nofollow">ncpgambling.org</a>.
+      </p>
+      <p class="footer__meta">© 2026–present Lottery Number Lab. Drawing data from the
+        New York State Open Data portal.</p>
+    </footer>
+    <script src="../data/draws.js"></script>
+    <script src="../src/data.js"></script>
+    <script src="../src/tools/lottery-what-if-calculator.js"></script>
+  </body>
+</html>

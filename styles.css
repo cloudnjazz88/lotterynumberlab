@@ -2959,7 +2959,7 @@ td small {
   line-height: 1.35;
 }
 
-/* Track spending is the only real calculator — keep link weight honest */
+/* Track spending is the only real calculator ??keep link weight honest */
 .panel--utility .utility-rail__item:last-child .utility-rail__label {
   font-weight: 750;
 }
@@ -3615,7 +3615,7 @@ td small {
   color: var(--text-primary);
 }
 
-/* About / one-in: separate line with clear gap — never glued as 0.03%(About...) */
+/* About / one-in: separate line with clear gap ??never glued as 0.03%(About...) */
 .odds-sub {
   display: block;
   margin-top: 0.2rem;
@@ -3981,4 +3981,212 @@ main:has(.year-page) {
 .prose--article {
   min-width: 0;
   max-width: 100%;
+}
+
+
+/* ===== What If Calculator (navy surfaces, light inputs only) ===== */
+.what-if-page .wi-form,
+.what-if {
+  min-width: 0;
+}
+.wi-form__game-row,
+.wi-period-row,
+.wi-actions,
+.wi-custom-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.75rem;
+  align-items: center;
+}
+.wi-game-btn {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  background: var(--surface-panel);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.45rem 0.95rem;
+  font: inherit;
+  cursor: pointer;
+}
+.wi-game-btn.is-on {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+.what-if[data-wi-game="megamillions"] {
+  --accent: #ffc233;
+}
+.what-if[data-wi-game="powerball"] {
+  --accent: #ff5566;
+}
+.wi-selection,
+.wi-status {
+  margin: 0.75rem 0;
+  color: var(--muted);
+}
+.wi-status--error {
+  color: #ff8f9a;
+}
+.wi-period-opt {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.wi-period-opt input {
+  accent-color: var(--accent);
+}
+.wi-custom-row .field,
+.wi-tickets-field {
+  min-width: min(100%, 12rem);
+}
+.wi-form input[type="date"],
+.wi-form input[type="number"] {
+  background: #f8fafc;
+  color: var(--input-ink, #0f172a);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+}
+.wi-results {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+}
+.wi-glance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.wi-glance > div {
+  background: var(--surface-panel);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+  min-width: 0;
+}
+.wi-glance dt {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.wi-glance dd {
+  margin: 0;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+.wi-dist,
+.wi-matches {
+  margin: 0.5rem 0 1rem;
+  padding-left: 1.1rem;
+}
+.wi-dist li,
+.wi-matches li {
+  margin: 0.35rem 0;
+  overflow-wrap: anywhere;
+}
+.wi-dist li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  list-style: none;
+  margin-left: -1.1rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-panel) 80%, transparent);
+}
+.wi-jackpot-note,
+.wi-disclaimer,
+.wi-matches__note {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.wi-empty {
+  padding: 0.75rem 0;
+}
+
+/* Tool panel h2: panel padding already spaces the title — don't stack prose h2 margin */
+.what-if-page #wi-tool > h2,
+.what-if > h2 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Results sit in normal flow; never reserve empty grid/flex space */
+.what-if,
+.wi-form,
+.wi-results,
+.wi-summary {
+  display: block;
+  min-height: 0;
+  height: auto;
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+}
+
+/* Isolate result lists from .prose ul/ol display:grid so rows size to content */
+.what-if-page .wi-dist,
+.what-if-page .wi-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0.5rem 0 1rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.what-if-page .wi-dist li {
+  margin: 0;
+  margin-left: 0;
+}
+
+.what-if-page .wi-matches {
+  list-style: decimal;
+  padding-left: 1.25rem;
+}
+
+.what-if-page .wi-matches li {
+  margin: 0;
+  display: list-item;
+}
+
+/* Explanatory sections: plain flow like Ticket Match / Spending (no card-stack gutters) */
+.what-if-page > section:not(.what-if) {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) and (min-width: 641px) {
+  /* Tablet band: force single-column flow; no desktop split height leftover */
+  .what-if-page,
+  .what-if-page #wi-tool,
+  .what-if-page .wi-results,
+  .what-if-page .wi-summary {
+    display: block;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    align-items: start;
+    min-height: 0;
+    height: auto;
+  }
+
+  .what-if-page .wi-glance {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .wi-glance {
+    grid-template-columns: 1fr;
+  }
+  .wi-dist li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
