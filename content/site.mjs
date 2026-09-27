@@ -6,7 +6,7 @@
  * reminder for anything still left at its placeholder value.
  */
 
-import { stylesheetHref } from "../tools/asset-version.mjs";
+import { stylesheetHref, withAssetVersion } from "../tools/asset-version.mjs";
 
 export const SITE = {
   name: "Lottery Number Lab",
@@ -359,8 +359,10 @@ export function layout(page) {
   const depth = page.slug.includes("/") ? page.slug.split("/").length - 1 : 0;
   const base = SITE.url.replace(/\/$/, "");
   const canonical = `${base}/${page.slug.replace(/index\.html$/, "")}`;
+  // Script cache busting: withAssetVersion content-hashes static src/* (+ styles via stylesheetHref).
+  // Mutable runtime data under data/ (e.g. draws.js) stays on a fixed URL for nightly PATHS refresh.
   const scripts = (page.scripts || [])
-    .map((src) => `<script src="${link(src, depth)}"></script>`)
+    .map((src) => `<script src="${withAssetVersion(link(src, depth), src)}"></script>`)
     .join("\n    ");
 
   const docTitle = page.title.includes(SITE.shortName) ? page.title : `${page.title} | ${SITE.shortName}`;
