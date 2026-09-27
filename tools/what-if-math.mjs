@@ -1,4 +1,4 @@
-﻿/**
+/**
  * What If Calculator math (Node + browser parity).
  * Same numbers repeated across current-matrix history — not one-draw Ticket Match.
  * Prizes: estimated/hypothetical official base only. No Megaplier/Power Play/tax/jackpot cash.
@@ -410,3 +410,244 @@ export const BANNED_CLAIM_WORDS = [
   "lucky",
   "due",
 ];
+
+/**
+ * Presentation-only helpers for What If results UI.
+ * Derives display copy from analyzeWhatIf output — does not recompute prizes/spent/net.
+ */
+export function formatIsoDateShort(iso) {
+  if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return String(iso || "");
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d, 12)).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+export function formatMatchTierLabel(whiteMatches, bonusMatch, specialName) {
+  const w = Number(whiteMatches) || 0;
+  const bonus = bonusMatch ? ` + ${specialName || "bonus"}` : "";
+  return `${w} white${bonus}`;
+}
+
+export function formatUsdSigned(n, { forcePlus = false } = {}) {
+  if (n == null || !Number.isFinite(n)) return "—";
+  if (n > 0 && forcePlus) return `+${formatUsd(n)}`;
+  return formatUsd(n);
+}
+
+/**
+ * Cents-per-dollar display from existing returnRate (prizes/spent).
+ * 0.12 -> "12\u00a2"; >= $1 uses dollar formatting.
+ */
+export function formatReturnPerDollar(rate) {
+  if (rate == null || !Number.isFinite(rate) || rate < 0) return null;
+  const cents = Math.round(rate * 100);
+  if (cents < 100) return `${cents}\u00a2`;
+  return formatUsd(cents / 100);
+}
+
+export function formatReturnPerDollarSentence(rate) {
+  const bit = formatReturnPerDollar(rate);
+  if (!bit) return null;
+  return `That is about ${bit} returned for every $1 spent.`;
+}
+
+/**
+ * Build prize-result rows keyed by match tier (never merge different tiers by $ alone).
+ * Subtotals use official base prize × tickets × drawing count; jackpot $ excluded.
+ */
+export function buildPrizeResultRows(result) {
+  const tickets = Number(result.ticketsPerDrawing) || 1;
+  const drawings = Number(result.drawingsAnalyzed) || 0;
+  const specialName = result.specialName || "bonus";
+  const rows = [];
+  let subtotalSum = 0;
+
+  for (const row of result.distribution || []) {
+    if (row.key === "no-match") {
+      rows.push({
+        key: "no-prize",
+        kind: "no-prize",
+        title: "No prize",
+        matchLabel: null,
+        count: row.count,
+        countLabel: `${Number(row.count).toLocaleString("en-US")} drawing${row.count === 1 ? "" : "s"}`,
+        total: 0,
+        totalLabel: null,
+        isJackpot: false,
+        ratio: drawings > 0 ? row.count / drawings : 0,
+      });
+      continue;
+    }
+
+    const [wStr, bStr] = String(row.key).split("+");
+    const w = Number(wStr) || 0;
+    const bonusMatch = Number(bStr) === 1;
+    const matchLabel = formatMatchTierLabel(w, bonusMatch, specialName);
+    const prize = lookupBasePrize(result.gameId, w, bonusMatch);
+
+    if (row.isJackpot || prize.isJackpot || prize.value == null) {
+      rows.push({
+        key: row.key,
+        kind: "jackpot",
+        title: "Jackpot",
+        matchLabel,
+        count: row.count,
+        countLabel: `${row.count} winning drawing${row.count === 1 ? "" : "s"}`,
+        total: null,
+        totalLabel: "Amount not estimated",
+        isJackpot: true,
+        ratio: drawings > 0 ? row.count / drawings : 0,
+      });
+      continue;
+    }
+
+    const unit = prize.value;
+    const total = unit * tickets * row.count;
+    subtotalSum += total;
+    const baseLabel = `${formatUsd(unit)} base prize`;
+    rows.push({
+      key: row.key,
+      kind: "prize",
+      title: baseLabel,
+      matchLabel,
+      count: row.count,
+      countLabel: `${row.count} winning drawing${row.count === 1 ? "" : "s"}`,
+      total,
+      totalLabel: `${formatUsd(total)} total`,
+      isJackpot: false,
+      ratio: drawings > 0 ? row.count / drawings : 0,
+      unit,
+    });
+  }
+
+  return { rows, subtotalSum };
+}
+
+/**
+ * Presentation view-model from an analyzeWhatIf result. No new prize math.
+ */
+export function buildResultsPresentation(result) {
+  if (!result || !result.ok || result.empty) {
+    return { ok: false, empty: Boolean(result && result.empty), message: result && result.message };
+  }
+
+  const spent = result.hypotheticalSpent;
+  const prizes = result.estimatedBasePrizes;
+  const net = result.net;
+  const hasJackpot = (result.jackpotTierCount || 0) > 0;
+
+  let outcome;
+  let conclusionEyebrow = null;
+  let conclusionHeadline;
+  let conclusionLabel;
+  let conclusionAmount;
+  let narrative;
+  let narrativeSecondary = null;
+  let returnSentence = null;
+
+  if (hasJackpot) {
+    // Overall P/L unknown when any jackpot-tier match exists (jackpot $ not estimated).
+    outcome = "indeterminate";
+    conclusionEyebrow = "Jackpot-tier match found";
+    conclusionHeadline = "Overall net cannot be determined";
+    conclusionLabel = "";
+    conclusionAmount = "Jackpot value not estimated";
+    narrative =
+      "This run includes a jackpot-tier match. Because the historical jackpot amount is not estimated, total prizes and overall gain or loss cannot be calculated.";
+    narrativeSecondary =
+      `Excluding the jackpot value, known base prizes total ${formatUsd(prizes)} against ${formatUsd(spent)} in ticket cost.`;
+    // Hide generic return-per-dollar when jackpot-tier is present.
+    returnSentence = null;
+  } else {
+    outcome = "break-even";
+    if (net < 0) outcome = "loss";
+    else if (net > 0) outcome = "gain";
+
+    if (outcome === "loss") {
+      conclusionHeadline = `You would have lost an estimated ${formatUsd(Math.abs(net))}`;
+      conclusionLabel = "Estimated loss";
+      conclusionAmount = formatUsd(net);
+      narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a net loss of ${formatUsd(Math.abs(net))}.`;
+    } else if (outcome === "gain") {
+      conclusionHeadline = `You would have gained an estimated ${formatUsd(net)}`;
+      conclusionLabel = "Estimated gain";
+      conclusionAmount = `+${formatUsd(net)}`;
+      narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a net gain of ${formatUsd(net)}.`;
+    } else {
+      conclusionHeadline = "Estimated break-even";
+      conclusionLabel = "Estimated break-even";
+      conclusionAmount = "$0";
+      narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a break-even net of $0.`;
+    }
+    returnSentence = formatReturnPerDollarSentence(result.returnRate);
+  }
+
+  const { rows: prizeRows, subtotalSum } = buildPrizeResultRows(result);
+
+  const best = result.bestMatch;
+  const bestMatchLabel = best
+    ? formatMatchTierLabel(best.whiteMatches, best.bonusMatch, result.specialName)
+    : "No prize-tier match";
+  const bestMatchDate = best ? formatIsoDateShort(best.d) : "—";
+
+  const winningDrawings = (result.meaningfulMatches || []).map((m) => ({
+    d: m.d,
+    dateLabel: formatIsoDateShort(m.d),
+    matchLabel: formatMatchTierLabel(m.whiteMatches, m.bonusMatch, result.specialName),
+    prizeLabel: m.isJackpot
+      ? "Jackpot (amount not estimated)"
+      : formatUsd(m.estimatedPrize),
+    isJackpot: Boolean(m.isJackpot),
+  }));
+
+  return {
+    ok: true,
+    empty: false,
+    outcome,
+    conclusionEyebrow,
+    conclusionHeadline,
+    conclusionLabel,
+    conclusionAmount,
+    narrative,
+    narrativeSecondary,
+    returnSentence,
+    returnPerDollar: hasJackpot ? null : formatReturnPerDollar(result.returnRate),
+    cards: {
+      totalTicketCost: { label: "Total ticket cost", amount: formatUsd(spent) },
+      estimatedPrizes: {
+        label: hasJackpot ? "Known estimated prizes" : "Estimated prizes",
+        amount: formatUsd(prizes),
+        helper: hasJackpot ? "Excludes jackpot value" : "Official base prize amounts only",
+      },
+      estimatedNet: {
+        label: hasJackpot ? "Net excluding jackpot value" : "Estimated net",
+        amount: formatUsdSigned(net, { forcePlus: net > 0 }),
+      },
+    },
+    // Conclusion already carries jackpot-unknown copy; avoid a redundant banner.
+    jackpotBanner: null,
+    runDetails: {
+      drawingsAnalyzed: result.drawingsAnalyzed,
+      ticketsPerDrawing: result.ticketsPerDrawing,
+      ticketPrice: formatUsd(result.ticketPrice),
+      winningDrawings: result.meaningfulTotal || 0,
+      noPrizeDrawings: result.noMatchCount || 0,
+      bestMatch: bestMatchLabel,
+      bestMatchDate,
+    },
+    prizeRows,
+    prizeSubtotalSum: subtotalSum,
+    winningDrawings,
+    winningTruncated: Boolean(result.meaningfulTruncated),
+    winningTotal: result.meaningfulTotal || 0,
+    winningLimit: result.meaningfulMatchLimit || MEANINGFUL_MATCH_LIMIT,
+    disclaimer:
+      "Historical estimate only. Prize totals use official base prize amounts for the current game matrix. Jackpot cash values, taxes, Megaplier, Power Play, and jurisdiction-specific rules are not included. This is not claim verification.",
+    picksLabel: `${(result.whites || []).map((n) => String(n).padStart(2, "0")).join("-")} + ${result.specialAbbr} ${String(result.bonus).padStart(2, "0")}`,
+    periodLabel: result.period,
+  };
+}

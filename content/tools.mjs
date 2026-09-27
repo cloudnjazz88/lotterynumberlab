@@ -830,7 +830,7 @@ export function whatIfCalculatorPage(ctx) {
             <li>Pick five unique white balls and one bonus ball (bonus may equal a white).</li>
             <li>Select Last 1 year, Last 5 years, All current-matrix history, or custom ET dates.</li>
             <li>Optionally set tickets per drawing (identical numbers each drawing).</li>
-            <li>Review drawings analyzed, hypothetical spend, estimated base prizes, net, tier counts, and up to about 20 strongest matches.</li>
+            <li>Review the estimated loss or gain summary, ticket cost versus estimated prizes, run details, prize results by match tier, and up to 20 winning drawings.</li>
           </ol>
           <p>
             Scope: bundled current-matrix history only

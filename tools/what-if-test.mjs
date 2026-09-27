@@ -1,4 +1,4 @@
-﻿/**
+/**
  * What If Calculator tests — known values, empty range, sorting, multi-ticket scale,
  * jackpot non-estimation, banned claim words, deterministic double-build check hook.
  */
@@ -22,7 +22,14 @@ import {
   TICKET_PRICE_USD,
   validateTicket,
   matchTicket,
+  buildResultsPresentation,
+  buildPrizeResultRows,
+  formatReturnPerDollar,
+  formatReturnPerDollarSentence,
+  formatIsoDateShort,
+  formatMatchTierLabel,
 } from "./what-if-math.mjs";
+
 import { matchTicket as tmMatch } from "./ticket-match-math.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -252,8 +259,208 @@ const pbDraws = loadDraws("powerball");
   pass("what-if test module loads");
 }
 
+
+// --- presentation: spent / prizes / net / return / tiers / jackpot ---
+{
+  const synthetic = [
+    { d: "2020-01-01", n: [1, 2, 3, 4, 5], s: 10 }, // 5+0
+    { d: "2020-01-04", n: [1, 2, 3, 4, 9], s: 10 }, // 4+0
+    { d: "2020-01-08", n: [1, 2, 3, 8, 9], s: 10 }, // 3+0
+    { d: "2020-01-11", n: [11, 12, 13, 14, 15], s: 20 }, // no match
+    { d: "2020-01-15", n: [1, 2, 3, 4, 5], s: 7 }, // 5+1 jackpot
+  ];
+  const r = analyzeWhatIf({
+    gameId: "powerball",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 7,
+    draws: synthetic,
+    period: "all",
+    ticketsPerDrawing: 2,
+  });
+  assert.equal(r.hypotheticalSpent, TICKET_PRICE_USD.powerball * 2 * 5);
+  assert.equal(r.estimatedBasePrizes, (1_000_000 + 100 + 7) * 2);
+  assert.equal(r.net, r.estimatedBasePrizes - r.hypotheticalSpent);
+  assert.equal(r.jackpotTierCount, 1);
+  const view = buildResultsPresentation(r);
+  assert.equal(view.outcome, "indeterminate");
+  assert.equal(view.conclusionEyebrow, "Jackpot-tier match found");
+  assert.equal(view.conclusionHeadline, "Overall net cannot be determined");
+  assert.equal(view.conclusionAmount, "Jackpot value not estimated");
+  assert.equal(view.cards.estimatedPrizes.label, "Known estimated prizes");
+  assert.equal(view.cards.estimatedPrizes.helper, "Excludes jackpot value");
+  assert.equal(view.cards.estimatedNet.label, "Net excluding jackpot value");
+  assert.equal(view.cards.estimatedPrizes.amount, formatUsd(r.estimatedBasePrizes));
+  assert.equal(view.cards.totalTicketCost.amount, formatUsd(r.hypotheticalSpent));
+  // Forbid overall loss/gain/break-even wording when jackpot-tier present
+  assert.notEqual(view.conclusionLabel, "Estimated loss");
+  assert.notEqual(view.conclusionLabel, "Estimated gain");
+  assert.ok(!/Estimated loss|Estimated gain|break-even/i.test(view.conclusionHeadline));
+  assert.ok(!/Estimated loss|Estimated gain|break-even/i.test(view.conclusionAmount));
+  assert.ok(!/lost an estimated|gained an estimated|break-even/i.test(view.narrative));
+  assert.ok(view.narrative.includes("jackpot-tier match"));
+  assert.ok(view.narrative.includes("cannot be calculated"));
+  assert.ok(view.narrativeSecondary);
+  assert.ok(view.narrativeSecondary.includes("Excluding the jackpot value"));
+  assert.ok(view.narrativeSecondary.includes(formatUsd(r.estimatedBasePrizes)));
+  assert.ok(view.narrativeSecondary.includes(formatUsd(r.hypotheticalSpent)));
+  // Generic return-per-dollar hidden for jackpot-tier
+  assert.equal(view.returnSentence, null);
+  assert.equal(view.returnPerDollar, null);
+  assert.equal(view.jackpotBanner, null);
+  assert.equal(view.prizeSubtotalSum, r.estimatedBasePrizes);
+  const { rows } = buildPrizeResultRows(r);
+  const prizeOnly = rows.filter((row) => row.kind === "prize");
+  assert.equal(
+    prizeOnly.reduce((a, row) => a + row.total, 0),
+    r.estimatedBasePrizes,
+  );
+  assert.ok(rows.some((row) => row.kind === "jackpot"));
+  assert.ok(rows.some((row) => row.kind === "no-prize"));
+  assert.ok(view.winningDrawings.some((m) => m.isJackpot));
+  pass("presentation jackpot indeterminate; known prizes/net exclude jackpot");
+}
+
+{
+  // loss case: MM last1y fixed picks
+  const r = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: mmDraws,
+    period: "last1y",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(r.hypotheticalSpent, TICKET_PRICE_USD.megamillions * 1 * r.drawingsAnalyzed);
+  assert.equal(r.net, r.estimatedBasePrizes - r.hypotheticalSpent);
+  const view = buildResultsPresentation(r);
+  if (r.net < 0) {
+    assert.equal(view.outcome, "loss");
+    assert.ok(view.conclusionLabel === "Estimated loss");
+    assert.ok(view.narrative.includes("net loss"));
+  } else if (r.net > 0) {
+    assert.equal(view.outcome, "gain");
+  } else {
+    assert.equal(view.outcome, "break-even");
+  }
+  assert.equal(view.prizeSubtotalSum, r.estimatedBasePrizes);
+  assert.ok(view.disclaimer.includes("Historical estimate only"));
+  assert.ok(view.disclaimer.includes("not claim verification"));
+  pass(`presentation MM last1y outcome=${view.outcome}`);
+}
+
+{
+  // zero winning drawings
+  const draws = [
+    { d: "2021-01-02", n: [10, 11, 12, 13, 14], s: 20 },
+    { d: "2021-01-05", n: [15, 16, 17, 18, 19], s: 21 },
+  ];
+  const r = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws,
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(r.meaningfulTotal, 0);
+  assert.equal(r.estimatedBasePrizes, 0);
+  assert.equal(r.hypotheticalSpent, 5 * 2);
+  assert.equal(r.net, -10);
+  const view = buildResultsPresentation(r);
+  assert.equal(view.outcome, "loss");
+  assert.equal(view.winningDrawings.length, 0);
+  assert.equal(view.prizeSubtotalSum, 0);
+  pass("presentation zero winning drawings");
+}
+
+{
+  // break-even synthetic: one $10 MM prize, spend $10
+  const draws = [{ d: "2021-02-02", n: [1, 2, 3, 8, 9], s: 20 }]; // 3+0 = $10
+  const r = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws,
+    period: "all",
+    ticketsPerDrawing: 2, // spend 5*2*1=10, prizes 10*2=20 -> gain
+  });
+  // adjust: tickets 1 => spend 5, prizes 10 => gain; for break-even need spend==prizes
+  const even = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: [
+      { d: "2021-02-02", n: [1, 2, 3, 8, 9], s: 20 }, // $10
+      { d: "2021-02-05", n: [10, 11, 12, 13, 14], s: 20 }, // no prize
+    ],
+    period: "all",
+    ticketsPerDrawing: 1, // spend 10, prizes 10
+  });
+  assert.equal(even.hypotheticalSpent, 10);
+  assert.equal(even.estimatedBasePrizes, 10);
+  assert.equal(even.net, 0);
+  const view = buildResultsPresentation(even);
+  assert.equal(view.outcome, "break-even");
+  assert.equal(view.conclusionAmount, "$0");
+  pass("presentation break-even");
+}
+
+{
+  const bit = formatReturnPerDollar(0.12);
+  assert.equal(bit, "12" + String.fromCharCode(0xa2));
+  assert.equal(
+    formatReturnPerDollarSentence(0.12),
+    "That is about 12" + String.fromCharCode(0xa2) + " returned for every $1 spent.",
+  );
+  assert.equal(formatIsoDateShort("2026-07-07"), "Jul 7, 2026");
+  assert.equal(formatMatchTierLabel(2, true, "Mega Ball"), "2 white + Mega Ball");
+  assert.equal(formatMatchTierLabel(5, false, "Powerball"), "5 white");
+  pass("return-per-dollar, date, match labels");
+}
+
+{
+  // MM identical $10 tiers must not merge
+  const draws = [
+    { d: "2021-03-02", n: [1, 2, 3, 8, 9], s: 20 }, // 3+0 $10
+    { d: "2021-03-05", n: [1, 2, 8, 9, 10], s: 6 }, // 2+1 $10
+  ];
+  const r = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws,
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(r.estimatedBasePrizes, 20);
+  const { rows } = buildPrizeResultRows(r);
+  const ten = rows.filter((row) => row.unit === 10);
+  assert.equal(ten.length, 2);
+  assert.ok(ten.some((row) => row.key === "3+0"));
+  assert.ok(ten.some((row) => row.key === "2+1"));
+  pass("MM same-dollar tiers kept separate by match key");
+}
+
+{
+  // PB multi-ticket + presentation
+  const r = analyzeWhatIf({
+    gameId: "powerball",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 7,
+    draws: pbDraws.slice(0, 80),
+    period: "all",
+    ticketsPerDrawing: 3,
+  });
+  assert.equal(r.hypotheticalSpent, TICKET_PRICE_USD.powerball * 3 * r.drawingsAnalyzed);
+  const view = buildResultsPresentation(r);
+  assert.equal(view.prizeSubtotalSum, r.estimatedBasePrizes);
+  assert.equal(view.cards.totalTicketCost.amount, formatUsd(r.hypotheticalSpent));
+  pass("PB multi-ticket presentation subtots");
+}
+
+
 if (process.exitCode) {
   console.error("\nwhat-if tests failed");
   process.exit(1);
 }
-console.log("\nPASS  what-if: parity, prizes, periods, multi-ticket, jackpot, cap, known values");
+console.log("\nPASS  what-if: parity, prizes, periods, multi-ticket, jackpot, cap, known values, presentation");

@@ -1,4 +1,4 @@
-﻿/* Lottery What If Calculator — client-side only. Hypothetical historical replay. */
+/* Lottery What If Calculator — client-side only. Hypothetical historical replay. */
 window.LOTTO = window.LOTTO || {};
 (function (APP) {
   "use strict";
@@ -172,6 +172,12 @@ window.LOTTO = window.LOTTO || {};
       })
     );
   }
+  function formatUsdSigned(n, opts) {
+    opts = opts || {};
+    if (n == null || !Number.isFinite(n)) return "—";
+    if (n > 0 && opts.forcePlus) return "+" + formatUsd(n);
+    return formatUsd(n);
+  }
 
   function loadDraws(gameId) {
     const bundled = APP.data && APP.data.loadBundled ? APP.data.loadBundled() : null;
@@ -337,6 +343,7 @@ window.LOTTO = window.LOTTO || {};
     return {
       ok: true,
       empty: false,
+      gameId: input.gameId,
       gameName: game.name,
       specialName: game.specialName,
       specialAbbr: game.specialAbbr,
@@ -481,7 +488,233 @@ window.LOTTO = window.LOTTO || {};
     renderResults(result);
   }
 
-  function renderResults(r) {
+function formatIsoDateShort(iso) {
+    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return String(iso || "");
+    const parts = iso.split("-").map(Number);
+    return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], 12)).toLocaleDateString("en-US", {
+      timeZone: "UTC",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
+  function formatMatchTierLabel(whiteMatches, bonusMatch, specialName) {
+    const w = Number(whiteMatches) || 0;
+    const bonus = bonusMatch ? " + " + (specialName || "bonus") : "";
+    return w + " white" + bonus;
+  }
+
+  function formatReturnPerDollar(rate) {
+    if (rate == null || !Number.isFinite(rate) || rate < 0) return null;
+    const cents = Math.round(rate * 100);
+    if (cents < 100) return cents + "\u00a2";
+    return formatUsd(cents / 100);
+  }
+
+  function buildResultsPresentation(result) {
+    if (!result || !result.ok || result.empty) {
+      return { ok: false, empty: Boolean(result && result.empty), message: result && result.message };
+    }
+    const spent = result.hypotheticalSpent;
+    const prizes = result.estimatedBasePrizes;
+    const net = result.net;
+    const hasJackpot = (result.jackpotTierCount || 0) > 0;
+
+    let outcome;
+    let conclusionEyebrow = null;
+    let conclusionHeadline;
+    let conclusionLabel;
+    let conclusionAmount;
+    let narrative;
+    let narrativeSecondary = null;
+    let returnSentence = null;
+
+    if (hasJackpot) {
+      outcome = "indeterminate";
+      conclusionEyebrow = "Jackpot-tier match found";
+      conclusionHeadline = "Overall net cannot be determined";
+      conclusionLabel = "";
+      conclusionAmount = "Jackpot value not estimated";
+      narrative =
+        "This run includes a jackpot-tier match. Because the historical jackpot amount is not estimated, total prizes and overall gain or loss cannot be calculated.";
+      narrativeSecondary =
+        "Excluding the jackpot value, known base prizes total " +
+        formatUsd(prizes) +
+        " against " +
+        formatUsd(spent) +
+        " in ticket cost.";
+      returnSentence = null;
+    } else {
+      outcome = "break-even";
+      if (net < 0) outcome = "loss";
+      else if (net > 0) outcome = "gain";
+
+      if (outcome === "loss") {
+        conclusionHeadline = "You would have lost an estimated " + formatUsd(Math.abs(net));
+        conclusionLabel = "Estimated loss";
+        conclusionAmount = formatUsd(net);
+        narrative =
+          "You would have spent " +
+          formatUsd(spent) +
+          " and received an estimated " +
+          formatUsd(prizes) +
+          " in base prizes, for a net loss of " +
+          formatUsd(Math.abs(net)) +
+          ".";
+      } else if (outcome === "gain") {
+        conclusionHeadline = "You would have gained an estimated " + formatUsd(net);
+        conclusionLabel = "Estimated gain";
+        conclusionAmount = "+" + formatUsd(net);
+        narrative =
+          "You would have spent " +
+          formatUsd(spent) +
+          " and received an estimated " +
+          formatUsd(prizes) +
+          " in base prizes, for a net gain of " +
+          formatUsd(net) +
+          ".";
+      } else {
+        conclusionHeadline = "Estimated break-even";
+        conclusionLabel = "Estimated break-even";
+        conclusionAmount = "$0";
+        narrative =
+          "You would have spent " +
+          formatUsd(spent) +
+          " and received an estimated " +
+          formatUsd(prizes) +
+          " in base prizes, for a break-even net of $0.";
+      }
+
+      const retBit = formatReturnPerDollar(result.returnRate);
+      returnSentence = retBit
+        ? "That is about " + retBit + " returned for every $1 spent."
+        : null;
+    }
+
+    const tickets = Number(result.ticketsPerDrawing) || 1;
+    const drawings = Number(result.drawingsAnalyzed) || 0;
+    const specialName = result.specialName || "bonus";
+    const prizeRows = [];
+    let subtotalSum = 0;
+    (result.distribution || []).forEach(function (row) {
+      if (row.key === "no-match") {
+        prizeRows.push({
+          key: "no-prize",
+          kind: "no-prize",
+          title: "No prize",
+          matchLabel: null,
+          countLabel: row.count.toLocaleString("en-US") + " drawing" + (row.count === 1 ? "" : "s"),
+          totalLabel: null,
+          isJackpot: false,
+          ratio: drawings > 0 ? row.count / drawings : 0,
+        });
+        return;
+      }
+      const parts = String(row.key).split("+");
+      const w = Number(parts[0]) || 0;
+      const bonusMatch = Number(parts[1]) === 1;
+      const matchLabel = formatMatchTierLabel(w, bonusMatch, specialName);
+      const prize = lookupBasePrize(result.gameId, w, bonusMatch);
+      if (row.isJackpot || prize.isJackpot || prize.value == null) {
+        prizeRows.push({
+          key: row.key,
+          kind: "jackpot",
+          title: "Jackpot",
+          matchLabel: matchLabel,
+          countLabel: row.count + " winning drawing" + (row.count === 1 ? "" : "s"),
+          totalLabel: "Amount not estimated",
+          isJackpot: true,
+          ratio: drawings > 0 ? row.count / drawings : 0,
+        });
+        return;
+      }
+      const total = prize.value * tickets * row.count;
+      subtotalSum += total;
+      prizeRows.push({
+        key: row.key,
+        kind: "prize",
+        title: formatUsd(prize.value) + " base prize",
+        matchLabel: matchLabel,
+        countLabel: row.count + " winning drawing" + (row.count === 1 ? "" : "s"),
+        totalLabel: formatUsd(total) + " total",
+        isJackpot: false,
+        ratio: drawings > 0 ? row.count / drawings : 0,
+      });
+    });
+
+    const best = result.bestMatch;
+    const bestMatchLabel = best
+      ? formatMatchTierLabel(best.whiteMatches, best.bonusMatch, result.specialName)
+      : "No prize-tier match";
+    const bestMatchDate = best ? formatIsoDateShort(best.d) : "—";
+
+    const winningDrawings = (result.meaningfulMatches || []).map(function (m) {
+      return {
+        d: m.d,
+        dateLabel: formatIsoDateShort(m.d),
+        matchLabel: formatMatchTierLabel(m.whiteMatches, m.bonusMatch, result.specialName),
+        prizeLabel: m.isJackpot ? "Jackpot (amount not estimated)" : formatUsd(m.estimatedPrize),
+        isJackpot: Boolean(m.isJackpot),
+      };
+    });
+
+    return {
+      ok: true,
+      outcome: outcome,
+      conclusionEyebrow: conclusionEyebrow,
+      conclusionHeadline: conclusionHeadline,
+      conclusionLabel: conclusionLabel,
+      conclusionAmount: conclusionAmount,
+      narrative: narrative,
+      narrativeSecondary: narrativeSecondary,
+      returnSentence: returnSentence,
+      cards: {
+        totalTicketCost: { label: "Total ticket cost", amount: formatUsd(spent) },
+        estimatedPrizes: {
+          label: hasJackpot ? "Known estimated prizes" : "Estimated prizes",
+          amount: formatUsd(prizes),
+          helper: hasJackpot ? "Excludes jackpot value" : "Official base prize amounts only",
+        },
+        estimatedNet: {
+          label: hasJackpot ? "Net excluding jackpot value" : "Estimated net",
+          amount: formatUsdSigned(net, { forcePlus: net > 0 }),
+        },
+      },
+      jackpotBanner: null,
+      runDetails: {
+        drawingsAnalyzed: result.drawingsAnalyzed,
+        ticketsPerDrawing: result.ticketsPerDrawing,
+        ticketPrice: formatUsd(result.ticketPrice),
+        winningDrawings: result.meaningfulTotal || 0,
+        noPrizeDrawings: result.noMatchCount || 0,
+        bestMatch: bestMatchLabel,
+        bestMatchDate: bestMatchDate,
+      },
+      prizeRows: prizeRows,
+      prizeSubtotalSum: subtotalSum,
+      winningDrawings: winningDrawings,
+      winningTruncated: Boolean(result.meaningfulTruncated),
+      winningTotal: result.meaningfulTotal || 0,
+      winningLimit: result.meaningfulMatchLimit || MEANINGFUL_LIMIT,
+      disclaimer:
+        "Historical estimate only. Prize totals use official base prize amounts for the current game matrix. Jackpot cash values, taxes, Megaplier, Power Play, and jurisdiction-specific rules are not included. This is not claim verification.",
+      picksLabel:
+        (result.whites || [])
+          .map(function (n) {
+            return String(n).padStart(2, "0");
+          })
+          .join("-") +
+        " + " +
+        result.specialAbbr +
+        " " +
+        String(result.bonus).padStart(2, "0"),
+      periodLabel: result.period,
+    };
+  }
+
+
+function renderResults(r) {
     const out = $("wi-results");
     if (!out) return;
     out.hidden = false;
@@ -493,112 +726,183 @@ window.LOTTO = window.LOTTO || {};
       return;
     }
 
-    const returnPct =
-      r.returnRate == null || !Number.isFinite(r.returnRate)
-        ? "—"
-        : (r.returnRate * 100).toFixed(2) + "%";
-    const best = r.bestMatch
-      ? r.bestMatch.whiteMatches +
-        " white" +
-        (r.bestMatch.bonusMatch ? " + " + r.specialAbbr : "") +
-        " on " +
-        r.bestMatch.d
-      : "No prize-tier matches in this range";
+    const p = buildResultsPresentation(r);
+    const outcomeClass =
+      p.outcome === "loss"
+        ? "wi-conclusion--loss"
+        : p.outcome === "gain"
+          ? "wi-conclusion--gain"
+          : p.outcome === "indeterminate"
+            ? "wi-conclusion--indeterminate"
+            : "wi-conclusion--even";
 
-    let distHtml = '<ul class="wi-dist">';
-    (r.distribution || []).forEach(function (row) {
-      distHtml +=
-        "<li><span>" +
-        escapeHtml(row.label) +
-        '</span> <strong>' +
-        row.count +
-        "</strong></li>";
+    let prizeHtml = '<ul class="wi-prize-results" role="list">';
+    p.prizeRows.forEach(function (row) {
+      const barPct = Math.max(0, Math.min(100, Math.round((row.ratio || 0) * 1000) / 10));
+      prizeHtml +=
+        '<li class="wi-prize-results__row wi-prize-results__row--' +
+        escapeHtml(row.kind) +
+        '">' +
+        '<div class="wi-prize-results__main">' +
+        '<span class="wi-prize-results__title">' +
+        escapeHtml(row.title) +
+        (row.matchLabel
+          ? ' <span class="wi-prize-results__match">(' + escapeHtml(row.matchLabel) + ")</span>"
+          : "") +
+        "</span>" +
+        '<span class="wi-prize-results__meta">' +
+        '<span class="wi-prize-results__count">' +
+        escapeHtml(row.countLabel) +
+        "</span>" +
+        (row.totalLabel
+          ? '<span class="wi-prize-results__total">' + escapeHtml(row.totalLabel) + "</span>"
+          : "") +
+        "</span>" +
+        "</div>" +
+        '<div class="wi-prize-results__bar" aria-hidden="true"><span style="width:' +
+        barPct +
+        '%"></span></div>' +
+        "</li>";
     });
-    distHtml += "</ul>";
+    prizeHtml += "</ul>";
 
-    let matchesHtml = "";
-    if (r.meaningfulMatches && r.meaningfulMatches.length) {
-      matchesHtml = '<ol class="wi-matches">';
-      r.meaningfulMatches.forEach(function (m) {
-        const prizeBit = m.isJackpot
-          ? escapeHtml(m.prizeLabel)
-          : "Est. base " + formatUsd(m.estimatedPrize);
-        matchesHtml +=
-          "<li><time datetime=\"" +
+    let winsHtml = "";
+    if (p.winningDrawings.length) {
+      winsHtml =
+        '<div class="wi-wins" role="table" aria-label="Winning drawings">' +
+        '<div class="wi-wins__head" role="row">' +
+        '<span role="columnheader">Date</span>' +
+        '<span role="columnheader">Match</span>' +
+        '<span role="columnheader">Estimated base prize</span>' +
+        "</div>";
+      p.winningDrawings.forEach(function (m) {
+        winsHtml +=
+          '<div class="wi-wins__row" role="row">' +
+          '<span role="cell"><time datetime="' +
           m.d +
-          "\">" +
-          m.d +
-          "</time> · " +
-          m.whiteMatches +
-          " white" +
-          (m.bonusMatch ? " + " + r.specialAbbr : "") +
-          " · " +
-          prizeBit +
-          "</li>";
+          '">' +
+          escapeHtml(m.dateLabel) +
+          "</time></span>" +
+          '<span role="cell">' +
+          escapeHtml(m.matchLabel) +
+          "</span>" +
+          '<span role="cell">' +
+          escapeHtml(m.prizeLabel) +
+          "</span>" +
+          "</div>";
       });
-      matchesHtml += "</ol>";
-      if (r.meaningfulTruncated) {
-        matchesHtml +=
-          '<p class="wi-matches__note">Showing the strongest ' +
-          MEANINGFUL_LIMIT +
-          " of " +
-          r.meaningfulTotal +
-          " prize-tier matches (not every drawing).</p>";
+      winsHtml += "</div>";
+      if (p.winningTruncated) {
+        winsHtml += '<p class="wi-matches__note">Showing the first 20 winning drawings</p>';
       }
     } else {
-      matchesHtml = "<p>No prize-tier matches in this range.</p>";
+      winsHtml = '<p class="wi-wins__empty">No winning drawings in this range.</p>';
     }
 
+    const rd = p.runDetails;
     out.innerHTML =
-      '<div class="wi-summary">' +
+      '<div class="wi-summary" data-wi-outcome="' +
+      escapeHtml(p.outcome) +
+      '">' +
       "<h3>Hypothetical results</h3>" +
       '<p class="wi-summary__picks"><strong>Numbers:</strong> ' +
-      r.whites.map(pad2).join("-") +
-      " + " +
-      r.specialAbbr +
-      " " +
-      pad2(r.bonus) +
+      escapeHtml(p.picksLabel) +
       "</p>" +
       "<p><strong>Range:</strong> " +
-      escapeHtml(r.period) +
+      escapeHtml(p.periodLabel) +
       "</p>" +
-      '<dl class="wi-glance">' +
-      "<div><dt>Drawings analyzed</dt><dd>" +
-      r.drawingsAnalyzed.toLocaleString("en-US") +
+      '<div class="wi-conclusion ' +
+      outcomeClass +
+      '" role="status" aria-label="' +
+      escapeHtml(p.outcome) +
+      '">' +
+      (p.conclusionEyebrow
+        ? '<p class="wi-conclusion__eyebrow">' + escapeHtml(p.conclusionEyebrow) + "</p>"
+        : "") +
+      '<p class="wi-conclusion__headline">' +
+      escapeHtml(p.conclusionHeadline) +
+      "</p>" +
+      '<div class="wi-conclusion__amount-wrap">' +
+      (p.conclusionLabel
+        ? '<span class="wi-conclusion__label">' + escapeHtml(p.conclusionLabel) + "</span>"
+        : "") +
+      '<span class="wi-conclusion__amount">' +
+      escapeHtml(p.conclusionAmount) +
+      "</span>" +
+      "</div>" +
+      '<span class="wi-conclusion__state visually-hidden">' +
+      escapeHtml(p.outcome) +
+      "</span>" +
+      "</div>" +
+      (p.jackpotBanner
+        ? '<p class="wi-jackpot-note" role="note">' + escapeHtml(p.jackpotBanner) + "</p>"
+        : "") +
+      '<dl class="wi-summary-cards">' +
+      '<div class="wi-summary-card">' +
+      "<dt>" +
+      escapeHtml(p.cards.totalTicketCost.label) +
+      "</dt><dd>" +
+      escapeHtml(p.cards.totalTicketCost.amount) +
       "</dd></div>" +
-      "<div><dt>Tickets per drawing</dt><dd>" +
-      r.ticketsPerDrawing +
-      "</dd></div>" +
-      "<div><dt>Ticket price</dt><dd>" +
-      formatUsd(r.ticketPrice) +
-      "</dd></div>" +
-      "<div><dt>Hypothetical spent</dt><dd>" +
-      formatUsd(r.hypotheticalSpent) +
-      "</dd></div>" +
-      "<div><dt>Estimated base prizes</dt><dd>" +
-      formatUsd(r.estimatedBasePrizes) +
-      "</dd></div>" +
-      "<div><dt>Net (est. prizes − spent)</dt><dd>" +
-      formatUsd(r.net) +
-      "</dd></div>" +
-      "<div><dt>Return rate (est.)</dt><dd>" +
-      returnPct +
-      "</dd></div>" +
-      "<div><dt>Best match</dt><dd>" +
-      escapeHtml(best) +
-      "</dd></div>" +
-      "<div><dt>No-match drawings</dt><dd>" +
-      r.noMatchCount.toLocaleString("en-US") +
+      '<div class="wi-summary-card">' +
+      "<dt>" +
+      escapeHtml(p.cards.estimatedPrizes.label) +
+      "</dt><dd>" +
+      escapeHtml(p.cards.estimatedPrizes.amount) +
+      '</dd><p class="wi-summary-card__helper">' +
+      escapeHtml(p.cards.estimatedPrizes.helper) +
+      "</p></div>" +
+      '<div class="wi-summary-card wi-summary-card--net">' +
+      "<dt>" +
+      escapeHtml(p.cards.estimatedNet.label) +
+      "</dt><dd>" +
+      escapeHtml(p.cards.estimatedNet.amount) +
       "</dd></div>" +
       "</dl>" +
-      (r.jackpotNote
-        ? '<p class="wi-jackpot-note" role="note">' + escapeHtml(r.jackpotNote) + "</p>"
-        : "") +
-      "<h4>Tier distribution</h4>" +
-      distHtml +
-      "<h4>Meaningful matches</h4>" +
-      matchesHtml +
-      '<p class="wi-disclaimer">Estimated / hypothetical only. Official base prizes; no tax, Megaplier, or Power Play. Not claim verification.</p>' +
+      '<div class="wi-interpret">' +
+      "<p>" +
+      escapeHtml(p.narrative) +
+      "</p>" +
+      (p.narrativeSecondary ? "<p>" + escapeHtml(p.narrativeSecondary) + "</p>" : "") +
+      (p.returnSentence ? "<p>" + escapeHtml(p.returnSentence) + "</p>" : "") +
+      "</div>" +
+      '<section class="wi-section wi-section--details" aria-labelledby="wi-run-details">' +
+      '<h4 id="wi-run-details">Run details</h4>' +
+      '<dl class="wi-details">' +
+      "<div><dt>Drawings analyzed</dt><dd>" +
+      Number(rd.drawingsAnalyzed).toLocaleString("en-US") +
+      "</dd></div>" +
+      "<div><dt>Tickets per drawing</dt><dd>" +
+      rd.ticketsPerDrawing +
+      "</dd></div>" +
+      "<div><dt>Ticket price</dt><dd>" +
+      escapeHtml(rd.ticketPrice) +
+      "</dd></div>" +
+      "<div><dt>Winning drawings</dt><dd>" +
+      Number(rd.winningDrawings).toLocaleString("en-US") +
+      "</dd></div>" +
+      "<div><dt>No-prize drawings</dt><dd>" +
+      Number(rd.noPrizeDrawings).toLocaleString("en-US") +
+      "</dd></div>" +
+      "<div><dt>Best match</dt><dd>" +
+      escapeHtml(rd.bestMatch) +
+      "</dd></div>" +
+      "<div><dt>Best match date</dt><dd>" +
+      escapeHtml(rd.bestMatchDate) +
+      "</dd></div>" +
+      "</dl>" +
+      "</section>" +
+      '<section class="wi-section wi-section--prizes" aria-labelledby="wi-prize-results">' +
+      '<h4 id="wi-prize-results">Prize results</h4>' +
+      prizeHtml +
+      "</section>" +
+      '<section class="wi-section wi-section--wins" aria-labelledby="wi-winning-drawings">' +
+      '<h4 id="wi-winning-drawings">Winning drawings</h4>' +
+      winsHtml +
+      "</section>" +
+      '<p class="wi-disclaimer" role="note">' +
+      escapeHtml(p.disclaimer) +
+      "</p>" +
       "</div>";
   }
 
