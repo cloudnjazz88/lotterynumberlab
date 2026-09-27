@@ -55,7 +55,7 @@ for (const n of GUIDE_TICKET_COUNTS) {
 
 const guide = GUIDES.find((g) => g.slug === "does-buying-more-lottery-tickets-improve-your-odds");
 check("guide registered in GUIDES", !!guide);
-check("GUIDES length is 10", GUIDES.length === 10, `len=${GUIDES.length}`);
+check("GUIDES length is 11", GUIDES.length === 11, `len=${GUIDES.length}`);
 
 const htmlPath = resolve(ROOT, "guides/does-buying-more-lottery-tickets-improve-your-odds.html");
 let html = "";
@@ -121,7 +121,7 @@ check(
 );
 
 const hub = readFileSync(resolve(ROOT, "guides/index.html"), "utf8");
-check("guides hub says Ten guides", hub.includes("Ten guides covering"));
+check("guides hub says Eleven guides", hub.includes("Eleven guides covering"));
 check("guides hub lists new guide card", hub.includes("does-buying-more-lottery-tickets-improve-your-odds.html"));
 
 if (failed) {

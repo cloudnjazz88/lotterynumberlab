@@ -5,6 +5,7 @@
 
 import { num, pct, oneIn, money, table, callout, dateLong, adSlot, sourceList } from "./site.mjs";
 import { comparisonRows } from "../tools/more-tickets-math.mjs";
+import { illustrativeAnnuityShareRows } from "../tools/shared-jackpot-math.mjs";
 
 /* ---------------------------------- 1 ------------------------------------- */
 
@@ -1785,6 +1786,334 @@ ${callout(
   },
 };
 
+/* --------------------------------- 11 ------------------------------------- */
+
+const sharedJackpot = {
+  slug: "what-happens-when-multiple-people-win-the-lottery-jackpot",
+  kicker: "Money",
+  title: "What Happens When Multiple People Win the Lottery Jackpot?",
+  seoTitle:
+    "What Happens When Multiple People Win the Lottery Jackpot? How the Prize Is Split",
+  dek: "When more than one ticket hits the jackpot, the prize is split among those tickets — not duplicated for every winner. Pools and cash-versus-annuity choices are a separate layer.",
+  description:
+    "Learn how Powerball and Mega Millions jackpots are divided when multiple tickets win, how cash and annuity choices work, and why a lottery pool is different.",
+  published: "2026-09-27",
+  updated: "2026-09-27",
+  publicationMeta:
+    "rules re-checked against official Powerball and Mega Millions materials and example state claim guidance on September 27, 2026",
+  faq: [
+    {
+      q: "Do multiple jackpot winners each get the full advertised jackpot?",
+      a: "No. When more than one ticket wins the jackpot in the same drawing, the jackpot is generally divided among those jackpot-winning tickets. Each ticket does not receive the full advertised amount.",
+      plain:
+        "No. When more than one ticket wins the jackpot in the same drawing, the jackpot is generally divided among those jackpot-winning tickets. Each ticket does not receive the full advertised amount.",
+    },
+    {
+      q: "Is a lottery pool the same as multiple independent winning tickets?",
+      a: "No. Multiple independent jackpot-winning tickets split the jackpot among those tickets. A pool that owns one winning ticket splits that ticket’s share among members through claim procedures — a different situation.",
+      plain:
+        "No. Multiple independent jackpot-winning tickets split the jackpot among those tickets. A pool that owns one winning ticket splits that ticket’s share among members through claim procedures — a different situation.",
+    },
+    {
+      q: "Can each jackpot-winning ticket choose cash or annuity?",
+      a: "Official Powerball and Mega Millions materials describe cash and annuity options for jackpot winners, and multi-ticket examples show U.S. tickets choosing independently for their share. Exact election deadlines and claim steps vary by state lottery.",
+      plain:
+        "Official Powerball and Mega Millions materials describe cash and annuity options for jackpot winners, and multi-ticket examples show U.S. tickets choosing independently for their share. Exact election deadlines and claim steps vary by state lottery.",
+    },
+    {
+      q: "Do all prize tiers get split the same way as the jackpot?",
+      a: "No. Do not assume every tier is split like the jackpot. The jackpot is the classic shared (pari-mutuel) top prize; many lower tiers are published as fixed amounts, with important jurisdiction exceptions such as California Mega Millions.",
+      plain:
+        "No. Do not assume every tier is split like the jackpot. The jackpot is the classic shared (pari-mutuel) top prize; many lower tiers are published as fixed amounts, with important jurisdiction exceptions such as California Mega Millions.",
+    },
+    {
+      q: "Do duplicate tickets of the same numbers raise the chance of winning?",
+      a: "No. Buying the same combination more than once does not make that combination more likely to be drawn. If that combination does hit and more than one valid jackpot-winning ticket exists, the ticket count can affect how the jackpot is divided — that is a payout question, not a hit-probability boost.",
+      plain:
+        "No. Buying the same combination more than once does not make that combination more likely to be drawn. If that combination does hit and more than one valid jackpot-winning ticket exists, the ticket count can affect how the jackpot is divided — that is a payout question, not a hit-probability boost.",
+    },
+  ],
+  body(ctx) {
+    const records = ctx.records;
+    const pbTriple = records.find((r) => r.tickets === 3) || records[5];
+    const pbDouble = records.find((r) => r.tickets === 2) || records[2];
+    const shareRows = illustrativeAnnuityShareRows();
+    const shareTable = table(
+      ["Winning tickets", "Each ticket’s share of a $600M annuity", "Share of the advertised total"],
+      shareRows.map((r) => [
+        String(r.tickets),
+        `<b>${r.shareLabel}</b>`,
+        r.tickets === 1 ? "100%" : r.tickets === 3 ? "33.33% (1/3)" : r.percentLabel,
+      ]),
+      {
+        caption:
+          "Illustrative only: a simple pre-tax division of a stated $600 million annuity figure. Not a claim estimate, cash value, or after-tax payout.",
+      },
+    );
+    const situationTable = table(
+      ["Situation", "What is split?", "Who claims?", "Main rule source"],
+      [
+        [
+          "Multiple independent jackpot-winning tickets",
+          "The jackpot among winning <em>tickets</em> (2 → ½, 3 → ⅓)",
+          "Each ticket’s owner (or owners) through the selling lottery",
+          "Powerball / Mega Millions multi-winner jackpot rules",
+        ],
+        [
+          "One jackpot-winning ticket owned by a pool",
+          "That ticket’s jackpot share among pool members",
+          "Group claim procedures set by the selling state lottery",
+          "State lottery group-claim guidance (e.g. California Lottery as one example)",
+        ],
+      ],
+      {
+        caption:
+          "Two different sharing problems. Ticket-level jackpot splits and pool-member splits are not the same process.",
+      },
+    );
+
+    return `
+<p class="lede">
+  When more than one ticket wins the jackpot in the same drawing, the jackpot is generally
+  divided among those jackpot-winning tickets — each ticket does <em>not</em> get the full
+  advertised jackpot. A workplace pool that owns a single winning ticket is a different
+  situation: that ticket’s share is then divided among members through claim procedures.
+</p>
+
+<h2>Divided by winning ticket — not duplicated for every winner</h2>
+<p>
+  Powerball’s official FAQ states that if there are multiple jackpot-winning tickets in a
+  single drawing, the jackpot is awarded on a <strong>pari-mutuel</strong> basis — meaning it
+  is split among all winning tickets. Pari-mutuel here simply means the prize pool for that
+  tier is divided by the number of winning plays, rather than paying a fixed amount to every
+  winner. Mega Millions’ How to Play page says the same idea in plain language: in the event
+  of multiple jackpot winners, the jackpot prize will be shared.
+</p>
+<p>
+  Count <strong>tickets</strong>, not headlines that say “winners.” Two valid jackpot tickets
+  mean each is looking at about half of the jackpot; three mean about one third. If one person
+  somehow holds more than one identical jackpot-winning ticket for the same drawing, treat that
+  as a special case and verify the game and jurisdiction rules — do not assume a universal
+  nationwide rule for that edge case from this page alone.
+</p>
+<p>
+  Advertised jackpot amounts are estimates until sales (and, for annuities, securities funding)
+  are finalized. Official materials are explicit that the cash and annuity figures you saw
+  before the draw can move when accounting is complete.
+</p>
+
+${adSlot("guide-mid")}
+
+<h2>Illustrative $600&nbsp;million annuity split</h2>
+<p>
+  The table below is a teaching device only. It takes a stated $600&nbsp;million annuity figure
+  and divides it evenly by the number of jackpot-winning tickets. It is <strong>not</strong> a
+  claim estimate, a cash-option quote, a tax forecast, or a guarantee of what any lottery would
+  pay.
+</p>
+${shareTable}
+<p>
+  Read the columns as a simple pre-tax split of an advertised-style annuity number. Sales and
+  accounting finalize the real jackpot. Annuity is not cash. Cash is not “advertised annuity
+  minus tax.” Taxes, residency, and ownership form (individual, trust, group claim) sit on top
+  of the ticket split. Lottery Number Lab does not compute or guarantee payouts.
+</p>
+
+<h2>Multiple independent tickets vs one pool-owned ticket</h2>
+${situationTable}
+${callout(
+  "Two situations people often conflate",
+  `<p>
+    <b>Situation 1 — Multiple independent jackpot-winning tickets.</b> The jackpot is split
+    among winning tickets. Two tickets → about half each; three → about one third each.
+  </p>
+  <p>
+    <b>Situation 2 — One winning ticket owned by a pool.</b> The lottery still sees one
+    jackpot-winning ticket. That ticket’s share is then divided among members through the
+    selling lottery’s group-claim process and whatever written agreement the group kept.
+  </p>
+  <p>
+    California Lottery’s public claim guidance is a useful <em>example</em> of group paperwork
+    (including multiple-ownership claim forms for large prizes and IRS Form 5754 in some group
+    settings). It is not a United States-wide rulebook. Written pool agreements help with
+    recordkeeping; they are not legal advice, and this site is not giving legal or tax advice.
+  </p>`,
+  "note",
+)}
+
+<h2>Cash vs annuity — applied to each ticket’s share</h2>
+<p>
+  The roadside “jackpot” number is generally an <strong>annuity</strong> presentation. The
+  <strong>cash value</strong> is a separate, usually smaller, amount tied to the money actually
+  available to fund the prize. After a multi-ticket split, each ticket is dealing with its
+  <em>share</em> of those figures — not a second full jackpot.
+</p>
+<p>
+  Official Powerball materials describe a U.S. jackpot winner’s choice between an annuity (one
+  immediate payment followed by 29 annual payments that increase by 5% each year) and a
+  one-time cash payment, with multi-ticket examples showing each U.S. winning ticket choosing
+  independently for its share. Official Mega Millions materials likewise describe a Cash Option
+  and an Annuity Option (initial payment followed by 29 annual payments, each 5% larger than the
+  previous). Confirm each game’s current payment schedule from its own pages — do not assume the
+  two games will always match forever just because they rhyme today.
+</p>
+<p>
+  Election deadlines, default choices if you miss a deadline, anonymity rules, and where you
+  must claim all vary by state lottery. For the broader cash-versus-annuity and tax arithmetic
+  (federal withholding versus final brackets, state tax variation), see
+  <a href="record-jackpots-and-taxes.html">record jackpots and the tax math winners actually
+  face</a>. Expected-value math that already treats the jackpot as shareable is in
+  <a href="expected-value-of-a-lottery-ticket.html">what is the expected value of a lottery
+  ticket?</a>
+</p>
+
+<h2>Different states, different claim details</h2>
+<p>
+  Powerball and Mega Millions set the shared jackpot framework, but you claim where the ticket
+  was sold. Claim periods commonly range from about 90 days to one year. Some jurisdictions
+  allow more privacy than others; some allow trusts or other entities; group-claim thresholds and
+  forms differ. Mega Millions’ FAQ notes that prizes can be shared and that restrictions apply —
+  and tells players to check the lottery where the tickets were bought. Treat every state page as
+  primary for process; treat this guide as orientation.
+</p>
+
+<h2>Do lower prize tiers split the same way?</h2>
+<p>
+  <strong>Do not claim that every tier splits like the jackpot.</strong> The jackpot is the
+  standard shared top prize: the jackpot prize pool is divided by the number of jackpot-winning
+  plays. Many lower tiers are published as fixed dollar amounts (or fixed amounts times a
+  multiplier). Separately, some jurisdictions — notably California for Mega Millions — pay
+  certain prizes on a pari-mutuel basis that can differ from the fixed amounts shown on national
+  charts. Always read the chart and the jurisdiction footnotes for the tier you care about.
+</p>
+
+<h2>What about duplicate tickets of the same numbers?</h2>
+<p>
+  Buying the same combination more than once does <em>not</em> raise the chance that combination
+  is drawn. That hit-probability point is the same one made in
+  <a href="does-buying-more-lottery-tickets-improve-your-odds.html">does buying more lottery
+  tickets improve your odds?</a>: duplicates are not a larger slice of the combination space.
+</p>
+<p>
+  Payout is a different question. If that combination does hit, and more than one valid
+  jackpot-winning ticket exists for the drawing, official multi-winner rules mean the jackpot is
+  divided among those winning tickets. Duplicates can therefore matter to <em>how a prize is
+  shared if it hits</em>; they still do not make the draw more likely to land on your numbers.
+</p>
+
+<h2>What pools should document</h2>
+<p>
+  If you play in a group, paperwork is about clarity — not about beating the odds. Useful
+  records typically include who contributed how much, which drawings and ticket serials are
+  covered, how winnings would be divided, who holds the physical tickets, and who is authorized
+  to claim. Sign the backs of tickets according to your lottery’s instructions. Keep copies.
+  Agree in advance how disputes get resolved. None of that is a substitute for the selling
+  lottery’s claim forms or for advice from a qualified attorney or tax professional if a large
+  prize actually arrives.
+</p>
+
+<h2>Real shared-jackpot examples</h2>
+<p>
+  Shared jackpots are not theoretical. On the site’s record board, the
+  ${pbTriple.date} Powerball jackpot of about ${pbTriple.annuity.toFixed(3)}&nbsp;billion was
+  won by <b>${pbTriple.tickets} tickets</b> (${pbTriple.where}) — a three-way ticket split of
+  the first U.S. lottery jackpot over a billion dollars. The ${pbDouble.date} Powerball jackpot
+  of about ${pbDouble.annuity.toFixed(3)}&nbsp;billion was won by <b>${pbDouble.tickets}
+  tickets</b> (${pbDouble.where}). Those examples are ticket-level splits of one drawing’s
+  jackpot; they are not the same thing as a single ticket later divided among office-pool
+  members.
+</p>
+<p>
+  Official Powerball FAQ examples for multi-ticket drawings also walk through equal cash-value
+  shares when two or three tickets win, including cases where U.S. and UK tickets share the
+  jackpot pool under the 2026 expansion rules — still divided by winning ticket count, with U.S.
+  tickets retaining a cash-or-annuity choice for their share.
+</p>
+
+<h2>Practical takeaway</h2>
+<p>
+  Plan for the advertised jackpot to be a shared pie when more than one ticket hits, and plan
+  for a pool’s internal split to be a second pie-cutting step if your group owns only one of
+  those tickets. Cash and annuity choices attach to a ticket’s share; taxes and residency attach
+  after that. None of this changes the jackpot odds themselves — covering how those odds are
+  built is separate reading in
+  <a href="how-lottery-odds-are-calculated.html">how lottery odds are calculated</a> and
+  <a href="mega-millions-vs-powerball-odds.html">Mega Millions vs Powerball odds</a>. If you
+  play at all, keep spend inside an entertainment budget you can lose without harm.
+  <a href="../responsible-play.html">Responsible play</a> resources are there if lottery play
+  stops feeling optional.
+</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq-list">
+  <dt>Do multiple jackpot winners each get the full advertised jackpot?</dt>
+  <dd>
+    No. When more than one ticket wins the jackpot in the same drawing, the jackpot is generally
+    divided among those jackpot-winning tickets. Each ticket does not receive the full advertised
+    amount.
+  </dd>
+  <dt>Is a lottery pool the same as multiple independent winning tickets?</dt>
+  <dd>
+    No. Multiple independent jackpot-winning tickets split the jackpot among those tickets. A
+    pool that owns one winning ticket splits that ticket’s share among members through claim
+    procedures — a different situation.
+  </dd>
+  <dt>Can each jackpot-winning ticket choose cash or annuity?</dt>
+  <dd>
+    Official Powerball and Mega Millions materials describe cash and annuity options for jackpot
+    winners, and multi-ticket examples show U.S. tickets choosing independently for their share.
+    Exact election deadlines and claim steps vary by state lottery.
+  </dd>
+  <dt>Do all prize tiers get split the same way as the jackpot?</dt>
+  <dd>
+    No. Do not assume every tier is split like the jackpot. The jackpot is the classic shared
+    (pari-mutuel) top prize; many lower tiers are published as fixed amounts, with important
+    jurisdiction exceptions such as California Mega Millions.
+  </dd>
+  <dt>Do duplicate tickets of the same numbers raise the chance of winning?</dt>
+  <dd>
+    No. Buying the same combination more than once does not make that combination more likely to
+    be drawn. If that combination does hit and more than one valid jackpot-winning ticket exists,
+    the ticket count can affect how the jackpot is divided — that is a payout question, not a
+    hit-probability boost.
+  </dd>
+</dl>
+
+<section class="sources">
+  <h2>Sources and methodology</h2>
+  <p>
+    Ticket-share illustrations use equal division of a stated annuity figure by the number of
+    jackpot-winning tickets. They are pre-tax teaching numbers only. Official multi-winner,
+    cash/annuity, and group-claim statements were re-checked on September 27, 2026. Record-board
+    multi-ticket examples come from the same published jackpot records used elsewhere on this
+    site. This page is informational entertainment — not legal, tax, or claims advice.
+  </p>
+  <ul>
+    <li><a href="https://www.powerball.com/faqs" target="_blank" rel="noopener nofollow">Powerball — FAQs</a> (multi-ticket pari-mutuel jackpot split; cash vs annuity; U.S. share election examples; accessed September 27, 2026)</li>
+    <li><a href="https://www.powerball.com/" target="_blank" rel="noopener nofollow">Powerball — official site</a> (prize and jackpot materials; accessed September 27, 2026)</li>
+    <li><a href="https://www.megamillions.com/How-to-Play.aspx" target="_blank" rel="noopener nofollow">Mega Millions — How to Play</a> (multiple jackpot winners share the jackpot; California pari-mutuel footnote for some prizes; accessed September 27, 2026)</li>
+    <li><a href="https://www.megamillions.com/FAQs" target="_blank" rel="noopener nofollow">Mega Millions — FAQs</a> (cash vs annuity; group sharing possible with state restrictions; accessed September 27, 2026)</li>
+    <li><a href="https://www.calottery.com/en/claim-a-prize" target="_blank" rel="noopener nofollow">California Lottery — Claim a Prize</a> (group-claim example for single-ticket pools; accessed September 27, 2026)</li>
+  </ul>
+  <p>
+    See also <a href="../methodology.html">our methodology and corrections policy</a>.
+  </p>
+</section>
+
+<h2>Related guides and tools</h2>
+<ul>
+  <li><a href="does-buying-more-lottery-tickets-improve-your-odds.html">Does buying more lottery tickets improve your odds?</a> — distinct tickets vs duplicates</li>
+  <li><a href="mega-millions-vs-powerball-odds.html">Mega Millions vs Powerball: the odds compared</a></li>
+  <li><a href="expected-value-of-a-lottery-ticket.html">What is the expected value of a lottery ticket?</a></li>
+  <li><a href="record-jackpots-and-taxes.html">Record jackpots and the tax math winners actually face</a></li>
+  <li><a href="how-lottery-odds-are-calculated.html">How are lottery odds calculated?</a></li>
+  <li><a href="../tools/odds-explorer.html">Lottery Odds Explorer</a> — published odds by ticket and drawing count</li>
+  <li><a href="../responsible-play.html">Responsible play</a></li>
+</ul>
+`;
+  },
+};
+
 export const GUIDES = [
 oddsCompared,
   independentTrials,
@@ -1796,4 +2125,5 @@ oddsCompared,
   megaMillions2025,
   oddsMath,
   moreTicketsOdds,
+  sharedJackpot,
 ];
