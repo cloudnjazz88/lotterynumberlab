@@ -69,6 +69,47 @@ function glanceCard(label, value, hint = "") {
 export function resultsHub(ctx) {
   const games = [ctx.mm, ctx.pb];
 
+  const gameCard = (game) => {
+    const id = game.config.id;
+    return `<section class="panel prose results-hub__card results-hub__card--${id}" aria-labelledby="hub-${id}">
+        <div class="results-hub__summary">
+        <h2 id="hub-${id}">${game.config.name}</h2>
+        <p class="results-hub__meta">
+          ${num(game.history.count)} drawings under the current ${game.config.matrixLabel} matrix,
+          from ${dateLong(game.history.firstDraw)} to ${dateLong(game.history.latestDraw)}. Drawn
+          ${game.config.drawDaysLabel.toLowerCase()} at ${game.config.drawTimeLabel}.
+        </p>
+        </div>
+        <h3>Most recent results</h3>
+        ${table(
+          ["Date", "Numbers"],
+          game.history.draws
+            .slice(0, 10)
+            .map((draw) => [dateLong(draw.d), balls(game.config, draw, "sm")]),
+          { className: "results-hub__recent" },
+        )}
+        <h3>By year</h3>
+        ${table(
+          ["Year", "Drawings", "Most drawn", "Full results"],
+          game.years.map((year) => [
+            `<b>${year.year}</b>`,
+            String(year.count),
+            `<span class="results-hub__hottest">${year.hottest
+              .slice(0, 3)
+              .map((x) => `${x.n} (${x.count}×)`)
+              .join(", ")}</span>`,
+            `<a class="results-hub__year-link" href="${yearHref(game.config.id, year.year)}">${year.year} results →</a>`,
+          ]),
+          { className: "results-hub__by-year" },
+        )}
+        <p class="results-hub__cta">
+          <a class="text-link" href="${link(gameHref(game.config.id), 1)}"
+            >Open the ${game.config.name} statistics dashboard and generator →</a
+          >
+        </p>
+      </section>`;
+  };
+
   return `      <section class="hero hero--slim">
         <p class="hero__eyebrow">Archive</p>
         <h1>Past Mega Millions and Powerball winning numbers</h1>
@@ -76,49 +117,18 @@ export function resultsHub(ctx) {
           Every Mega Millions drawing since ${dateLong(ctx.mm.history.firstDraw)} and every
           Powerball drawing since ${dateLong(ctx.pb.history.firstDraw)} —
           ${num(ctx.mm.history.count + ctx.pb.history.count)} results in total, broken down by
-          year with the sums, splits and frequency analysis for each one. All dates are the
-          Eastern Time drawing dates.
+          year. All dates are the Eastern Time drawing dates.
         </p>
       </section>
 
-      ${games
-        .map(
-          (game) => `<section class="panel prose" aria-labelledby="hub-${game.config.id}">
-        <h2 id="hub-${game.config.id}">${game.config.name}</h2>
-        <p>
-          ${num(game.history.count)} drawings under the current ${game.config.matrixLabel} matrix,
-          from ${dateLong(game.history.firstDraw)} to ${dateLong(game.history.latestDraw)}. Drawn
-          ${game.config.drawDaysLabel.toLowerCase()} at ${game.config.drawTimeLabel}.
-        </p>
-        <h3>Most recent results</h3>
-        ${table(
-          ["Date", "Numbers", "Sum"],
-          game.history.draws
-            .slice(0, 10)
-            .map((draw) => [dateLong(draw.d), balls(game.config, draw, "sm"), String(sumOf(draw))]),
-        )}
-        <h3>By year</h3>
-        ${table(
-          ["Year", "Drawings", "Average sum", "Most drawn", "Full results"],
-          game.years.map((year) => [
-            `<b>${year.year}</b>`,
-            String(year.count),
-            year.sumMean.toFixed(1),
-            year.hottest
-              .slice(0, 3)
-              .map((x) => `${x.n} (${x.count}×)`)
-              .join(", "),
-            `<a href="${yearHref(game.config.id, year.year)}">${year.year} results →</a>`,
-          ]),
-        )}
-        <p>
-          <a class="text-link" href="${link(gameHref(game.config.id), 1)}"
-            >Open the ${game.config.name} statistics dashboard and generator →</a
-          >
-        </p>
-      </section>`,
-        )
-        .join("\n\n      ")}
+      <nav class="results-hub__jumps" aria-label="Jump to game archive">
+        <a class="results-hub__jump" href="#hub-megamillions">Mega Millions</a>
+        <a class="results-hub__jump" href="#hub-powerball">Powerball</a>
+      </nav>
+
+      <div class="results-hub">
+        ${games.map(gameCard).join("\n\n        ")}
+      </div>
 
 ${adSlot("results-hub") ? `      ${adSlot("results-hub")}\n` : ""}
 
@@ -126,19 +136,15 @@ ${adSlot("results-hub") ? `      ${adSlot("results-hub")}\n` : ""}
         <h2>How to read these tables</h2>
         <p>
           Each row is one drawing: the five white balls in ascending order, then the
-          ${ctx.mm.config.specialName} or ${ctx.pb.config.specialName} highlighted at the end.
-          The order the balls came out of the machine does not matter for prizes, so results are
-          always published sorted.
+          ${ctx.mm.config.specialName} or ${ctx.pb.config.specialName} (the gold bonus ball)
+          highlighted at the end. The order the balls came out of the machine does not matter
+          for prizes, so results are always published sorted.
         </p>
         <p>
-          <b>Sum</b> is the total of the five white balls. It clusters near
-          ${ctx.mm.shape.sumMean.toFixed(0)} because there are far more combinations that add up
-          to a middling total than to an extreme one — the reason is explained in
-          <a href="${link("guides/what-winning-combinations-look-like.html", 1)}">what real
-          winning combinations look like</a>. <b>Odd/even</b> and <b>low/high</b> count how many
-          of the five balls fell on each side of that split, with "low" meaning
-          1–${Math.floor(ctx.mm.config.mainMax / 2)} for Mega Millions and
-          1–${Math.floor(ctx.pb.config.mainMax / 2)} for Powerball.
+          <b>Most drawn</b> on each year row lists the hottest white balls for that calendar
+          year under the current matrix — not across older rule sets.
+          <b>Full results</b> opens that year's page. Do not mix drawings from older matrices
+          with these counts; ball pools change and pooling them distorts every frequency.
         </p>
         <p>
           The archive starts at each game's most recent matrix change rather than at its launch,

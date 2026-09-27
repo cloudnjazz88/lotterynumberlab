@@ -108,6 +108,13 @@ export function parseEtDateTime(raw) {
   return easternTimeToInstant(+match[1], +match[2], +match[3], +match[4], +match[5], +(match[6] || 0)).toISOString();
 }
 
+/** Convert Intl en-US AM/PM markers to site prose: a.m. / p.m. */
+function withAmPmProse(formatted) {
+  return String(formatted).replace(/\s?\u202F?(AM|PM)\b/g, (_, mer) =>
+    mer === "AM" ? " a.m." : " p.m.",
+  );
+}
+
 export function formatEtDate(iso) {
   return new Intl.DateTimeFormat("en-US", {
     timeZone: TZ,
@@ -137,24 +144,30 @@ export function etWeekday(iso) {
 }
 
 export function formatEtDateTime(iso) {
-  return new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York",
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(iso));
+  return withAmPmProse(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(new Date(iso)),
+  );
 }
 
 export function formatEtShort(iso) {
-  return new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(iso));
+  return withAmPmProse(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(new Date(iso)),
+  );
 }

@@ -78,9 +78,15 @@
     return fmt.format(new Date(Date.UTC(y, m - 1, d, 12)));
   }
 
+  function amPmProse(formatted) {
+    return String(formatted).replace(/\s?\u202F?(AM|PM)\b/g, (_, mer) =>
+      mer === "AM" ? " a.m." : " p.m.",
+    );
+  }
+
   function nextDrawingLabel(config) {
     const next = data.nextDrawing(config);
-    return next ? `${data.easternDateTime.format(next)} ET` : "–";
+    return next ? `${amPmProse(data.easternDateTime.format(next))} ET` : "–";
   }
 
   let toastTimer = null;

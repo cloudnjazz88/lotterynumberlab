@@ -388,7 +388,7 @@ const pages = [
     slug: "results/index.html",
     nav: "results",
     title: "Past Mega Millions and Powerball winning numbers",
-    description: `Archive of ${num(ctx.mm.history.count + ctx.pb.history.count)} Mega Millions and Powerball drawings under the current matrices, organised by year, with sums and frequency notes. Not an official record.`,
+    description: `Archive of ${num(ctx.mm.history.count + ctx.pb.history.count)} Mega Millions and Powerball drawings under the current matrices, organised by year with most-drawn notes and full year pages. Not an official record.`,
     modified: drawsLatest,
     dataset: {
       name: "Mega Millions and Powerball drawing archive",

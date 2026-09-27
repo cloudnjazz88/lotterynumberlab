@@ -3974,7 +3974,7 @@ main:has(.year-page) {
   padding: 0.75rem 0;
 }
 
-/* Tool panel h2: panel padding already spaces the title — don't stack prose h2 margin */
+/* Tool panel h2: panel padding already spaces the title ??don't stack prose h2 margin */
 .what-if-page #wi-tool > h2,
 .what-if > h2 {
   margin-top: 0;
@@ -5217,5 +5217,222 @@ main:has(.year-page) {
   .tools-hub-card:active {
     transition: none;
     transform: none;
+  }
+}
+
+
+/* ===== Results hub (past winning numbers): MM | PB side-by-side ===== */
+/* Page-only width ??does not change global body[data-view=page] main (880px). */
+body[data-view="page"]:has(.results-hub) main {
+  max-width: 1160px;
+  overflow-x: clip;
+}
+
+.results-hub {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.results-hub__card {
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: auto;
+  align-self: start;
+  overflow-x: clip;
+}
+
+.results-hub__card > h2 {
+  margin-top: 0;
+}
+
+.results-hub__summary {
+  margin: 0;
+}
+
+.results-hub__summary > h2 {
+  margin-top: 0;
+}
+
+.results-hub__meta {
+  margin: 0 0 0;
+}
+
+/* Align MM/PB "Most recent results" tops on desktop 2-col; clear in 1-col. */
+@media (min-width: 1100px) {
+  .results-hub__summary {
+    min-height: 8.25rem;
+  }
+}
+
+@media (max-width: 1099px) {
+  .results-hub__summary {
+    min-height: 0;
+  }
+}
+
+.results-hub__card > h3 {
+  margin-top: 1.1rem;
+  margin-bottom: 0.55rem;
+  font-size: 1.02rem;
+}
+
+.results-hub__card .table-wrap {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.results-hub__recent,
+.results-hub__by-year {
+  width: 100%;
+  table-layout: auto;
+}
+
+.results-hub__recent th:first-child,
+.results-hub__recent td:first-child {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.results-hub__by-year th:nth-child(1),
+.results-hub__by-year td:nth-child(1) {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.results-hub__by-year th:nth-child(2),
+.results-hub__by-year td:nth-child(2) {
+  white-space: nowrap;
+  text-align: right;
+  width: 1%;
+  font-variant-numeric: tabular-nums;
+}
+
+.results-hub__hottest {
+  display: inline;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.results-hub__year-link {
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.results-hub__cta {
+  margin-top: 1.1rem;
+  padding-top: 0;
+}
+
+.results-hub__cta .text-link {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Compact jump links ??useful when stacked (mid/mobile). Hidden on 2-col desktop. */
+.results-hub__jumps {
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.65rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.results-hub__jump {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.results-hub__jump:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+}
+
+.results-hub__jump:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Mid: drop to one column when the pair would be cramped */
+@media (max-width: 1099px) {
+  .results-hub {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .results-hub__jumps {
+    display: flex;
+  }
+}
+
+@media (max-width: 640px) {
+  .results-hub__jumps {
+    gap: 0.4rem 0.5rem;
+  }
+
+  .results-hub__jump {
+    flex: 1 1 auto;
+    min-width: calc(50% - 0.3rem);
+    padding: 0.45rem 0.7rem;
+    font-size: 0.84rem;
+  }
+
+  .results-hub__by-year th:nth-child(3),
+  .results-hub__by-year td:nth-child(3) {
+    font-size: 0.9rem;
+  }
+
+  .results-hub__cta .text-link {
+    font-size: 0.92rem;
+  }
+}
+/* Results hub cards: equalize the desktop pair without changing mobile flow. */
+@media (min-width: 1100px) {
+  .results-hub {
+    align-items: stretch;
+  }
+
+  .results-hub__card {
+    align-self: stretch;
+  }
+
+  .results-hub__card > .results-hub__cta {
+    margin-top: auto;
+    padding-top: 1.1rem;
+  }
+}
+
+@media (max-width: 1099px) {
+  .results-hub {
+    align-items: start;
+  }
+
+  .results-hub__card {
+    align-self: start;
+  }
+
+  .results-hub__card > .results-hub__cta {
+    margin-top: 1.1rem;
+    padding-top: 0;
   }
 }
