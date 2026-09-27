@@ -33,7 +33,7 @@ check("$600M share labels", rows.map((r) => r.shareLabel).join("|") === "$600,00
 
 const guide = GUIDES.find((g) => g.slug === "what-happens-when-multiple-people-win-the-lottery-jackpot");
 check("guide registered in GUIDES", !!guide);
-check("GUIDES length is 11", GUIDES.length === 11, `len=${GUIDES.length}`);
+check("GUIDES length is 12", GUIDES.length === 12, `len=${GUIDES.length}`);
 
 const htmlPath = resolve(ROOT, "guides/what-happens-when-multiple-people-win-the-lottery-jackpot.html");
 let html = "";
@@ -128,8 +128,9 @@ check(
 );
 
 const hub = readFileSync(resolve(ROOT, "guides/index.html"), "utf8");
-check("guides hub says Eleven guides", hub.includes("Eleven guides covering"));
+check("guides hub says Twelve guides", hub.includes("Twelve guides covering"));
 check("guides hub has no leftover Ten guides", !hub.includes("Ten guides covering"));
+check("guides hub has no leftover Eleven guides", !hub.includes("Eleven guides covering"));
 check(
   "guides hub lists new guide card",
   hub.includes("what-happens-when-multiple-people-win-the-lottery-jackpot.html"),

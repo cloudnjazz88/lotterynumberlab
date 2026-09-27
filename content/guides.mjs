@@ -2114,6 +2114,383 @@ ${callout(
   },
 };
 
+/* --------------------------------- 12 ------------------------------------- */
+
+const quickPickVsManual = {
+  slug: "quick-pick-vs-choosing-your-own-lottery-numbers",
+  kicker: "Odds",
+  title: "Quick Pick vs. Choosing Your Own Lottery Numbers: Does Either Have Better Odds?",
+  seoTitle: "Quick Pick vs. Your Own Lottery Numbers: Does Either Have Better Odds?",
+  dek: "Neither method changes jackpot odds for a valid line. Selection is convenience; prize sharing is a separate risk from drawing probability.",
+  description:
+    "Quick Pick and self-chosen lottery numbers have the same odds. Learn what random selection changes, what it does not, and how popular picks may affect prize sharing.",
+  published: "2026-09-27",
+  updated: "2026-09-27",
+  publicationMeta:
+    "Quick Pick / Easy Pick definitions and jackpot odds verified against official Mega Millions and Powerball materials",
+  faq: [
+    {
+      q: "Does Quick Pick have better jackpot odds than choosing your own numbers?",
+      a: "No. For Mega Millions and Powerball, any one valid line has the same jackpot probability whether the terminal (or another RNG) selected it or you marked it by hand. Selection method is not drawing probability.",
+      plain:
+        "No. For Mega Millions and Powerball, any one valid line has the same jackpot probability whether the terminal (or another RNG) selected it or you marked it by hand. Selection method is not drawing probability.",
+    },
+    {
+      q: "Are birthday numbers worse odds in the drawing?",
+      a: "No. Birthdays and other calendar-limited patterns are not lower-probability combinations in the draw. Every valid combination remains equally likely. The separate question is whether popular patterns may be shared by more players if they hit — which affects prize sharing, not hit chance.",
+      plain:
+        "No. Birthdays and other calendar-limited patterns are not lower-probability combinations in the draw. Every valid combination remains equally likely. The separate question is whether popular patterns may be shared by more players if they hit — which affects prize sharing, not hit chance.",
+    },
+    {
+      q: "Why do many jackpot stories mention Quick Pick?",
+      a: "Quick Pick and Easy Pick are widely used convenience features, so many tickets — and therefore many winners — can be randomly selected without that proving better drawing odds. Without primary sales-mix data, do not treat winner anecdotes as a win-rate percentage.",
+      plain:
+        "Quick Pick and Easy Pick are widely used convenience features, so many tickets — and therefore many winners — can be randomly selected without that proving better drawing odds. Without primary sales-mix data, do not treat winner anecdotes as a win-rate percentage.",
+    },
+    {
+      q: "Do website number generators improve lottery odds?",
+      a: "No. A site generator that produces a valid random line is entertainment and convenience, not a prediction or recommendation. It does not raise jackpot probability above any other valid line.",
+      plain:
+        "No. A site generator that produces a valid random line is entertainment and convenience, not a prediction or recommendation. It does not raise jackpot probability above any other valid line.",
+    },
+    {
+      q: "If I buy several lines, should they be Quick Pick or manual?",
+      a: "For hit probability, what matters is covering distinct valid combinations — not whether each line was Quick Pick or hand-marked. Duplicates do not raise the chance a combination is drawn. Ticket-count math is covered separately; this page is about selection method.",
+      plain:
+        "For hit probability, what matters is covering distinct valid combinations — not whether each line was Quick Pick or hand-marked. Duplicates do not raise the chance a combination is drawn. Ticket-count math is covered separately; this page is about selection method.",
+    },
+    {
+      q: "Does playing the same numbers every drawing change the odds?",
+      a: "No. Each drawing is an independent trial. Reusing the same valid line does not make it hotter, colder, due, or overdue. Past results do not change the next draw’s probability.",
+      plain:
+        "No. Each drawing is an independent trial. Reusing the same valid line does not make it hotter, colder, due, or overdue. Past results do not change the next draw’s probability.",
+    },
+  ],
+  body(ctx) {
+    const mm = ctx.mm;
+    const pb = ctx.pb;
+    const mmN = mm.config.jackpotOdds;
+    const pbN = pb.config.jackpotOdds;
+
+    const conceptsTable = table(
+      ["Concept", "What it means", "What it does not mean"],
+      [
+        [
+          "Drawing probability",
+          "Every valid combination is equally likely; Quick Pick does not change N",
+          "That the terminal “knows” a better line",
+        ],
+        [
+          "Selection method",
+          "Quick Pick / Easy Pick, manual marking, or a site RNG — convenience and entertainment",
+          "A prediction system or odds upgrade",
+        ],
+        [
+          "Prize-sharing risk",
+          "If a popular pattern hits, more players may hold it — a payout split question",
+          "Lower (or higher) chance that pattern is drawn",
+        ],
+      ],
+      {
+        caption:
+          "Three ideas people mix together. Only the first controls jackpot hit probability for one valid line.",
+      },
+    );
+
+    const comparisonTable = table(
+      ["Question", "Quick Pick / Easy Pick", "Choosing your own numbers"],
+      [
+        ["Who selects the line?", "Lottery terminal / gaming system RNG", "You (playslip, app, or verbal entry)"],
+        ["Jackpot odds for one valid line", "Same", "Same"],
+        ["Can repeat a prior winning combination?", "Yes", "Yes"],
+        ["Can another player hold the same line?", "Yes", "Yes"],
+        ["Predicts the draw?", "No", "No"],
+      ],
+      {
+        caption:
+          "Selection method changes how the line is produced, not whether that line is equally likely in the drawing.",
+      },
+    );
+
+    const sameOddsTable = table(
+      ["Game", "Matrix", "Play price", "Jackpot odds (one valid line)"],
+      [
+        [
+          mm.config.name,
+          mm.config.matrixLabel,
+          mm.config.ticketPrice,
+          `<b>${oneIn(mmN)}</b> — Quick Pick or manual`,
+        ],
+        [
+          pb.config.name,
+          pb.config.matrixLabel,
+          pb.config.ticketPrice,
+          `<b>${oneIn(pbN)}</b> — Quick Pick or manual`,
+        ],
+      ],
+      {
+        caption:
+          "Published jackpot combination counts and play prices. Figures from official odds/matrix materials — not from draw-history sampling. Access date September 27, 2026.",
+      },
+    );
+
+    return `
+<p class="lede">
+  Neither Quick Pick nor choosing your own numbers has better drawing odds. A valid Quick Pick
+  line and a valid manual line have the same jackpot chance. Selection method is not drawing
+  probability.
+</p>
+
+<h2>What Quick Pick (or Easy Pick) does</h2>
+<p>
+  Official Mega Millions materials describe choosing six numbers from the two pools
+  <em>or</em> selecting <strong>Easy Pick/Quick Pick</strong>. State Powerball rules define
+  Quick Pick (sometimes labeled Easy Pick / EP) as a feature that lets the gaming system or
+  terminal randomly select the numbers for a play. In plain terms: the lottery computer fills
+  a valid line for you so you do not have to mark a playslip.
+</p>
+<p>
+  That is a convenience feature at the point of sale. It is not a forecast of the next draw,
+  and it does not rewrite the game’s combination count. A site number generator that also
+  emits a valid random line sits in the same conceptual bucket — entertainment and convenience,
+  not prediction.
+</p>
+
+${adSlot("guide-mid")}
+
+<h2>Three concepts people mix up</h2>
+${conceptsTable}
+${callout(
+  "Keep the labels separate",
+  `<p>
+    <b>Drawing probability</b> is about the balls and the matrix: all valid combinations are
+    equal, and Quick Pick does not change N.
+  </p>
+  <p>
+    <b>Selection method</b> is how your ticket’s numbers were produced — terminal Quick Pick /
+    Easy Pick, manual choice, or a website RNG. That choice is convenience, not an odds upgrade.
+  </p>
+  <p>
+    <b>Prize-sharing risk</b> is what happens <em>if</em> a line hits and other players hold it
+    too. Sharing is separate from draw odds. This guide does not quantify popular-pattern
+    frequencies without official sales-mix data, and it does not claim that Quick Pick wins
+    jackpots alone or that manual picks always share more.
+  </p>`,
+  "note",
+)}
+
+<h2>Why the odds are the same</h2>
+<p>
+  Mega Millions and Powerball each have a fixed number of equally likely jackpot combinations —
+  call that number N. One valid ticket covers one of those N slots, so the jackpot probability
+  is 1&nbsp;/&nbsp;N. How you chose the six numbers does not add or remove slots from the list.
+  A Quick Pick that prints 03-17-22-41-68 with Mega Ball 09 is the same mathematical object as
+  a hand-marked ticket with those numbers.
+</p>
+<p>
+  How N is built from the white-ball and bonus pools is covered in
+  <a href="how-lottery-odds-are-calculated.html">how lottery odds are calculated</a>. The
+  tier-by-tier comparison of the two games is in
+  <a href="mega-millions-vs-powerball-odds.html">Mega Millions vs Powerball odds</a>.
+</p>
+${comparisonTable}
+
+<h2>Mega Millions and Powerball side by side</h2>
+<p>
+  Re-checked against official How to Play / prize-chart materials on September 27, 2026: Mega
+  Millions uses a 5-of-70 + Mega Ball 1–24 matrix at $5 per play; Powerball uses 5-of-69 +
+  Powerball 1–26 at $2 per play. Under those published matrices, one valid line has the jackpot
+  odds below — regardless of Quick Pick or manual selection.
+</p>
+${sameOddsTable}
+<p>
+  If those official matrices or prices change later, the absolute 1-in-N figures move with them;
+  the parity between Quick Pick and manual for any one valid line does not. Explore the published
+  one-ticket odds interactively with the
+  <a href="../tools/odds-explorer.html">Lottery Odds Explorer</a>.
+</p>
+
+<h2>Why Quick Pick winners may appear common</h2>
+<p>
+  Lottery retailers and apps make Quick Pick / Easy Pick the fastest path to a ticket. When a
+  large share of tickets is randomly selected, a large share of winners will also be randomly
+  selected — even though each ticket still faced the same 1&nbsp;/&nbsp;N chance. Headline
+  anecdotes (“the winner used Quick Pick”) describe how a ticket was produced, not a proof that
+  Quick Pick beats manual selection.
+</p>
+<p>
+  This page does <strong>not</strong> publish an unsupported “most jackpot winners used Quick
+  Pick” percentage. Without primary sales-mix data from the lotteries, winner stories are not a
+  win-rate statistic. Convenience volume is not the same thing as better odds.
+</p>
+
+<h2>Birthdays, patterns, and “better spread”</h2>
+<p>
+  Birthday sets (days 1–31), anniversaries, and other calendar-limited patterns are
+  <strong>not</strong> lower-probability combinations in the drawing. Every valid line remains
+  equally likely. Do not claim that numbers above 31 are “drawn more” in a way that improves a
+  ticket’s hit chance — the matrix does not work that way.
+</p>
+<p>
+  What people sometimes mean by “better spread” is really one of three different ideas:
+</p>
+<ul>
+  <li><strong>Multi-ticket distinct lines</strong> — covering more unique combinations raises
+  hit probability linearly with how many distinct lines you hold (see
+  <a href="does-buying-more-lottery-tickets-improve-your-odds.html">does buying more lottery
+  tickets improve your odds?</a>). That is ticket count, not Quick Pick vs manual.</li>
+  <li><strong>Popular patterns and sharing</strong> — if many players favor the same memorable
+  pattern and it hits, more tickets may share the prize. That is a
+  <a href="what-happens-when-multiple-people-win-the-lottery-jackpot.html">shared-jackpot</a>
+  question, not a statement that the pattern was less likely to be drawn.</li>
+  <li><strong>Hit probability vs share-if-hit</strong> — keep those labels apart. Selection
+  folklore often collapses them into one slogan.</li>
+</ul>
+<p>
+  Claims that “hot” or “cold” numbers change the next draw are a different myth entirely; see
+  <a href="hot-and-cold-numbers-tested.html">are hot and cold numbers real?</a>
+</p>
+
+<h2>Win probability vs prize-sharing risk</h2>
+<p>
+  For any one valid Mega Millions or Powerball line, jackpot <em>hit</em> probability does not
+  care whether a human or a terminal chose the digits. Prize <em>sharing</em> if that line hits
+  depends on how many other valid jackpot-winning tickets exist for the same drawing. Popular
+  memorable patterns are a sharing hypothesis people discuss; they are not a drawing-odds
+  penalty, and this guide will not invent a sales-weighted sharing percentage without official
+  mix data.
+</p>
+
+<h2>Several lines in one drawing</h2>
+<p>
+  If you hold more than one line, jackpot hit chance tracks how many <strong>distinct</strong>
+  valid combinations you cover — not whether each line was Quick Pick or hand-chosen.
+  Duplicates of the same combination do not raise the chance that combination is drawn; they
+  only affect identical claims if it hits. That consistency with the more-tickets and
+  shared-jackpot guides matters; this page still centers on selection method rather than
+  ticket-count arithmetic.
+</p>
+
+<h2>Same numbers every drawing</h2>
+<p>
+  Replaying a favorite set night after night does not make it due. Each drawing is an
+  independent trial: the machine does not remember your prior tickets. Past winners are not
+  “less likely” next time in the sense that would help you avoid them — and Quick Pick is free
+  to emit a prior winning combination again. See
+  <a href="independent-trials.html">the law of independent trials</a>.
+</p>
+
+<h2>When Quick Pick is convenient</h2>
+<p>
+  Quick Pick / Easy Pick is useful when you want a valid line quickly, do not care which equally
+  likely combination you hold, or are buying several lines and do not want to fill a long
+  playslip. Those are convenience reasons — not a strategy claim and not a recommendation to
+  play.
+</p>
+
+<h2>When people prefer choosing their own</h2>
+<p>
+  Some players enjoy marking birthdays, lucky numbers, or a fixed set they recognize on the
+  ticket. That preference is about meaning and habit. It does not buy better jackpot odds than
+  a random valid line, and it does not make the draw more predictable.
+</p>
+
+<h2>Practical takeaway</h2>
+<p>
+  Treat Quick Pick and manual selection as two ways to obtain a valid line with the same
+  published 1&nbsp;/&nbsp;N jackpot probability. Do not crown either method a “winner.” If you
+  use a website generator, treat it the same way: convenience, not prediction. Keep any lottery
+  spend inside an entertainment budget you can lose without harm.
+  <a href="../responsible-play.html">Responsible play</a> resources are there if play stops
+  feeling optional.
+</p>
+<p>
+  Prefer a random valid line for convenience? The
+  <a href="../mega-millions.html">Mega Millions</a> and
+  <a href="../powerball.html">Powerball</a> generator pages on this site produce combinations
+  for entertainment — they are not predictions, recommendations, or odds improvements.
+</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq-list">
+  <dt>Does Quick Pick have better jackpot odds than choosing your own numbers?</dt>
+  <dd>
+    No. For Mega Millions and Powerball, any one valid line has the same jackpot probability
+    whether the terminal (or another RNG) selected it or you marked it by hand. Selection
+    method is not drawing probability.
+  </dd>
+  <dt>Are birthday numbers worse odds in the drawing?</dt>
+  <dd>
+    No. Birthdays and other calendar-limited patterns are not lower-probability combinations in
+    the draw. Every valid combination remains equally likely. The separate question is whether
+    popular patterns may be shared by more players if they hit — which affects prize sharing,
+    not hit chance.
+  </dd>
+  <dt>Why do many jackpot stories mention Quick Pick?</dt>
+  <dd>
+    Quick Pick and Easy Pick are widely used convenience features, so many tickets — and
+    therefore many winners — can be randomly selected without that proving better drawing odds.
+    Without primary sales-mix data, do not treat winner anecdotes as a win-rate percentage.
+  </dd>
+  <dt>Do website number generators improve lottery odds?</dt>
+  <dd>
+    No. A site generator that produces a valid random line is entertainment and convenience, not
+    a prediction or recommendation. It does not raise jackpot probability above any other valid
+    line.
+  </dd>
+  <dt>If I buy several lines, should they be Quick Pick or manual?</dt>
+  <dd>
+    For hit probability, what matters is covering distinct valid combinations — not whether each
+    line was Quick Pick or hand-marked. Duplicates do not raise the chance a combination is
+    drawn. Ticket-count math is covered separately; this page is about selection method.
+  </dd>
+  <dt>Does playing the same numbers every drawing change the odds?</dt>
+  <dd>
+    No. Each drawing is an independent trial. Reusing the same valid line does not make it
+    hotter, colder, due, or overdue. Past results do not change the next draw’s probability.
+  </dd>
+</dl>
+
+<section class="sources">
+  <h2>Sources and methodology</h2>
+  <p>
+    Jackpot odds and play prices in the side-by-side table are the published combination counts
+    and official prices used across this site (Mega Millions ${num(mmN)}; Powerball
+    ${num(pbN)}; $5 and $2 respectively under the current matrices). Parity between Quick Pick
+    and manual follows from equal likelihood of valid combinations: selection method does not
+    change N. Quick Pick / Easy Pick wording was taken from official Mega Millions How to Play
+    language and from state Powerball rule definitions of terminal/system random selection.
+    Official materials were re-checked on September 27, 2026. This page does not estimate
+    Quick Pick winner percentages or popular-pattern sales shares without primary lottery
+    sales-mix data.
+  </p>
+  <ul>
+    <li><a href="https://www.megamillions.com/How-to-Play.aspx" target="_blank" rel="noopener nofollow">Mega Millions — How to Play</a> (Easy Pick/Quick Pick option; matrix 5/70 + 1/24; jackpot odds 1 in 290,472,336; $5 per play; accessed September 27, 2026)</li>
+    <li><a href="https://www.powerball.com/powerball-prize-chart" target="_blank" rel="noopener nofollow">Powerball — prize chart and official odds</a> (jackpot odds 1 in 292,201,338; $2 play basis; accessed September 27, 2026)</li>
+    <li><a href="https://www.powerball.com/" target="_blank" rel="noopener nofollow">Powerball — official site</a> (game materials; accessed September 27, 2026)</li>
+    <li><a href="https://www.megamillions.com/" target="_blank" rel="noopener nofollow">Mega Millions — official site</a></li>
+  </ul>
+  <p>
+    See also <a href="../methodology.html">our methodology and corrections policy</a>.
+  </p>
+</section>
+
+<h2>Related guides and tools</h2>
+<ul>
+  <li><a href="../mega-millions.html">Mega Millions generator</a> — random valid lines for convenience, not prediction</li>
+  <li><a href="../powerball.html">Powerball generator</a> — same idea for Powerball</li>
+  <li><a href="../tools/odds-explorer.html">Lottery Odds Explorer</a> — published odds by ticket and drawing count</li>
+  <li><a href="does-buying-more-lottery-tickets-improve-your-odds.html">Does buying more lottery tickets improve your odds?</a></li>
+  <li><a href="what-happens-when-multiple-people-win-the-lottery-jackpot.html">What happens when multiple people win the jackpot?</a></li>
+  <li><a href="independent-trials.html">Are lottery drawings independent?</a></li>
+  <li><a href="hot-and-cold-numbers-tested.html">Are hot and cold numbers real?</a></li>
+  <li><a href="how-lottery-odds-are-calculated.html">How are lottery odds calculated?</a></li>
+  <li><a href="../responsible-play.html">Responsible play</a></li>
+</ul>
+`;
+  },
+};
+
 export const GUIDES = [
 oddsCompared,
   independentTrials,
@@ -2126,4 +2503,5 @@ oddsCompared,
   oddsMath,
   moreTicketsOdds,
   sharedJackpot,
+  quickPickVsManual,
 ];
