@@ -61,6 +61,7 @@ const PAGES = [
   "guides/powerball-2015-rule-change.html",
   "guides/mega-millions-2025-rule-change.html",
   "guides/how-lottery-odds-are-calculated.html",
+  "guides/does-buying-more-lottery-tickets-improve-your-odds.html",
   "results/index.html",
   "tools/index.html",
   "tools/lottery-spending-calculator.html",
@@ -173,7 +174,7 @@ context = "guides/index.html";
 await page.goto(pageUrl("guides/index.html"), { waitUntil: "load" });
 const hubCards = await page.evaluate(() => document.querySelectorAll(".guide-card").length);
 console.log(`\nguides hub lists ${hubCards} guides`);
-if (hubCards !== 9) problems.push(`guides hub should list 9 guides, lists ${hubCards}`);
+if (hubCards !== 10) problems.push(`guides hub should list 10 guides, lists ${hubCards}`);
 
 /* --------------------------------- home ----------------------------------- */
 

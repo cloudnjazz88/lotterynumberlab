@@ -4,6 +4,7 @@
  */
 
 import { num, pct, oneIn, money, table, callout, dateLong, adSlot, sourceList } from "./site.mjs";
+import { comparisonRows } from "../tools/more-tickets-math.mjs";
 
 /* ---------------------------------- 1 ------------------------------------- */
 
@@ -1497,8 +1498,295 @@ ${sourceList(["mm2025", "mm2025md", "mmHowTo", "mmHome"], 1)}
   },
 };
 
+/* --------------------------------- 10 ------------------------------------ */
+
+const moreTicketsOdds = {
+  slug: "does-buying-more-lottery-tickets-improve-your-odds",
+  kicker: "Odds",
+  title: "Does Buying More Lottery Tickets Improve Your Odds?",
+  seoTitle:
+    "Does Buying More Lottery Tickets Improve Your Odds? The Math for 1, 5, 10 and 100 Tickets",
+  dek: "Distinct tickets raise jackpot probability in a straight line with how many you buy — and cost rises at the same rate. Absolute odds stay tiny.",
+  description:
+    "Does buying more lottery tickets improve your odds? See Mega Millions and Powerball jackpot chances and cost for 1, 5, 10 and 100 distinct tickets in one drawing — and why duplicates do not help.",
+  published: "2026-09-27",
+  updated: "2026-09-27",
+  publicationMeta:
+    "figures calculated from official jackpot odds and ticket prices verified on September 27, 2026",
+  faq: [
+    {
+      q: "Does buying more lottery tickets improve your jackpot odds?",
+      a: "Yes, linearly for distinct combinations in one drawing: n distinct tickets give n times the one-ticket jackpot probability. Absolute odds stay tiny, and cost scales at the same rate.",
+      plain:
+        "Yes, linearly for distinct combinations in one drawing: n distinct tickets give n times the one-ticket jackpot probability. Absolute odds stay tiny, and cost scales at the same rate.",
+    },
+    {
+      q: "Do duplicate tickets of the same numbers help?",
+      a: "No. Buying the same combination more than once in one drawing does not raise the chance that combination is drawn. It only multiplies how many claims you would have if that combination wins.",
+      plain:
+        "No. Buying the same combination more than once in one drawing does not raise the chance that combination is drawn. It only multiplies how many claims you would have if that combination wins.",
+    },
+    {
+      q: "Is 100 tickets enough to make winning the jackpot likely?",
+      a: "No. One hundred distinct Mega Millions or Powerball tickets still leave you at about 1 in 2.9 million for the jackpot — a hundred times better than one ticket, and still extremely unlikely.",
+      plain:
+        "No. One hundred distinct Mega Millions or Powerball tickets still leave you at about 1 in 2.9 million for the jackpot — a hundred times better than one ticket, and still extremely unlikely.",
+    },
+    {
+      q: "Does buying more tickets improve expected value?",
+      a: "No. Expected value per dollar stays essentially the same when you buy more tickets at the same price and odds. More tickets scale total chance and total spend together; they do not create a better bet.",
+      plain:
+        "No. Expected value per dollar stays essentially the same when you buy more tickets at the same price and odds. More tickets scale total chance and total spend together; they do not create a better bet.",
+    },
+  ],
+  body(ctx) {
+    const mm = ctx.mm;
+    const pb = ctx.pb;
+    const mmN = mm.config.jackpotOdds;
+    const pbN = pb.config.jackpotOdds;
+    const mmPrice = 5;
+    const pbPrice = 2;
+    const mmRows = comparisonRows(mmN, mmPrice);
+    const pbRows = comparisonRows(pbN, pbPrice);
+    const mmTable = table(
+      ["Tickets", "Jackpot probability", "Approx. 1 in X", "Percentage chance", "Cost per drawing"],
+      mmRows.map((r) => [
+        String(r.tickets),
+        r.probabilityLabel,
+        r.approxOneInLabel,
+        r.percentageLabel,
+        r.costLabel,
+      ]),
+      {
+        caption: `Mega Millions jackpot odds for distinct tickets in one drawing (N = ${num(mmN)}; $5 per play). Figures from n / N.`,
+      },
+    );
+    const pbTable = table(
+      ["Tickets", "Jackpot probability", "Approx. 1 in X", "Percentage chance", "Cost per drawing"],
+      pbRows.map((r) => [
+        String(r.tickets),
+        r.probabilityLabel,
+        r.approxOneInLabel,
+        r.percentageLabel,
+        r.costLabel,
+      ]),
+      {
+        caption: `Powerball jackpot odds for distinct tickets in one drawing (N = ${num(pbN)}; $2 per play). Figures from n / N.`,
+      },
+    );
+    const mm100 = mmRows.find((r) => r.tickets === 100);
+    const pb100 = pbRows.find((r) => r.tickets === 100);
+
+    return `
+<p class="lede">
+  Yes — if the tickets are <em>different</em> combinations in the same drawing. Buying more tickets increases the chance of winning, but it does not make any individual number combination more likely to be drawn. Jackpot probability rises in a straight line with the
+  ticket count, absolute odds stay tiny, and cost grows at the same rate.
+</p>
+
+<h2>What changes when you buy more tickets?</h2>
+<p>
+  Focus on one drawing and the jackpot only. Let N be the number of equally likely winning
+  combinations — ${num(mmN)} for Mega Millions and ${num(pbN)} for Powerball under the current
+  published matrices. One ticket covering a single combination has jackpot probability
+  1&nbsp;/&nbsp;N.
+</p>
+<p>
+  If you buy <b>n distinct</b> combinations in that same drawing (and n is no larger than N),
+  those tickets cover n of the N slots. The jackpot probability is simply:
+</p>
+<p class="formula">P(jackpot) = n / N</p>
+<p>
+  That is linear in n: 10 distinct tickets give ten times the jackpot chance of one ticket;
+  100 give one hundred times. Nothing mystical happens to the balls. You are covering more of
+  the finite list of combinations. The drawing itself still picks one winning combination at
+  random; past results do not change the next draw — that is the
+  <a href="independent-trials.html">law of independent trials</a>. How N itself is derived from
+  the ball matrices is covered in
+  <a href="how-lottery-odds-are-calculated.html">how lottery odds are calculated</a>.
+</p>
+<p>
+  This guide stays on a different question: how jackpot chance and cost move when you change
+  the ticket count in one drawing (with a short note on stacking tickets across many drawings).
+</p>
+
+${adSlot("guide-mid")}
+
+<h2>Mega Millions: 1 vs 5 vs 10 vs 100</h2>
+<p>
+  Mega Millions currently uses a 5-of-70 white-ball matrix plus a Mega Ball from 1–24, for
+  N&nbsp;=&nbsp;${num(mmN)} possible jackpot combinations. Official materials list the jackpot
+  odds as ${oneIn(mmN)} and the price as $5 per play (verified against the official How to Play
+  chart; access date September 27, 2026).
+</p>
+${mmTable}
+<p>
+  One hundred distinct Mega Millions tickets cost $500 for that drawing and lift the jackpot
+  chance to ${mm100.approxOneInLabel} — exactly 100× a single ticket, and still about one in
+  2.9&nbsp;million.
+</p>
+
+<h2>Powerball: 1 vs 5 vs 10 vs 100</h2>
+<p>
+  Powerball uses 5-of-69 white balls plus a Powerball from 1–26, for N&nbsp;=&nbsp;${num(pbN)}.
+  The official prize chart lists jackpot odds of ${oneIn(pbN)} for a $2 play (access date
+  September 27, 2026).
+</p>
+${pbTable}
+<p>
+  One hundred distinct Powerball tickets cost $200 and move the jackpot chance to
+  ${pb100.approxOneInLabel} — again 100× one ticket, and still about one in 2.9&nbsp;million.
+</p>
+
+<h2>Why 100× chance is still tiny</h2>
+<p>
+  Multiplying a microscopic probability by 100 leaves a microscopic probability. Roughly
+  1&nbsp;in&nbsp;2.9&nbsp;million is better than 1&nbsp;in&nbsp;290&nbsp;million in the ratio
+  sense, and it is nowhere near "likely." You would not describe a 1-in-2.9-million event as
+  something you expect to see in ordinary life. Spending $500 (Mega Millions) or $200
+  (Powerball) does not change that description; it only buys a larger slice of the same
+  enormous combination space.
+</p>
+<p>
+  A useful mental check: 100× the chance is not the same as "close to winning," and it is not
+  a reason to treat lottery play as a plan. Cost scaled by the same factor.
+</p>
+
+${callout(
+  "Different combinations vs duplicate tickets",
+  `<p>
+    <b>Distinct combinations</b> in one drawing raise jackpot hit probability: each new unique
+    line covers another slot in the N-combination list, so P = n / N.
+  </p>
+  <p>
+    <b>Duplicate tickets</b> — the same five white balls and the same bonus ball, bought more
+    than once for the same drawing — do <em>not</em> increase the chance that combination is
+    drawn. The machine still selects one winning combination. Duplicates only multiply how many
+    identical claims you would hold <em>if</em> that combination wins. Jackpot splitting and
+    state payout rules are a separate topic from hit probability; they do not turn duplicates
+    into a larger chance of matching the draw.
+  </p>
+  <p>
+    Buying more tickets increases the chance of winning, but it does not make any individual number combination more likely to be drawn.
+  </p>`,
+  "warn",
+)}
+
+<h2>Multiple tickets across multiple drawings</h2>
+<p>
+  A different formula applies when each ticket is an independent attempt — for example one
+  ticket per drawing across many drawings, or any sequence of trials that each have
+  probability 1/N of success:
+</p>
+<p class="formula">P(at least one jackpot) = 1 − (1 − 1/N)<sup>n</sup></p>
+<p>
+  For the tiny jackpot probabilities here, that complement stays extremely close to the simple
+  n/N line when n is small compared with N. One hundred independent Mega Millions attempts are
+  still on the order of 1&nbsp;in&nbsp;2.9&nbsp;million for at least one jackpot; they are not a
+  meaningful leap toward "likely." Use the
+  <a href="../tools/odds-explorer.html">Lottery Odds Explorer</a> if you want to compare
+  chance by ticket count and drawing count interactively — it applies the same published
+  one-ticket odds to the attempts you enter.
+</p>
+
+<h2>Cost grows at the same rate as chances</h2>
+<p>
+  Under P = n / N for distinct tickets in one drawing, multiplying tickets by k multiplies
+  jackpot probability by k and multiplies spend by k. Mega Millions: 1 → 100 tickets moves
+  chance ×100 and cost from $5 to $500. Powerball: 1 → 100 tickets moves chance ×100 and cost
+  from $2 to $200. There is no bulk discount on probability. The
+  <a href="../tools/lottery-spending-calculator.html">Lottery Spending Calculator</a> is the
+  place to see what a weekly or monthly ticket habit adds up to over a year — before the
+  jackpot fantasy does the arithmetic for you.
+</p>
+
+<h2>Does buying more improve expected value?</h2>
+<p>
+  Odds and expected value are not the same question. Expected value asks what a ticket returns
+  on average once every prize tier and the jackpot’s real after-tax, shared value are included.
+  Buying more tickets at the same price and the same odds scales total expected return and total
+  cost together; it does not create a better bet per dollar. For the break-even jackpot math and
+  why national jackpot games effectively never get there, see
+  <a href="expected-value-of-a-lottery-ticket.html">What is the expected value of a lottery
+  ticket?</a>
+</p>
+
+<h2>Practical takeaway</h2>
+<p>
+  If you choose to play, treat extra distinct tickets as a proportional purchase of a still-tiny
+  jackpot chance — not as a strategy that bends the odds in your favor. Duplicates do not help
+  hit probability. A hundred tickets can feel like a serious effort and still leave you at
+  roughly 1&nbsp;in&nbsp;2.9&nbsp;million. Keep any spend inside an entertainment budget you can
+  lose without harm, and skip chasing losses after a near-miss that was never a signal.
+  <a href="../responsible-play.html">Responsible play</a> resources and problem-gambling help
+  lines are there if lottery play stops feeling optional.
+</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq-list">
+  <dt>Does buying more lottery tickets improve your jackpot odds?</dt>
+  <dd>
+    Yes, linearly for distinct combinations in one drawing: n distinct tickets give n times the
+    one-ticket jackpot probability. Absolute odds stay tiny, and cost scales at the same rate.
+  </dd>
+  <dt>Do duplicate tickets of the same numbers help?</dt>
+  <dd>
+    No. Buying the same combination more than once in one drawing does not raise the chance that
+    combination is drawn. It only multiplies how many claims you would have if that combination
+    wins.
+  </dd>
+  <dt>Is 100 tickets enough to make winning the jackpot likely?</dt>
+  <dd>
+    No. One hundred distinct Mega Millions or Powerball tickets still leave you at about 1 in
+    2.9 million for the jackpot — a hundred times better than one ticket, and still extremely
+    unlikely.
+  </dd>
+  <dt>Does buying more tickets improve expected value?</dt>
+  <dd>
+    No. Expected value per dollar stays essentially the same when you buy more tickets at the
+    same price and odds. More tickets scale total chance and total spend together; they do not
+    create a better bet.
+  </dd>
+</dl>
+
+<section class="sources">
+  <h2>Sources and methodology</h2>
+  <p>
+    Same-draw table values are computed as <strong>n / N</strong> for distinct tickets, with
+    N taken from the published jackpot combination counts used across this site
+    (Mega Millions ${num(mmN)}; Powerball ${num(pbN)}). Multi-draw "at least one" figures use
+    <strong>1 − (1 − 1/N)<sup>n</sup></strong>, evaluated with a numerically stable
+    <code>-expm1(n · log1p(−p))</code> form. Ticket prices are the current official play prices
+    ($5 Mega Millions; $2 Powerball). Official odds and prices were re-checked against primary
+    sources on September 27, 2026. Rounding for "approx. 1 in X" uses nearest-integer
+    reciprocals; percentage columns use fixed decimal display without scientific notation.
+    Jackpot-only focus: this page does not invent multi-ticket any-prize products.
+  </p>
+  <ul>
+    <li><a href="https://www.megamillions.com/How-to-Play.aspx" target="_blank" rel="noopener nofollow">Mega Millions — How to Play and prize tiers</a> (jackpot odds 1 in 290,472,336; $5 per play; accessed September 27, 2026)</li>
+    <li><a href="https://www.powerball.com/powerball-prize-chart" target="_blank" rel="noopener nofollow">Powerball — prize chart and official odds</a> (jackpot odds 1 in 292,201,338; $2 play basis; accessed September 27, 2026)</li>
+    <li><a href="https://www.megamillions.com/" target="_blank" rel="noopener nofollow">Mega Millions — official site</a></li>
+    <li><a href="https://www.powerball.com/" target="_blank" rel="noopener nofollow">Powerball — official site</a></li>
+  </ul>
+  <p>
+    See also <a href="../methodology.html">our methodology and corrections policy</a>.
+  </p>
+</section>
+
+<h2>Related guides and tools</h2>
+<ul>
+  <li><a href="../tools/odds-explorer.html">Lottery Odds Explorer</a> — compare chance by ticket count and drawings</li>
+  <li><a href="../tools/lottery-spending-calculator.html">Lottery Spending Calculator</a> — see weekly, monthly, and yearly spend</li>
+  <li><a href="independent-trials.html">Are lottery drawings independent?</a></li>
+  <li><a href="how-lottery-odds-are-calculated.html">How are lottery odds calculated?</a></li>
+  <li><a href="expected-value-of-a-lottery-ticket.html">What is the expected value of a lottery ticket?</a></li>
+  <li><a href="../responsible-play.html">Responsible play</a></li>
+</ul>
+`;
+  },
+};
+
 export const GUIDES = [
-  oddsCompared,
+oddsCompared,
   independentTrials,
   hotCold,
   winningShapes,
@@ -1507,4 +1795,5 @@ export const GUIDES = [
   ruleChange2015,
   megaMillions2025,
   oddsMath,
+  moreTicketsOdds,
 ];

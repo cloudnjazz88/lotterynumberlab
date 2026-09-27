@@ -50,6 +50,9 @@ const drawsLatest =
 /* ------------------------------- guide pages ------------------------------ */
 
 function guideArticle(guide, index) {
+  const figuresMeta =
+    guide.publicationMeta ||
+    `figures computed from ${num(ctx.mm.history.count + ctx.pb.history.count)} drawings and the published game rules`;
   const prev = GUIDES[(index - 1 + GUIDES.length) % GUIDES.length];
   const next = GUIDES[(index + 1) % GUIDES.length];
   const others = GUIDES.filter((g) => g.slug !== guide.slug).slice(0, 3);
@@ -69,8 +72,7 @@ function guideArticle(guide, index) {
           <p class="article-dek">${guide.dek}</p>
           <p class="article-meta">
             <time datetime="${guide.published}">Published ${dateLong(guide.published)}</time>
-            · figures computed from ${num(ctx.mm.history.count + ctx.pb.history.count)} drawings
-            and the published game rules
+            · ${figuresMeta}
           </p>
         </header>
 ${guide.body(ctx)}
@@ -109,7 +111,7 @@ function guidesHub() {
         <p class="hero__eyebrow">Guides</p>
         <h1>Mega Millions and Powerball odds guides</h1>
         <p class="hero__lead">
-          Nine guides covering the probability, the prize structures, the tax arithmetic and the
+          Ten guides covering the probability, the prize structures, the tax arithmetic and the
           rule changes behind Mega Millions and Powerball. Every figure is computed from the
           published ball matrices and from
           ${num(ctx.mm.history.count + ctx.pb.history.count)} recorded drawings — if a number
@@ -409,11 +411,12 @@ const pages = [
     slug: `guides/${guide.slug}.html`,
     kind: "guide",
     nav: "guides",
-    title: guide.title,
+    title: guide.seoTitle || guide.title,
     description: guide.description,
     published: guide.published,
     updated: guide.updated,
     modified: guide.updated || guide.published,
+    faq: guide.faq,
     body: guideArticle(guide, index),
   })),
 ];
