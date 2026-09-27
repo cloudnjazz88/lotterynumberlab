@@ -18,7 +18,7 @@
     <meta name="twitter:title" content="Powerball winning numbers for 2018 | Lottery Number Lab" />
     <meta name="twitter:description" content="All 104 Powerball drawings in 2018: winning numbers, sums, odd/even splits, and the year's most- and least-drawn balls. Convenience copy of public data; verify with your state lottery." />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/styles.css?v=c98c822407b2" />
+    <link rel="stylesheet" href="/styles.css?v=fea19f0a4906" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Winning numbers","item":"https://lotterynumberlab.com/results/"},{"@type":"ListItem","position":3,"name":"Powerball winning numbers for 2018","item":"https://lotterynumberlab.com/results/powerball-2018.html"}]}</script>
     <meta name="google-adsense-account" content="ca-pub-9237217026636557" />
     <script
@@ -64,14 +64,14 @@
         <span>Powerball 2018</span>
       </nav>
 
-      <article class="panel prose prose--article">
+      <article class="panel prose prose--article year-page" data-game="powerball" data-year="2018">
         <header class="article-head">
           <p class="page-kicker">Powerball archive</p>
           <h1>Powerball winning numbers for 2018</h1>
           <p class="article-dek">
             All 104 Powerball drawings held in 2018, from
-            January 3, 2018 to December 29, 2018, with the year's frequency and shape
-            analysis.
+            January 3, 2018 to December 29, 2018, with year-specific frequency,
+            sum, odd/even and consecutive-pair analysis from the bundled draw record.
           </p>
           <p class="article-meta">
             Dates are Eastern Time drawing dates · 5 of 69 + 1 of 26 ·
@@ -79,63 +79,119 @@
           </p>
         </header>
 
-        <h2>The year in numbers</h2>
-        <p>
-          Powerball held <b>104 drawings</b> in 2018. The five white balls averaged
-          <b>177.1</b> per drawing, almost exactly the long-run average of 176.9 for this matrix.
-        </p>
-        <div class="table-wrap"><table class="table--compare">
-  <thead><tr><th>Measure</th><th>2018</th><th>All 1,406 drawings</th></tr></thead>
-  <tbody><tr><td>Drawings</td><td>104</td><td>1,406</td></tr>
-  <tr><td>Average sum</td><td>177.1</td><td>176.9</td></tr>
-  <tr><td>Drawings with consecutive numbers</td><td>32.7%</td><td>26.3%</td></tr>
-  <tr><td>Drawings repeating a ball from the previous one</td><td>27.2%</td><td>31.7%</td></tr>
-  <tr><td>All five balls in the lower half</td><td>4</td><td>3.0% of drawings</td></tr></tbody></table></div>
+        <h2>Year at a glance</h2>
+        <p class="year-matrix-note">Powerball used five white balls from 1–69 and a red Powerball from 1–26, drawn Wednesday and Saturday evenings (ET).</p>
+        <dl class="year-glance year-glance--pb">
+          <div class="year-glance__card">
+    <dt>Drawings</dt>
+    <dd>104</dd>
+    <p class="year-glance__hint">January 3, 2018 → December 29, 2018</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Average white-ball sum</dt>
+    <dd>177.1</dd>
+    <p class="year-glance__hint">almost exactly the long-run average of 176.9</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Sum range</dt>
+    <dd>71 – 282</dd>
+    <p class="year-glance__hint">Low April 18, 2018 · High October 3, 2018</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Consecutive pairs</dt>
+    <dd>34 (32.7%)</dd>
+    <p class="year-glance__hint">Matrix-wide 26.3%</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Top odd/even split</dt>
+    <dd>3:2</dd>
+    <p class="year-glance__hint">45 drawings (43.3%)</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Top Powerball</dt>
+    <dd>24</dd>
+    <p class="year-glance__hint">8×</p>
+  </div>
+        </dl>
 
-        <h2>Most and least drawn numbers of 2018</h2>
+        <h2>Key findings for 2018</h2>
+        <ul class="year-findings">
+          <li>Most frequent white ball: <b>56</b> (13×).</li>
+          <li>Least frequent (including zeros): <b>35</b> (2×).</li>
+          <li>Most frequent Powerball: <b>24</b> (8×).</li>
+          <li>Most common odd/even split: 3 odd / 2 even (45 drawings, 43.3%).</li>
+          <li>Consecutive-number drawings: 34 of 104 (32.7%).</li>
+          <li>White-ball sum range: 71 (April 18, 2018) to 282 (October 3, 2018).</li>
+        </ul>
+
+        <h2>Frequency — white balls and Powerball</h2>
         <p>
-          With 104 drawings and five balls each, every number "should" appear about
-          <b>7.5 times</b> if the machine is fair. The spread below is what
-          fair randomness actually looks like over a single year — a leader several appearances
-          clear of the field, and a tail of numbers that barely showed up.
+          With 104 drawings and five balls each, every white number's fair share is about
+          <b>7.5 appearances</b> if the drum is fair. Rankings below break ties
+          by ball number ascending so a rebuild always produces the same order.
         </p>
-        <div class="table-wrap"><table><caption>The five most-drawn white balls of 2018.</caption>
-  <thead><tr><th>Rank</th><th>Number</th><th>Times drawn</th><th>Share of 2018 drawings</th></tr></thead>
+        <div class="table-wrap"><table><caption>Five most-drawn white balls in 2018 (ties broken by lower number first).</caption>
+  <thead><tr><th>Rank</th><th>White ball</th><th>Times drawn</th><th>Share of 2018 drawings</th></tr></thead>
   <tbody><tr><td>#1</td><td><b>56</b></td><td>13×</td><td>12.5%</td></tr>
   <tr><td>#2</td><td><b>61</b></td><td>12×</td><td>11.5%</td></tr>
   <tr><td>#3</td><td><b>64</b></td><td>12×</td><td>11.5%</td></tr>
   <tr><td>#4</td><td><b>69</b></td><td>12×</td><td>11.5%</td></tr>
   <tr><td>#5</td><td><b>7</b></td><td>10×</td><td>9.6%</td></tr></tbody></table></div>
         <p>
-          Powerball's most frequent number in 2018 was <b>56</b>, drawn
-          13 times — in 12.5% of the year's drawings.
-          Every number from 1 to 69 came up at least once, with the quietest
-                 appearing just 2 times
-                 (35).
-          The most common Powerball was <b>24</b>, with
-          8 appearances.
+          Least-drawn white balls in 2018
+          all sat at <b>2×</b>: 35.
         </p>
+        <div class="table-wrap"><table><caption>Most frequent Powerball values in 2018.</caption>
+  <thead><tr><th>Rank</th><th>Powerball</th><th>Times drawn</th><th>Share of 2018</th></tr></thead>
+  <tbody><tr><td>#1</td><td><b>24</b></td><td>8×</td><td>7.7%</td></tr>
+  <tr><td>#2</td><td><b>21</b></td><td>7×</td><td>6.7%</td></tr>
+  <tr><td>#3</td><td><b>26</b></td><td>7×</td><td>6.7%</td></tr>
+  <tr><td>#4</td><td><b>7</b></td><td>6×</td><td>5.8%</td></tr>
+  <tr><td>#5</td><td><b>15</b></td><td>5×</td><td>4.8%</td></tr></tbody></table></div>
         <p class="note">
-          None of this predicts anything. A number that led one year has no better chance the
-          next, and the ranking reshuffles completely from year to year — which is exactly what
-          <a href="../guides/hot-and-cold-numbers-tested.html">testing the full record
-          against simulated fair draws</a> shows.
+          Frequency is a rear-view mirror. A number that led 2018 has no better chance in the
+          next drawing — see
+          <a href="../guides/hot-and-cold-numbers-tested.html">hot and cold numbers tested</a>
+          and
+          <a href="../guides/independent-trials.html">independent trials</a>.
         </p>
 
-        <h2>Extremes of the year</h2>
+        <h2>Sums and odd/even distribution</h2>
         <p>
-          The lowest-scoring drawing of 2018 came on April 18, 2018, when the
-          five white balls added up to just <b>71</b>:
+          The lowest white-ball sum of 2018 was <b>71</b> on
+          April 18, 2018:
         </p>
         <p class="draw-highlight"><span class="draw-cell"><span class="ball">09</span><span class="ball">10</span><span class="ball">12</span><span class="ball">17</span><span class="ball">23</span><span class="ball ball--special" title="Powerball">09</span></span></p>
         <p>
-          The highest was October 3, 2018, totalling
-          <b>282</b> — a spread of
-          211 points across a single year:
+          The highest was <b>282</b> on October 3, 2018
+          — a spread of 211 points:
         </p>
         <p class="draw-highlight"><span class="draw-cell"><span class="ball">41</span><span class="ball">53</span><span class="ball">59</span><span class="ball">63</span><span class="ball">66</span><span class="ball ball--special" title="Powerball">03</span></span></p>
+        <div class="table-wrap"><table><caption>Odd/even split of the five white balls across all 104 drawings in 2018.</caption>
+  <thead><tr><th>Odd:even split</th><th>Drawings</th><th>Share of year</th></tr></thead>
+  <tbody><tr><td><b>3 odd / 2 even</b></td><td>45</td><td>43.3%</td></tr>
+  <tr><td><b>2 odd / 3 even</b></td><td>30</td><td>28.8%</td></tr>
+  <tr><td><b>1 odd / 4 even</b></td><td>10</td><td>9.6%</td></tr>
+  <tr><td><b>4 odd / 1 even</b></td><td>10</td><td>9.6%</td></tr>
+  <tr><td><b>5 odd / 0 even</b></td><td>6</td><td>5.8%</td></tr>
+  <tr><td><b>0 odd / 5 even</b></td><td>3</td><td>2.9%</td></tr></tbody></table></div>
+        <div class="table-wrap"><table class="table--compare">
+  <thead><tr><th>Measure</th><th>2018</th><th>All 1,406 drawings</th></tr></thead>
+  <tbody><tr><td>Drawings</td><td>104</td><td>1,406</td></tr>
+  <tr><td>Average sum</td><td>177.1</td><td>176.9</td></tr>
+  <tr><td>Drawings with consecutive numbers</td><td>34 (32.7%)</td><td>26.3%</td></tr>
+  <tr><td>Drawings repeating a ball from the previous one</td><td>27.2%</td><td>31.7%</td></tr>
+  <tr><td>All five balls in the lower half</td><td>4</td><td>3.0% of drawings</td></tr></tbody></table></div>
 
-        
+        <h2>Consecutive-number pairs</h2>
+        <p>
+          <b>34</b> of 104 drawings (32.7%)
+          included at least one consecutive white-ball pair (for example 14–15). Across the full
+          5 of 69 + 1 of 26 archive that rate is 26.3%. Consecutive
+          pairs are common in random samples; they are not a signal to seek or avoid on a ticket.
+        </p>
+
+
 
         <h2>Every Powerball drawing in 2018</h2>
         <div class="table-wrap"><table class="table--results"><caption>Powerball results, newest first. The Powerball is the final,
@@ -247,6 +303,22 @@
   <tr><td>January 6, 2018</td><td><span class="draw-cell"><span class="ball ball--sm">12</span><span class="ball ball--sm">29</span><span class="ball ball--sm">30</span><span class="ball ball--sm">33</span><span class="ball ball--sm">61</span><span class="ball ball--special ball--sm" title="Powerball">26</span></span></td><td>165</td><td>3:2</td><td>4:1</td></tr>
   <tr><td>January 3, 2018</td><td><span class="draw-cell"><span class="ball ball--sm">02</span><span class="ball ball--sm">18</span><span class="ball ball--sm">37</span><span class="ball ball--sm">39</span><span class="ball ball--sm">42</span><span class="ball ball--special ball--sm" title="Powerball">12</span></span></td><td>138</td><td>2:3</td><td>2:3</td></tr></tbody></table></div>
 
+        <h2>How to interpret these 2018 figures</h2>
+        <p>Powerball completed 104 drawings in 2018 with a white-ball average of 177.1 — almost exactly the long-run matrix mean of 176.9. Even when a year lands on the average, individual drawings still swing from the low 71s to the high 282s.</p>
+        <p>Against a fair-share baseline of about 7.5 hits per number, 2018's leader board looks busy. White ball 56 led with 13 appearances (12.5% of drawings). The quietest count was 2, shared by number 35. Leaders reshuffle every year when you re-rank the same matrix — which is what you expect when each drawing is an independent event, not a memory of the last one.</p>
+        <p>The most common odd/even split was 3 odd / 2 even — 45 drawings (43.3%). Consecutive pairs showed up in 34 drawings (32.7%), a bit above the matrix-wide 26.3%. Neither pattern is a playbook; both are side effects of how combinations are counted, and each new draw resets the slate.</p>
+        <p>The most frequent Powerball in 2018 was 24 (8×). Bonus-ball streaks look meaningful on a year page and still carry no edge: the next drawing does not owe anyone a repeat or a make-up hit. This archive is for looking back — verify any ticket with your state lottery, and never treat hot, cold, or overdue lists as a way to beat the odds.</p>
+
+        <h2>Source and methodology</h2>
+        <p>
+          Counts on this page are computed from the site's bundled Powerball draw file for
+          calendar year 2018 only (Eastern Time drawing dates). Matrix context:
+          Powerball used five white balls from 1–69 and a red Powerball from 1–26, drawn Wednesday and Saturday evenings (ET). Full method and correction policy:
+          <a href="../methodology.html">Methodology</a>.
+          Draw snapshot last refreshed September 26, 2026. Always verify a ticket with your state
+          lottery — this page is a convenience copy, not an official record.
+        </p>
+
         <footer class="article-foot">
           <p class="disclaimer-text">
             These results are a convenience copy of public data and may be delayed or incorrect.
@@ -266,6 +338,21 @@
           <span>Next year</span><b>Powerball 2019 results</b>
         </a>
       </nav>
+
+      <section class="panel prose year-related">
+        <h2>Related years, guides and tools</h2>
+        <ul class="year-related__list">
+          <li><a href="../powerball.html">Powerball statistics dashboard</a></li>
+          <li><a href="index.html">Results archive hub</a></li>
+          <li><a href="powerball-2017.html">Powerball 2017 results</a></li>
+          <li><a href="powerball-2019.html">Powerball 2019 results</a></li>
+          <li><a href="../tools/odds-explorer.html">Odds Explorer</a></li>
+          <li><a href="../tools/ticket-match-checker.html">Ticket Match checker</a></li>
+          <li><a href="../guides/independent-trials.html">Independent trials guide</a></li>
+          <li><a href="../guides/hot-and-cold-numbers-tested.html">Hot and cold numbers tested</a></li>
+          <li><a href="../methodology.html">Methodology and corrections</a></li>
+        </ul>
+      </section>
 
       <section class="sources">
   <h2>Sources</h2>

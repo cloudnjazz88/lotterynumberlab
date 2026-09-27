@@ -3852,3 +3852,133 @@ td small {
     font-size: 0.92rem;
   }
 }
+
+
+/* ===== Year results analysis (navy surfaces, MM gold / PB coral accents) ===== */
+.year-page .year-matrix-note {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0 0 1rem;
+}
+
+.year-glance {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.year-glance__card {
+  margin: 0;
+  padding: 14px 16px;
+  background: var(--surface-data);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  border-top: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.year-glance--mm .year-glance__card {
+  border-top-color: color-mix(in srgb, #ffc233 70%, transparent);
+}
+
+.year-glance--pb .year-glance__card {
+  border-top-color: color-mix(in srgb, #ff5566 70%, transparent);
+}
+
+.year-glance__card dt {
+  margin: 0 0 6px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+
+.year-glance__card dd {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.year-glance__hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.year-findings {
+  margin: 0 0 1.5rem;
+  padding-left: 1.2rem;
+}
+
+.year-findings li {
+  margin: 0.4rem 0;
+}
+
+.year-related {
+  margin-top: 1.25rem;
+}
+
+.year-related__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1.25rem;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+@media (max-width: 900px) {
+  .year-glance {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .year-related__list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .year-glance {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Year pages: keep wide result tables inside the viewport on narrow screens */
+.year-page,
+.year-page .table-wrap,
+.year-related,
+.year-glance {
+  min-width: 0;
+  max-width: 100%;
+}
+.year-page .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.year-page .table--results,
+.year-page .table--compare {
+  width: max-content;
+  max-width: none;
+}
+main:has(.year-page) {
+  min-width: 0;
+  overflow-x: clip;
+}
+.breadcrumb {
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Contain all archive tables on narrow viewports (year pages + hub) */
+.table-wrap {
+  max-width: 100%;
+  min-width: 0;
+}
+.panel.prose,
+.prose--article {
+  min-width: 0;
+  max-width: 100%;
+}

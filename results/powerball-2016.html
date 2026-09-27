@@ -18,7 +18,7 @@
     <meta name="twitter:title" content="Powerball winning numbers for 2016 | Lottery Number Lab" />
     <meta name="twitter:description" content="All 105 Powerball drawings in 2016: winning numbers, sums, odd/even splits, and the year's most- and least-drawn balls. Convenience copy of public data; verify with your state lottery." />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/styles.css?v=c98c822407b2" />
+    <link rel="stylesheet" href="/styles.css?v=fea19f0a4906" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Winning numbers","item":"https://lotterynumberlab.com/results/"},{"@type":"ListItem","position":3,"name":"Powerball winning numbers for 2016","item":"https://lotterynumberlab.com/results/powerball-2016.html"}]}</script>
     <meta name="google-adsense-account" content="ca-pub-9237217026636557" />
     <script
@@ -64,14 +64,14 @@
         <span>Powerball 2016</span>
       </nav>
 
-      <article class="panel prose prose--article">
+      <article class="panel prose prose--article year-page" data-game="powerball" data-year="2016">
         <header class="article-head">
           <p class="page-kicker">Powerball archive</p>
           <h1>Powerball winning numbers for 2016</h1>
           <p class="article-dek">
             All 105 Powerball drawings held in 2016, from
-            January 2, 2016 to December 31, 2016, with the year's frequency and shape
-            analysis.
+            January 2, 2016 to December 31, 2016, with year-specific frequency,
+            sum, odd/even and consecutive-pair analysis from the bundled draw record.
           </p>
           <p class="article-meta">
             Dates are Eastern Time drawing dates · 5 of 69 + 1 of 26 ·
@@ -79,63 +79,119 @@
           </p>
         </header>
 
-        <h2>The year in numbers</h2>
-        <p>
-          Powerball held <b>105 drawings</b> in 2016. The five white balls averaged
-          <b>176.7</b> per drawing, almost exactly the long-run average of 176.9 for this matrix.
-        </p>
-        <div class="table-wrap"><table class="table--compare">
-  <thead><tr><th>Measure</th><th>2016</th><th>All 1,406 drawings</th></tr></thead>
-  <tbody><tr><td>Drawings</td><td>105</td><td>1,406</td></tr>
-  <tr><td>Average sum</td><td>176.7</td><td>176.9</td></tr>
-  <tr><td>Drawings with consecutive numbers</td><td>27.6%</td><td>26.3%</td></tr>
-  <tr><td>Drawings repeating a ball from the previous one</td><td>28.8%</td><td>31.7%</td></tr>
-  <tr><td>All five balls in the lower half</td><td>7</td><td>3.0% of drawings</td></tr></tbody></table></div>
+        <h2>Year at a glance</h2>
+        <p class="year-matrix-note">Powerball used five white balls from 1–69 and a red Powerball from 1–26, drawn Wednesday and Saturday evenings (ET).</p>
+        <dl class="year-glance year-glance--pb">
+          <div class="year-glance__card">
+    <dt>Drawings</dt>
+    <dd>105</dd>
+    <p class="year-glance__hint">January 2, 2016 → December 31, 2016</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Average white-ball sum</dt>
+    <dd>176.7</dd>
+    <p class="year-glance__hint">almost exactly the long-run average of 176.9</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Sum range</dt>
+    <dd>76 – 275</dd>
+    <p class="year-glance__hint">Low May 21, 2016 · High August 13, 2016</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Consecutive pairs</dt>
+    <dd>29 (27.6%)</dd>
+    <p class="year-glance__hint">Matrix-wide 26.3%</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Top odd/even split</dt>
+    <dd>2:3</dd>
+    <p class="year-glance__hint">33 drawings (31.4%)</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Top Powerball</dt>
+    <dd>3</dd>
+    <p class="year-glance__hint">7×</p>
+  </div>
+        </dl>
 
-        <h2>Most and least drawn numbers of 2016</h2>
+        <h2>Key findings for 2016</h2>
+        <ul class="year-findings">
+          <li>Most frequent white balls: <b>23</b> (16×), <b>64</b> (16×).</li>
+          <li>Least frequent (including zeros): <b>45</b> (1×).</li>
+          <li>Most frequent Powerball: <b>3</b> (7×).</li>
+          <li>Most common odd/even split: 2 odd / 3 even (33 drawings, 31.4%).</li>
+          <li>Consecutive-number drawings: 29 of 105 (27.6%).</li>
+          <li>White-ball sum range: 76 (May 21, 2016) to 275 (August 13, 2016).</li>
+        </ul>
+
+        <h2>Frequency — white balls and Powerball</h2>
         <p>
-          With 105 drawings and five balls each, every number "should" appear about
-          <b>7.6 times</b> if the machine is fair. The spread below is what
-          fair randomness actually looks like over a single year — a leader several appearances
-          clear of the field, and a tail of numbers that barely showed up.
+          With 105 drawings and five balls each, every white number's fair share is about
+          <b>7.6 appearances</b> if the drum is fair. Rankings below break ties
+          by ball number ascending so a rebuild always produces the same order.
         </p>
-        <div class="table-wrap"><table><caption>The five most-drawn white balls of 2016.</caption>
-  <thead><tr><th>Rank</th><th>Number</th><th>Times drawn</th><th>Share of 2016 drawings</th></tr></thead>
+        <div class="table-wrap"><table><caption>Five most-drawn white balls in 2016 (ties broken by lower number first).</caption>
+  <thead><tr><th>Rank</th><th>White ball</th><th>Times drawn</th><th>Share of 2016 drawings</th></tr></thead>
   <tbody><tr><td>#1</td><td><b>23</b></td><td>16×</td><td>15.2%</td></tr>
   <tr><td>#2</td><td><b>64</b></td><td>16×</td><td>15.2%</td></tr>
   <tr><td>#3</td><td><b>3</b></td><td>14×</td><td>13.3%</td></tr>
   <tr><td>#4</td><td><b>28</b></td><td>13×</td><td>12.4%</td></tr>
   <tr><td>#5</td><td><b>52</b></td><td>13×</td><td>12.4%</td></tr></tbody></table></div>
         <p>
-          Powerball's most frequent number in 2016 was <b>23</b>, drawn
-          16 times — in 15.2% of the year's drawings.
-          Every number from 1 to 69 came up at least once, with the quietest
-                 appearing just 1 time
-                 (45).
-          The most common Powerball was <b>3</b>, with
-          7 appearances.
+          Least-drawn white balls in 2016
+          all sat at <b>1×</b>: 45.
         </p>
+        <div class="table-wrap"><table><caption>Most frequent Powerball values in 2016.</caption>
+  <thead><tr><th>Rank</th><th>Powerball</th><th>Times drawn</th><th>Share of 2016</th></tr></thead>
+  <tbody><tr><td>#1</td><td><b>3</b></td><td>7×</td><td>6.7%</td></tr>
+  <tr><td>#2</td><td><b>12</b></td><td>6×</td><td>5.7%</td></tr>
+  <tr><td>#3</td><td><b>25</b></td><td>6×</td><td>5.7%</td></tr>
+  <tr><td>#4</td><td><b>5</b></td><td>5×</td><td>4.8%</td></tr>
+  <tr><td>#5</td><td><b>6</b></td><td>5×</td><td>4.8%</td></tr></tbody></table></div>
         <p class="note">
-          None of this predicts anything. A number that led one year has no better chance the
-          next, and the ranking reshuffles completely from year to year — which is exactly what
-          <a href="../guides/hot-and-cold-numbers-tested.html">testing the full record
-          against simulated fair draws</a> shows.
+          Frequency is a rear-view mirror. A number that led 2016 has no better chance in the
+          next drawing — see
+          <a href="../guides/hot-and-cold-numbers-tested.html">hot and cold numbers tested</a>
+          and
+          <a href="../guides/independent-trials.html">independent trials</a>.
         </p>
 
-        <h2>Extremes of the year</h2>
+        <h2>Sums and odd/even distribution</h2>
         <p>
-          The lowest-scoring drawing of 2016 came on May 21, 2016, when the
-          five white balls added up to just <b>76</b>:
+          The lowest white-ball sum of 2016 was <b>76</b> on
+          May 21, 2016:
         </p>
         <p class="draw-highlight"><span class="draw-cell"><span class="ball">05</span><span class="ball">07</span><span class="ball">09</span><span class="ball">23</span><span class="ball">32</span><span class="ball ball--special" title="Powerball">26</span></span></p>
         <p>
-          The highest was August 13, 2016, totalling
-          <b>275</b> — a spread of
-          199 points across a single year:
+          The highest was <b>275</b> on August 13, 2016
+          — a spread of 199 points:
         </p>
         <p class="draw-highlight"><span class="draw-cell"><span class="ball">38</span><span class="ball">44</span><span class="ball">60</span><span class="ball">64</span><span class="ball">69</span><span class="ball ball--special" title="Powerball">06</span></span></p>
+        <div class="table-wrap"><table><caption>Odd/even split of the five white balls across all 105 drawings in 2016.</caption>
+  <thead><tr><th>Odd:even split</th><th>Drawings</th><th>Share of year</th></tr></thead>
+  <tbody><tr><td><b>2 odd / 3 even</b></td><td>33</td><td>31.4%</td></tr>
+  <tr><td><b>3 odd / 2 even</b></td><td>27</td><td>25.7%</td></tr>
+  <tr><td><b>4 odd / 1 even</b></td><td>24</td><td>22.9%</td></tr>
+  <tr><td><b>1 odd / 4 even</b></td><td>20</td><td>19.0%</td></tr>
+  <tr><td><b>5 odd / 0 even</b></td><td>1</td><td>1.0%</td></tr>
+  <tr><td><b>0 odd / 5 even</b></td><td>0</td><td>0.0%</td></tr></tbody></table></div>
+        <div class="table-wrap"><table class="table--compare">
+  <thead><tr><th>Measure</th><th>2016</th><th>All 1,406 drawings</th></tr></thead>
+  <tbody><tr><td>Drawings</td><td>105</td><td>1,406</td></tr>
+  <tr><td>Average sum</td><td>176.7</td><td>176.9</td></tr>
+  <tr><td>Drawings with consecutive numbers</td><td>29 (27.6%)</td><td>26.3%</td></tr>
+  <tr><td>Drawings repeating a ball from the previous one</td><td>28.8%</td><td>31.7%</td></tr>
+  <tr><td>All five balls in the lower half</td><td>7</td><td>3.0% of drawings</td></tr></tbody></table></div>
 
-        
+        <h2>Consecutive-number pairs</h2>
+        <p>
+          <b>29</b> of 105 drawings (27.6%)
+          included at least one consecutive white-ball pair (for example 14–15). Across the full
+          5 of 69 + 1 of 26 archive that rate is 26.3%. Consecutive
+          pairs are common in random samples; they are not a signal to seek or avoid on a ticket.
+        </p>
+
+
 
         <h2>Every Powerball drawing in 2016</h2>
         <div class="table-wrap"><table class="table--results"><caption>Powerball results, newest first. The Powerball is the final,
@@ -248,6 +304,22 @@
   <tr><td>January 6, 2016</td><td><span class="draw-cell"><span class="ball ball--sm">02</span><span class="ball ball--sm">11</span><span class="ball ball--sm">47</span><span class="ball ball--sm">62</span><span class="ball ball--sm">63</span><span class="ball ball--special ball--sm" title="Powerball">17</span></span></td><td>185</td><td>3:2</td><td>2:3</td></tr>
   <tr><td>January 2, 2016</td><td><span class="draw-cell"><span class="ball ball--sm">05</span><span class="ball ball--sm">06</span><span class="ball ball--sm">15</span><span class="ball ball--sm">29</span><span class="ball ball--sm">42</span><span class="ball ball--special ball--sm" title="Powerball">10</span></span></td><td>97</td><td>3:2</td><td>4:1</td></tr></tbody></table></div>
 
+        <h2>How to interpret these 2016 figures</h2>
+        <p>Powerball completed 105 drawings in 2016 with a white-ball average of 176.7 — almost exactly the long-run matrix mean of 176.9. Even when a year lands on the average, individual drawings still swing from the low 76s to the high 275s.</p>
+        <p>Against a fair-share baseline of about 7.6 hits per number, 2016's leader board looks busy. 2 white balls tied at 16 appearances (23, 64). The quietest count was 1, shared by number 45. Leaders reshuffle every year when you re-rank the same matrix — which is what you expect when each drawing is an independent event, not a memory of the last one.</p>
+        <p>The most common odd/even split was 2 odd / 3 even — 33 drawings (31.4%). Drawings with at least one consecutive white-ball pair landed 27.6% of the time, in line with the matrix-wide 26.3%. Neither pattern is a playbook; both are side effects of how combinations are counted, and each new draw resets the slate.</p>
+        <p>The most frequent Powerball in 2016 was 3 (7×). Bonus-ball streaks look meaningful on a year page and still carry no edge: the next drawing does not owe anyone a repeat or a make-up hit. This archive is for looking back — verify any ticket with your state lottery, and never treat hot, cold, or overdue lists as a way to beat the odds.</p>
+
+        <h2>Source and methodology</h2>
+        <p>
+          Counts on this page are computed from the site's bundled Powerball draw file for
+          calendar year 2016 only (Eastern Time drawing dates). Matrix context:
+          Powerball used five white balls from 1–69 and a red Powerball from 1–26, drawn Wednesday and Saturday evenings (ET). Full method and correction policy:
+          <a href="../methodology.html">Methodology</a>.
+          Draw snapshot last refreshed September 26, 2026. Always verify a ticket with your state
+          lottery — this page is a convenience copy, not an official record.
+        </p>
+
         <footer class="article-foot">
           <p class="disclaimer-text">
             These results are a convenience copy of public data and may be delayed or incorrect.
@@ -267,6 +339,22 @@
           <span>Next year</span><b>Powerball 2017 results</b>
         </a>
       </nav>
+
+      <section class="panel prose year-related">
+        <h2>Related years, guides and tools</h2>
+        <ul class="year-related__list">
+          <li><a href="../powerball.html">Powerball statistics dashboard</a></li>
+          <li><a href="index.html">Results archive hub</a></li>
+          <li><a href="powerball-2015.html">Powerball 2015 results</a></li>
+          <li><a href="powerball-2017.html">Powerball 2017 results</a></li>
+          <li><a href="../tools/odds-explorer.html">Odds Explorer</a></li>
+          <li><a href="../tools/ticket-match-checker.html">Ticket Match checker</a></li>
+          <li><a href="../guides/independent-trials.html">Independent trials guide</a></li>
+          <li><a href="../guides/hot-and-cold-numbers-tested.html">Hot and cold numbers tested</a></li>
+          <li><a href="../methodology.html">Methodology and corrections</a></li>
+          <li><a href="../guides/powerball-2015-rule-change.html">Powerball 2015 rule change</a></li>
+        </ul>
+      </section>
 
       <section class="sources">
   <h2>Sources</h2>

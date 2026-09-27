@@ -18,7 +18,7 @@
     <meta name="twitter:title" content="Mega Millions winning numbers for 2017 | Lottery Number Lab" />
     <meta name="twitter:description" content="All 18 Mega Millions drawings in 2017: winning numbers, sums, odd/even splits, and the year's most- and least-drawn balls. Convenience copy of public data; verify with your state lottery." />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/styles.css?v=c98c822407b2" />
+    <link rel="stylesheet" href="/styles.css?v=fea19f0a4906" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Winning numbers","item":"https://lotterynumberlab.com/results/"},{"@type":"ListItem","position":3,"name":"Mega Millions winning numbers for 2017","item":"https://lotterynumberlab.com/results/mega-millions-2017.html"}]}</script>
     <meta name="google-adsense-account" content="ca-pub-9237217026636557" />
     <script
@@ -64,14 +64,14 @@
         <span>Mega Millions 2017</span>
       </nav>
 
-      <article class="panel prose prose--article">
+      <article class="panel prose prose--article year-page" data-game="megamillions" data-year="2017">
         <header class="article-head">
           <p class="page-kicker">Mega Millions archive</p>
           <h1>Mega Millions winning numbers for 2017</h1>
           <p class="article-dek">
             All 18 Mega Millions drawings held in 2017, from
-            October 31, 2017 to December 29, 2017, with the year's frequency and shape
-            analysis.
+            October 31, 2017 to December 29, 2017, with year-specific frequency,
+            sum, odd/even and consecutive-pair analysis from the bundled draw record.
           </p>
           <p class="article-meta">
             Dates are Eastern Time drawing dates · 5 of 70 + 1 of 24 ·
@@ -79,63 +79,119 @@
           </p>
         </header>
 
-        <h2>The year in numbers</h2>
-        <p>
-          Mega Millions held <b>18 drawings</b> in 2017, starting on October 31, 2017 — the first drawing under the current
-                   5 of 70 + 1 of 24 matrix. The five white balls averaged
-          <b>167.9</b> per drawing, well below the long-run average of 174.5 for this matrix.
-        </p>
-        <div class="table-wrap"><table class="table--compare">
-  <thead><tr><th>Measure</th><th>2017</th><th>All 930 drawings</th></tr></thead>
-  <tbody><tr><td>Drawings</td><td>18</td><td>930</td></tr>
-  <tr><td>Average sum</td><td>167.9</td><td>174.5</td></tr>
-  <tr><td>Drawings with consecutive numbers</td><td>33.3%</td><td>25.8%</td></tr>
-  <tr><td>Drawings repeating a ball from the previous one</td><td>41.2%</td><td>33.0%</td></tr>
-  <tr><td>All five balls in the lower half</td><td>2</td><td>3.2% of drawings</td></tr></tbody></table></div>
+        <h2>Year at a glance</h2>
+        <p class="year-matrix-note">Archive coverage begins October 31, 2017 — the first drawing under the 5-of-70 white / 1-of-25 Mega Ball matrix. Earlier 2017 drawings used a different pool and are excluded.</p>
+        <dl class="year-glance year-glance--mm">
+          <div class="year-glance__card">
+    <dt>Drawings</dt>
+    <dd>18</dd>
+    <p class="year-glance__hint">October 31, 2017 → December 29, 2017</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Average white-ball sum</dt>
+    <dd>167.9</dd>
+    <p class="year-glance__hint">well below the long-run average of 174.5</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Sum range</dt>
+    <dd>86 – 252</dd>
+    <p class="year-glance__hint">Low November 14, 2017 · High November 7, 2017</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Consecutive pairs</dt>
+    <dd>6 (33.3%)</dd>
+    <p class="year-glance__hint">Matrix-wide 25.8%</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Top odd/even split</dt>
+    <dd>2:3</dd>
+    <p class="year-glance__hint">8 drawings (44.4%)</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Top Mega Ball</dt>
+    <dd>3, 19, 22, 24</dd>
+    <p class="year-glance__hint">2×</p>
+  </div>
+        </dl>
 
-        <h2>Most and least drawn numbers of 2017</h2>
+        <h2>Key findings for 2017</h2>
+        <ul class="year-findings">
+          <li>Most frequent white ball: <b>42</b> (5×).</li>
+          <li>Least frequent (including zeros): <b>2</b> (0×), <b>5</b> (0×), <b>9</b> (0×), <b>11</b> (0×), <b>13</b> (0×), <b>19</b> (0×), <b>29</b> (0×), <b>32</b> (0×), +10 more.</li>
+          <li>Most frequent Mega Ball: <b>3</b> (2×), <b>19</b> (2×), <b>22</b> (2×), <b>24</b> (2×).</li>
+          <li>Most common odd/even split: 2 odd / 3 even (8 drawings, 44.4%).</li>
+          <li>Consecutive-number drawings: 6 of 18 (33.3%).</li>
+          <li>White-ball sum range: 86 (November 14, 2017) to 252 (November 7, 2017).</li>
+        </ul>
+
+        <h2>Frequency — white balls and Mega Ball</h2>
         <p>
-          With 18 drawings and five balls each, every number "should" appear about
-          <b>1.3 times</b> if the machine is fair. The spread below is what
-          fair randomness actually looks like over a single year — a leader several appearances
-          clear of the field, and a tail of numbers that barely showed up.
+          With 18 drawings and five balls each, every white number's fair share is about
+          <b>1.3 appearances</b> if the drum is fair. Rankings below break ties
+          by ball number ascending so a rebuild always produces the same order.
         </p>
-        <div class="table-wrap"><table><caption>The five most-drawn white balls of 2017.</caption>
-  <thead><tr><th>Rank</th><th>Number</th><th>Times drawn</th><th>Share of 2017 drawings</th></tr></thead>
+        <div class="table-wrap"><table><caption>Five most-drawn white balls in 2017 (ties broken by lower number first).</caption>
+  <thead><tr><th>Rank</th><th>White ball</th><th>Times drawn</th><th>Share of 2017 drawings</th></tr></thead>
   <tbody><tr><td>#1</td><td><b>42</b></td><td>5×</td><td>27.8%</td></tr>
   <tr><td>#2</td><td><b>10</b></td><td>4×</td><td>22.2%</td></tr>
   <tr><td>#3</td><td><b>22</b></td><td>4×</td><td>22.2%</td></tr>
   <tr><td>#4</td><td><b>28</b></td><td>4×</td><td>22.2%</td></tr>
   <tr><td>#5</td><td><b>1</b></td><td>3×</td><td>16.7%</td></tr></tbody></table></div>
         <p>
-          Mega Millions's most frequent number in 2017 was <b>42</b>, drawn
-          5 times — in 27.8% of the year's drawings.
-          <b>18</b> numbers were never drawn at all in this period
-                 (2, 5, 9, 11, 13, 19, 29, 32, 34, 35, 43, 45, …).
-          The most common Mega Ball was <b>3</b>, with
-          2 appearances.
+          Least-drawn white balls in 2017
+          (including <b>18</b> that never appeared): 2, 5, 9, 11, 13, 19, 29, 32, 34, 35, 43, 45, and 6 more.
         </p>
+        <div class="table-wrap"><table><caption>Most frequent Mega Ball values in 2017.</caption>
+  <thead><tr><th>Rank</th><th>Mega Ball</th><th>Times drawn</th><th>Share of 2017</th></tr></thead>
+  <tbody><tr><td>#1</td><td><b>3</b></td><td>2×</td><td>11.1%</td></tr>
+  <tr><td>#2</td><td><b>19</b></td><td>2×</td><td>11.1%</td></tr>
+  <tr><td>#3</td><td><b>22</b></td><td>2×</td><td>11.1%</td></tr>
+  <tr><td>#4</td><td><b>24</b></td><td>2×</td><td>11.1%</td></tr>
+  <tr><td>#5</td><td><b>2</b></td><td>1×</td><td>5.6%</td></tr></tbody></table></div>
         <p class="note">
-          None of this predicts anything. A number that led one year has no better chance the
-          next, and the ranking reshuffles completely from year to year — which is exactly what
-          <a href="../guides/hot-and-cold-numbers-tested.html">testing the full record
-          against simulated fair draws</a> shows.
+          Frequency is a rear-view mirror. A number that led 2017 has no better chance in the
+          next drawing — see
+          <a href="../guides/hot-and-cold-numbers-tested.html">hot and cold numbers tested</a>
+          and
+          <a href="../guides/independent-trials.html">independent trials</a>.
         </p>
 
-        <h2>Extremes of the year</h2>
+        <h2>Sums and odd/even distribution</h2>
         <p>
-          The lowest-scoring drawing of 2017 came on November 14, 2017, when the
-          five white balls added up to just <b>86</b>:
+          The lowest white-ball sum of 2017 was <b>86</b> on
+          November 14, 2017:
         </p>
         <p class="draw-highlight"><span class="draw-cell"><span class="ball">01</span><span class="ball">14</span><span class="ball">21</span><span class="ball">22</span><span class="ball">28</span><span class="ball ball--special" title="Mega Ball">19</span></span></p>
         <p>
-          The highest was November 7, 2017, totalling
-          <b>252</b> — a spread of
-          166 points across a single year:
+          The highest was <b>252</b> on November 7, 2017
+          — a spread of 166 points:
         </p>
         <p class="draw-highlight"><span class="draw-cell"><span class="ball">01</span><span class="ball">54</span><span class="ball">60</span><span class="ball">68</span><span class="ball">69</span><span class="ball ball--special" title="Mega Ball">11</span></span></p>
+        <div class="table-wrap"><table><caption>Odd/even split of the five white balls across all 18 drawings in 2017.</caption>
+  <thead><tr><th>Odd:even split</th><th>Drawings</th><th>Share of year</th></tr></thead>
+  <tbody><tr><td><b>2 odd / 3 even</b></td><td>8</td><td>44.4%</td></tr>
+  <tr><td><b>1 odd / 4 even</b></td><td>5</td><td>27.8%</td></tr>
+  <tr><td><b>3 odd / 2 even</b></td><td>3</td><td>16.7%</td></tr>
+  <tr><td><b>0 odd / 5 even</b></td><td>1</td><td>5.6%</td></tr>
+  <tr><td><b>4 odd / 1 even</b></td><td>1</td><td>5.6%</td></tr>
+  <tr><td><b>5 odd / 0 even</b></td><td>0</td><td>0.0%</td></tr></tbody></table></div>
+        <div class="table-wrap"><table class="table--compare">
+  <thead><tr><th>Measure</th><th>2017</th><th>All 930 drawings</th></tr></thead>
+  <tbody><tr><td>Drawings</td><td>18</td><td>930</td></tr>
+  <tr><td>Average sum</td><td>167.9</td><td>174.5</td></tr>
+  <tr><td>Drawings with consecutive numbers</td><td>6 (33.3%)</td><td>25.8%</td></tr>
+  <tr><td>Drawings repeating a ball from the previous one</td><td>41.2%</td><td>33.0%</td></tr>
+  <tr><td>All five balls in the lower half</td><td>2</td><td>3.2% of drawings</td></tr></tbody></table></div>
 
-        
+        <h2>Consecutive-number pairs</h2>
+        <p>
+          <b>6</b> of 18 drawings (33.3%)
+          included at least one consecutive white-ball pair (for example 14–15). Across the full
+          5 of 70 + 1 of 24 archive that rate is 25.8%. Consecutive
+          pairs are common in random samples; they are not a signal to seek or avoid on a ticket.
+        </p>
+
+
 
         <h2>Every Mega Millions drawing in 2017</h2>
         <div class="table-wrap"><table class="table--results"><caption>Mega Millions results, newest first. The Mega Ball is the final,
@@ -161,6 +217,22 @@
   <tr><td>November 3, 2017</td><td><span class="draw-cell"><span class="ball ball--sm">10</span><span class="ball ball--sm">22</span><span class="ball ball--sm">42</span><span class="ball ball--sm">61</span><span class="ball ball--sm">69</span><span class="ball ball--special ball--sm" title="Mega Ball">03</span></span></td><td>204</td><td>2:3</td><td>2:3</td></tr>
   <tr><td>October 31, 2017</td><td><span class="draw-cell"><span class="ball ball--sm">06</span><span class="ball ball--sm">28</span><span class="ball ball--sm">31</span><span class="ball ball--sm">52</span><span class="ball ball--sm">53</span><span class="ball ball--special ball--sm" title="Mega Ball">12</span></span></td><td>170</td><td>2:3</td><td>3:2</td></tr></tbody></table></div>
 
+        <h2>How to interpret these 2017 figures</h2>
+        <p>2017 is a short archive year for Mega Millions: 18 drawings from 2017-10-31 through 2017-12-29. Small samples swing hard — a number can lead the board after a handful of appearances and then vanish from the next year's ranking. Treat every figure on this page as a description of what already happened.</p>
+        <p>With only 18 drawings, many of the 70 white balls never showed up. White ball 42 led with 5 appearances (27.8% of drawings). 18 numbers from 1–70 never appeared at all in 2017. Gaps that large are normal in a short window; they are not "due" numbers for the next drawing.</p>
+        <p>The most common odd/even split was 2 odd / 3 even — 8 drawings (44.4%). Consecutive pairs showed up in 6 drawings (33.3%), a bit above the matrix-wide 25.8%. Neither pattern is a playbook; both are side effects of how combinations are counted, and each new draw resets the slate.</p>
+        <p>The most frequent Mega Ball in 2017 was 3 (2×). Bonus-ball streaks look meaningful on a year page and still carry no edge: the next drawing does not owe anyone a repeat or a make-up hit. This archive is for looking back — verify any ticket with your state lottery, and never treat hot, cold, or overdue lists as a way to beat the odds.</p>
+
+        <h2>Source and methodology</h2>
+        <p>
+          Counts on this page are computed from the site's bundled Mega Millions draw file for
+          calendar year 2017 only (Eastern Time drawing dates). Matrix context:
+          Archive coverage begins October 31, 2017 — the first drawing under the 5-of-70 white / 1-of-25 Mega Ball matrix. Earlier 2017 drawings used a different pool and are excluded. Full method and correction policy:
+          <a href="../methodology.html">Methodology</a>.
+          Draw snapshot last refreshed September 26, 2026. Always verify a ticket with your state
+          lottery — this page is a convenience copy, not an official record.
+        </p>
+
         <footer class="article-foot">
           <p class="disclaimer-text">
             These results are a convenience copy of public data and may be delayed or incorrect.
@@ -180,6 +252,20 @@
           <span>Next year</span><b>Mega Millions 2018 results</b>
         </a>
       </nav>
+
+      <section class="panel prose year-related">
+        <h2>Related years, guides and tools</h2>
+        <ul class="year-related__list">
+          <li><a href="../mega-millions.html">Mega Millions statistics dashboard</a></li>
+          <li><a href="index.html">Results archive hub</a></li>
+          <li><a href="mega-millions-2018.html">Mega Millions 2018 results</a></li>
+          <li><a href="../tools/odds-explorer.html">Odds Explorer</a></li>
+          <li><a href="../tools/ticket-match-checker.html">Ticket Match checker</a></li>
+          <li><a href="../guides/independent-trials.html">Independent trials guide</a></li>
+          <li><a href="../guides/hot-and-cold-numbers-tested.html">Hot and cold numbers tested</a></li>
+          <li><a href="../methodology.html">Methodology and corrections</a></li>
+        </ul>
+      </section>
 
       <section class="sources">
   <h2>Sources</h2>

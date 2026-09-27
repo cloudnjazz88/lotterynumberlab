@@ -6,6 +6,7 @@
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import { presentJackpot } from "./jackpot-present.mjs";
+import { yearlyBreakdown } from "./year-analysis.mjs";
 
 const root = new URL("..", import.meta.url);
 
@@ -438,64 +439,7 @@ function powerballChange() {
  * Per-calendar-year breakdown for the results archive: the drawings themselves
  * plus the handful of facts that make each year's page say something specific.
  */
-function yearlyBreakdown(config, draws) {
-  const byYear = new Map();
-  for (const draw of draws) {
-    const year = draw.d.slice(0, 4);
-    if (!byYear.has(year)) byYear.set(year, []);
-    byYear.get(year).push(draw);
-  }
-
-  const years = [];
-  for (const [year, list] of [...byYear.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1))) {
-    const sums = list.map((d) => d.n.reduce((a, b) => a + b, 0));
-    const counts = new Array(config.mainMax + 1).fill(0);
-    const specialCounts = new Array(config.specialMax + 2).fill(0);
-    let consecutive = 0;
-    let allLow = 0;
-    let repeats = 0;
-
-    list.forEach((draw, index) => {
-      for (const n of draw.n) counts[n] += 1;
-      specialCounts[draw.s] += 1;
-      if (draw.n.some((n, i) => i > 0 && n === draw.n[i - 1] + 1)) consecutive += 1;
-      if (draw.n.every((n) => n <= Math.floor(config.mainMax / 2))) allLow += 1;
-      const next = list[index + 1];
-      if (next && draw.n.some((n) => next.n.includes(n))) repeats += 1;
-    });
-
-    const ranked = counts
-      .map((count, n) => ({ n, count }))
-      .slice(1)
-      .sort((a, b) => b.count - a.count || a.n - b.n);
-    const topSpecial = specialCounts
-      .map((count, n) => ({ n, count }))
-      .slice(1)
-      .sort((a, b) => b.count - a.count || a.n - b.n)[0];
-
-    const lowest = sums.indexOf(Math.min(...sums));
-    const highest = sums.indexOf(Math.max(...sums));
-
-    years.push({
-      year,
-      draws: list,
-      count: list.length,
-      first: list[list.length - 1].d,
-      last: list[0].d,
-      sumMean: sums.reduce((a, b) => a + b, 0) / sums.length,
-      sumMin: { value: sums[lowest], draw: list[lowest] },
-      sumMax: { value: sums[highest], draw: list[highest] },
-      hottest: ranked.slice(0, 5),
-      coldest: ranked.filter((x) => x.count === ranked[ranked.length - 1].count).slice(0, 8),
-      missing: ranked.filter((x) => x.count === 0).map((x) => x.n),
-      topSpecial,
-      consecutiveShare: consecutive / list.length,
-      allLowCount: allLow,
-      repeatShare: repeats / Math.max(1, list.length - 1),
-    });
-  }
-  return years;
-}
+/* yearlyBreakdown lives in ./year-analysis.mjs (imported above). */
 
 /** Share of drawings whose five white balls all fall in the 1-31 "birthday" range. */
 function countUnder31(draws, config) {

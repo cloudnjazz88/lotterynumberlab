@@ -18,7 +18,7 @@
     <meta name="twitter:title" content="Powerball winning numbers for 2022 | Lottery Number Lab" />
     <meta name="twitter:description" content="All 154 Powerball drawings in 2022: winning numbers, sums, odd/even splits, and the year's most- and least-drawn balls. Convenience copy of public data; verify with your state lottery." />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/styles.css?v=c98c822407b2" />
+    <link rel="stylesheet" href="/styles.css?v=fea19f0a4906" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lotterynumberlab.com/"},{"@type":"ListItem","position":2,"name":"Winning numbers","item":"https://lotterynumberlab.com/results/"},{"@type":"ListItem","position":3,"name":"Powerball winning numbers for 2022","item":"https://lotterynumberlab.com/results/powerball-2022.html"}]}</script>
     <meta name="google-adsense-account" content="ca-pub-9237217026636557" />
     <script
@@ -64,14 +64,14 @@
         <span>Powerball 2022</span>
       </nav>
 
-      <article class="panel prose prose--article">
+      <article class="panel prose prose--article year-page" data-game="powerball" data-year="2022">
         <header class="article-head">
           <p class="page-kicker">Powerball archive</p>
           <h1>Powerball winning numbers for 2022</h1>
           <p class="article-dek">
             All 154 Powerball drawings held in 2022, from
-            January 1, 2022 to December 31, 2022, with the year's frequency and shape
-            analysis.
+            January 1, 2022 to December 31, 2022, with year-specific frequency,
+            sum, odd/even and consecutive-pair analysis from the bundled draw record.
           </p>
           <p class="article-meta">
             Dates are Eastern Time drawing dates · 5 of 69 + 1 of 26 ·
@@ -79,63 +79,119 @@
           </p>
         </header>
 
-        <h2>The year in numbers</h2>
-        <p>
-          Powerball held <b>154 drawings</b> in 2022. The five white balls averaged
-          <b>180.7</b> per drawing, above the long-run average of 176.9 for this matrix.
-        </p>
-        <div class="table-wrap"><table class="table--compare">
-  <thead><tr><th>Measure</th><th>2022</th><th>All 1,406 drawings</th></tr></thead>
-  <tbody><tr><td>Drawings</td><td>154</td><td>1,406</td></tr>
-  <tr><td>Average sum</td><td>180.7</td><td>176.9</td></tr>
-  <tr><td>Drawings with consecutive numbers</td><td>27.9%</td><td>26.3%</td></tr>
-  <tr><td>Drawings repeating a ball from the previous one</td><td>31.4%</td><td>31.7%</td></tr>
-  <tr><td>All five balls in the lower half</td><td>7</td><td>3.0% of drawings</td></tr></tbody></table></div>
+        <h2>Year at a glance</h2>
+        <p class="year-matrix-note">Powerball used five white balls from 1–69 and a red Powerball from 1–26, drawn Monday, Wednesday and Saturday evenings (ET).</p>
+        <dl class="year-glance year-glance--pb">
+          <div class="year-glance__card">
+    <dt>Drawings</dt>
+    <dd>154</dd>
+    <p class="year-glance__hint">January 1, 2022 → December 31, 2022</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Average white-ball sum</dt>
+    <dd>180.7</dd>
+    <p class="year-glance__hint">above the long-run average of 176.9</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Sum range</dt>
+    <dd>59 – 287</dd>
+    <p class="year-glance__hint">Low October 10, 2022 · High December 17, 2022</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Consecutive pairs</dt>
+    <dd>43 (27.9%)</dd>
+    <p class="year-glance__hint">Matrix-wide 26.3%</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Top odd/even split</dt>
+    <dd>2:3</dd>
+    <p class="year-glance__hint">52 drawings (33.8%)</p>
+  </div>
+          <div class="year-glance__card">
+    <dt>Top Powerball</dt>
+    <dd>7, 11</dd>
+    <p class="year-glance__hint">9×</p>
+  </div>
+        </dl>
 
-        <h2>Most and least drawn numbers of 2022</h2>
+        <h2>Key findings for 2022</h2>
+        <ul class="year-findings">
+          <li>Most frequent white ball: <b>37</b> (21×).</li>
+          <li>Least frequent (including zeros): <b>1</b> (5×), <b>26</b> (5×), <b>29</b> (5×).</li>
+          <li>Most frequent Powerball: <b>7</b> (9×), <b>11</b> (9×).</li>
+          <li>Most common odd/even split: 2 odd / 3 even (52 drawings, 33.8%).</li>
+          <li>Consecutive-number drawings: 43 of 154 (27.9%).</li>
+          <li>White-ball sum range: 59 (October 10, 2022) to 287 (December 17, 2022).</li>
+        </ul>
+
+        <h2>Frequency — white balls and Powerball</h2>
         <p>
-          With 154 drawings and five balls each, every number "should" appear about
-          <b>11.2 times</b> if the machine is fair. The spread below is what
-          fair randomness actually looks like over a single year — a leader several appearances
-          clear of the field, and a tail of numbers that barely showed up.
+          With 154 drawings and five balls each, every white number's fair share is about
+          <b>11.2 appearances</b> if the drum is fair. Rankings below break ties
+          by ball number ascending so a rebuild always produces the same order.
         </p>
-        <div class="table-wrap"><table><caption>The five most-drawn white balls of 2022.</caption>
-  <thead><tr><th>Rank</th><th>Number</th><th>Times drawn</th><th>Share of 2022 drawings</th></tr></thead>
+        <div class="table-wrap"><table><caption>Five most-drawn white balls in 2022 (ties broken by lower number first).</caption>
+  <thead><tr><th>Rank</th><th>White ball</th><th>Times drawn</th><th>Share of 2022 drawings</th></tr></thead>
   <tbody><tr><td>#1</td><td><b>37</b></td><td>21×</td><td>13.6%</td></tr>
   <tr><td>#2</td><td><b>36</b></td><td>20×</td><td>13.0%</td></tr>
   <tr><td>#3</td><td><b>6</b></td><td>18×</td><td>11.7%</td></tr>
   <tr><td>#4</td><td><b>15</b></td><td>17×</td><td>11.0%</td></tr>
   <tr><td>#5</td><td><b>33</b></td><td>17×</td><td>11.0%</td></tr></tbody></table></div>
         <p>
-          Powerball's most frequent number in 2022 was <b>37</b>, drawn
-          21 times — in 13.6% of the year's drawings.
-          Every number from 1 to 69 came up at least once, with the quietest
-                 appearing just 5 times
-                 (1, 26, 29).
-          The most common Powerball was <b>7</b>, with
-          9 appearances.
+          Least-drawn white balls in 2022
+          all sat at <b>5×</b>: 1, 26, 29.
         </p>
+        <div class="table-wrap"><table><caption>Most frequent Powerball values in 2022.</caption>
+  <thead><tr><th>Rank</th><th>Powerball</th><th>Times drawn</th><th>Share of 2022</th></tr></thead>
+  <tbody><tr><td>#1</td><td><b>7</b></td><td>9×</td><td>5.8%</td></tr>
+  <tr><td>#2</td><td><b>11</b></td><td>9×</td><td>5.8%</td></tr>
+  <tr><td>#3</td><td><b>10</b></td><td>8×</td><td>5.2%</td></tr>
+  <tr><td>#4</td><td><b>16</b></td><td>8×</td><td>5.2%</td></tr>
+  <tr><td>#5</td><td><b>25</b></td><td>8×</td><td>5.2%</td></tr></tbody></table></div>
         <p class="note">
-          None of this predicts anything. A number that led one year has no better chance the
-          next, and the ranking reshuffles completely from year to year — which is exactly what
-          <a href="../guides/hot-and-cold-numbers-tested.html">testing the full record
-          against simulated fair draws</a> shows.
+          Frequency is a rear-view mirror. A number that led 2022 has no better chance in the
+          next drawing — see
+          <a href="../guides/hot-and-cold-numbers-tested.html">hot and cold numbers tested</a>
+          and
+          <a href="../guides/independent-trials.html">independent trials</a>.
         </p>
 
-        <h2>Extremes of the year</h2>
+        <h2>Sums and odd/even distribution</h2>
         <p>
-          The lowest-scoring drawing of 2022 came on October 10, 2022, when the
-          five white balls added up to just <b>59</b>:
+          The lowest white-ball sum of 2022 was <b>59</b> on
+          October 10, 2022:
         </p>
         <p class="draw-highlight"><span class="draw-cell"><span class="ball">03</span><span class="ball">06</span><span class="ball">11</span><span class="ball">17</span><span class="ball">22</span><span class="ball ball--special" title="Powerball">11</span></span></p>
         <p>
-          The highest was December 17, 2022, totalling
-          <b>287</b> — a spread of
-          228 points across a single year:
+          The highest was <b>287</b> on December 17, 2022
+          — a spread of 228 points:
         </p>
         <p class="draw-highlight"><span class="draw-cell"><span class="ball">33</span><span class="ball">56</span><span class="ball">64</span><span class="ball">66</span><span class="ball">68</span><span class="ball ball--special" title="Powerball">12</span></span></p>
+        <div class="table-wrap"><table><caption>Odd/even split of the five white balls across all 154 drawings in 2022.</caption>
+  <thead><tr><th>Odd:even split</th><th>Drawings</th><th>Share of year</th></tr></thead>
+  <tbody><tr><td><b>2 odd / 3 even</b></td><td>52</td><td>33.8%</td></tr>
+  <tr><td><b>3 odd / 2 even</b></td><td>45</td><td>29.2%</td></tr>
+  <tr><td><b>4 odd / 1 even</b></td><td>26</td><td>16.9%</td></tr>
+  <tr><td><b>1 odd / 4 even</b></td><td>20</td><td>13.0%</td></tr>
+  <tr><td><b>5 odd / 0 even</b></td><td>6</td><td>3.9%</td></tr>
+  <tr><td><b>0 odd / 5 even</b></td><td>5</td><td>3.2%</td></tr></tbody></table></div>
+        <div class="table-wrap"><table class="table--compare">
+  <thead><tr><th>Measure</th><th>2022</th><th>All 1,406 drawings</th></tr></thead>
+  <tbody><tr><td>Drawings</td><td>154</td><td>1,406</td></tr>
+  <tr><td>Average sum</td><td>180.7</td><td>176.9</td></tr>
+  <tr><td>Drawings with consecutive numbers</td><td>43 (27.9%)</td><td>26.3%</td></tr>
+  <tr><td>Drawings repeating a ball from the previous one</td><td>31.4%</td><td>31.7%</td></tr>
+  <tr><td>All five balls in the lower half</td><td>7</td><td>3.0% of drawings</td></tr></tbody></table></div>
 
-        
+        <h2>Consecutive-number pairs</h2>
+        <p>
+          <b>43</b> of 154 drawings (27.9%)
+          included at least one consecutive white-ball pair (for example 14–15). Across the full
+          5 of 69 + 1 of 26 archive that rate is 26.3%. Consecutive
+          pairs are common in random samples; they are not a signal to seek or avoid on a ticket.
+        </p>
+
+
 
         <h2>Every Powerball drawing in 2022</h2>
         <div class="table-wrap"><table class="table--results"><caption>Powerball results, newest first. The Powerball is the final,
@@ -297,6 +353,22 @@
   <tr><td>January 3, 2022</td><td><span class="draw-cell"><span class="ball ball--sm">02</span><span class="ball ball--sm">13</span><span class="ball ball--sm">32</span><span class="ball ball--sm">33</span><span class="ball ball--sm">48</span><span class="ball ball--special ball--sm" title="Powerball">22</span></span></td><td>128</td><td>2:3</td><td>4:1</td></tr>
   <tr><td>January 1, 2022</td><td><span class="draw-cell"><span class="ball ball--sm">06</span><span class="ball ball--sm">12</span><span class="ball ball--sm">39</span><span class="ball ball--sm">48</span><span class="ball ball--sm">50</span><span class="ball ball--special ball--sm" title="Powerball">07</span></span></td><td>155</td><td>1:4</td><td>2:3</td></tr></tbody></table></div>
 
+        <h2>How to interpret these 2022 figures</h2>
+        <p>Powerball held 154 drawings in 2022, and the white-ball sum averaged 180.7, a little above the long-run matrix average of 176.9. Year-to-year wiggles of a few points are the normal footprint of independent draws, not a signal to chase.</p>
+        <p>Against a fair-share baseline of about 11.2 hits per number, 2022's leader board looks busy. White ball 37 led with 21 appearances (13.6% of drawings). The quietest count was 5, shared by 3 numbers. Leaders reshuffle every year when you re-rank the same matrix — which is what you expect when each drawing is an independent event, not a memory of the last one.</p>
+        <p>The most common odd/even split was 2 odd / 3 even — 52 drawings (33.8%). Drawings with at least one consecutive white-ball pair landed 27.9% of the time, in line with the matrix-wide 26.3%. Neither pattern is a playbook; both are side effects of how combinations are counted, and each new draw resets the slate.</p>
+        <p>The most frequent Powerball in 2022 was 7 (9×). Bonus-ball streaks look meaningful on a year page and still carry no edge: the next drawing does not owe anyone a repeat or a make-up hit. This archive is for looking back — verify any ticket with your state lottery, and never treat hot, cold, or overdue lists as a way to beat the odds.</p>
+
+        <h2>Source and methodology</h2>
+        <p>
+          Counts on this page are computed from the site's bundled Powerball draw file for
+          calendar year 2022 only (Eastern Time drawing dates). Matrix context:
+          Powerball used five white balls from 1–69 and a red Powerball from 1–26, drawn Monday, Wednesday and Saturday evenings (ET). Full method and correction policy:
+          <a href="../methodology.html">Methodology</a>.
+          Draw snapshot last refreshed September 26, 2026. Always verify a ticket with your state
+          lottery — this page is a convenience copy, not an official record.
+        </p>
+
         <footer class="article-foot">
           <p class="disclaimer-text">
             These results are a convenience copy of public data and may be delayed or incorrect.
@@ -316,6 +388,21 @@
           <span>Next year</span><b>Powerball 2023 results</b>
         </a>
       </nav>
+
+      <section class="panel prose year-related">
+        <h2>Related years, guides and tools</h2>
+        <ul class="year-related__list">
+          <li><a href="../powerball.html">Powerball statistics dashboard</a></li>
+          <li><a href="index.html">Results archive hub</a></li>
+          <li><a href="powerball-2021.html">Powerball 2021 results</a></li>
+          <li><a href="powerball-2023.html">Powerball 2023 results</a></li>
+          <li><a href="../tools/odds-explorer.html">Odds Explorer</a></li>
+          <li><a href="../tools/ticket-match-checker.html">Ticket Match checker</a></li>
+          <li><a href="../guides/independent-trials.html">Independent trials guide</a></li>
+          <li><a href="../guides/hot-and-cold-numbers-tested.html">Hot and cold numbers tested</a></li>
+          <li><a href="../methodology.html">Methodology and corrections</a></li>
+        </ul>
+      </section>
 
       <section class="sources">
   <h2>Sources</h2>

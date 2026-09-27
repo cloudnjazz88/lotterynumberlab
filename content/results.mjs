@@ -4,6 +4,7 @@
  */
 
 import { num, pct, table, dateLong, adSlot, link, sourceList } from "./site.mjs";
+import { yearInterpretation, formatBallList } from "../tools/year-analysis.mjs";
 
 const pad = (n) => String(n).padStart(2, "0");
 const sumOf = (draw) => draw.n.reduce((a, b) => a + b, 0);
@@ -44,6 +45,23 @@ function resultsTable(config, draws) {
         convenience copy, not an official record.`,
     },
   );
+}
+
+function accentClass(gameId) {
+  return gameId === "megamillions" ? "year-glance--mm" : "year-glance--pb";
+}
+
+function formatTiedBalls(entries) {
+  if (!entries.length) return "—";
+  return entries.map((x) => `<b>${x.n}</b> (${x.count}×)`).join(", ");
+}
+
+function glanceCard(label, value, hint = "") {
+  return `<div class="year-glance__card">
+    <dt>${label}</dt>
+    <dd>${value}</dd>
+    ${hint ? `<p class="year-glance__hint">${hint}</p>` : ""}
+  </div>`;
 }
 
 /* --------------------------------- the hub -------------------------------- */
@@ -102,7 +120,7 @@ export function resultsHub(ctx) {
         )
         .join("\n\n      ")}
 
-      ${adSlot("results-hub")}
+${adSlot("results-hub") ? `      ${adSlot("results-hub")}\n` : ""}
 
       <section class="panel prose">
         <h2>How to read these tables</h2>
@@ -152,15 +170,55 @@ export function yearPage(ctx, gameId, year) {
   const index = game.years.findIndex((y) => y.year === year);
   const newer = game.years[index - 1];
   const older = game.years[index + 1];
-  const isPartial = data.count < 90;
   const scheduleNote =
     gameId === "powerball" && Number(year) === 2021
       ? ` Powerball added a third weekly drawing on Mondays in August 2021, which is why the
          count sits between the two-a-week and three-a-week totals.`
       : "";
 
-  const hottestShare = data.hottest[0].count / data.count;
   const expected = (data.count * config.pick) / config.mainMax;
+  const mode = data.mostCommonOddEven;
+  const interpret = yearInterpretation(config, data, game.shape);
+  const specialTop =
+    data.mostFrequentSpecial && data.mostFrequentSpecial.length
+      ? data.mostFrequentSpecial
+      : data.topSpecial
+        ? [data.topSpecial]
+        : [];
+  const gameSlug = gameId === "megamillions" ? "mega-millions" : "powerball";
+  const fetchedNote = ctx.snapshotFetchedAt
+    ? dateLong(String(ctx.snapshotFetchedAt).slice(0, 10))
+    : dateLong(data.last);
+
+  const keyFindings = [];
+  if (data.mostFrequent?.length) {
+    keyFindings.push(
+      `Most frequent white ball${data.mostFrequent.length > 1 ? "s" : ""}: ${formatTiedBalls(data.mostFrequent)}.`,
+    );
+  }
+  if (data.leastFrequent?.length && data.count >= 2) {
+    keyFindings.push(
+      `Least frequent (including zeros): ${formatTiedBalls(data.leastFrequent.slice(0, 8))}${data.leastFrequent.length > 8 ? `, +${data.leastFrequent.length - 8} more` : ""}.`,
+    );
+  }
+  if (specialTop.length) {
+    keyFindings.push(
+      `Most frequent ${config.specialName}: ${formatTiedBalls(specialTop)}.`,
+    );
+  }
+  if (mode) {
+    keyFindings.push(
+      `Most common odd/even split: ${mode.odd} odd / ${mode.even} even (${mode.count} drawings, ${pct(mode.share)}).`,
+    );
+  }
+  keyFindings.push(
+    `Consecutive-number drawings: ${data.consecutiveCount} of ${data.count} (${pct(data.consecutiveShare)}).`,
+  );
+  if (data.sumMin && data.sumMax) {
+    keyFindings.push(
+      `White-ball sum range: ${data.sumMin.value} (${dateLong(data.sumMin.draw.d)}) to ${data.sumMax.value} (${dateLong(data.sumMax.draw.d)}).`,
+    );
+  }
 
   return `      <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="${link("/", 1)}">Home</a>
@@ -170,14 +228,14 @@ export function yearPage(ctx, gameId, year) {
         <span>${config.name} ${year}</span>
       </nav>
 
-      <article class="panel prose prose--article">
+      <article class="panel prose prose--article year-page" data-game="${gameId}" data-year="${year}">
         <header class="article-head">
           <p class="page-kicker">${config.name} archive</p>
           <h1>${config.name} winning numbers for ${year}</h1>
           <p class="article-dek">
             All ${data.count} ${config.name} drawings held in ${year}, from
-            ${dateLong(data.first)} to ${dateLong(data.last)}, with the year's frequency and shape
-            analysis.
+            ${dateLong(data.first)} to ${dateLong(data.last)}, with year-specific frequency,
+            sum, odd/even and consecutive-pair analysis from the bundled draw record.
           </p>
           <p class="article-meta">
             Dates are Eastern Time drawing dates · ${config.matrixLabel} ·
@@ -185,29 +243,112 @@ export function yearPage(ctx, gameId, year) {
           </p>
         </header>
 
-        <h2>The year in numbers</h2>
+        <h2>Year at a glance</h2>
+        <p class="year-matrix-note">${data.matrixNote}${scheduleNote}</p>
+        <dl class="year-glance ${accentClass(gameId)}">
+          ${glanceCard("Drawings", num(data.count), `${dateLong(data.first)} → ${dateLong(data.last)}`)}
+          ${glanceCard("Average white-ball sum", data.sumMean.toFixed(1), comparison(data.sumMean, game.shape.sumMean))}
+          ${glanceCard(
+            "Sum range",
+            `${data.sumMin.value} – ${data.sumMax.value}`,
+            `Low ${dateLong(data.sumMin.draw.d)} · High ${dateLong(data.sumMax.draw.d)}`,
+          )}
+          ${glanceCard(
+            "Consecutive pairs",
+            `${data.consecutiveCount} (${pct(data.consecutiveShare)})`,
+            `Matrix-wide ${pct(game.shape.consecutiveRate)}`,
+          )}
+          ${glanceCard(
+            "Top odd/even split",
+            mode ? `${mode.odd}:${mode.even}` : "—",
+            mode ? `${mode.count} drawings (${pct(mode.share)})` : "",
+          )}
+          ${glanceCard(
+            `Top ${config.specialName}`,
+            specialTop.length ? specialTop.map((x) => x.n).join(", ") : "—",
+            specialTop.length ? `${specialTop[0].count}×` : "",
+          )}
+        </dl>
+
+        <h2>Key findings for ${year}</h2>
+        <ul class="year-findings">
+          ${keyFindings.map((line) => `<li>${line}</li>`).join("\n          ")}
+        </ul>
+
+        <h2>Frequency — white balls and ${config.specialName}</h2>
         <p>
-          ${config.name} held <b>${data.count} drawings</b> in ${year}${
-            isPartial
-              ? Number(year) === Number(game.history.firstDraw.slice(0, 4))
-                ? `, starting on ${dateLong(data.first)} — the first drawing under the current
-                   ${config.matrixLabel} matrix`
-                : `, a partial year so far`
-              : ""
-          }.${scheduleNote} The five white balls averaged
-          <b>${data.sumMean.toFixed(1)}</b> per drawing, ${comparison(
-            data.sumMean,
-            game.shape.sumMean,
-          )} for this matrix.
+          With ${data.count} drawings and five balls each, every white number's fair share is about
+          <b>${expected.toFixed(1)} appearances</b> if the drum is fair. Rankings below break ties
+          by ball number ascending so a rebuild always produces the same order.
         </p>
         ${table(
-          ["Measure", `${year}`, "All ${count} drawings".replace("${count}", num(game.history.count))],
+          ["Rank", "White ball", "Times drawn", `Share of ${year} drawings`],
+          data.hottest.map((entry, i) => [
+            `#${i + 1}`,
+            `<b>${entry.n}</b>`,
+            `${entry.count}×`,
+            pct(entry.count / data.count),
+          ]),
+          { caption: `Five most-drawn white balls in ${year} (ties broken by lower number first).` },
+        )}
+        <p>
+          Least-drawn white balls in ${year}
+          ${
+            data.missing.length
+              ? `(including <b>${data.missing.length}</b> that never appeared): ${formatBallList(data.leastFrequent, 12)}.`
+              : `all sat at <b>${data.leastFrequent[0]?.count ?? 0}×</b>: ${formatBallList(data.leastFrequent, 12)}.`
+          }
+        </p>
+        ${
+          data.specialRanked?.length
+            ? table(
+                ["Rank", config.specialName, "Times drawn", `Share of ${year}`],
+                data.specialRanked.slice(0, 5).map((entry, i) => [
+                  `#${i + 1}`,
+                  `<b>${entry.n}</b>`,
+                  `${entry.count}×`,
+                  pct(entry.count / data.count),
+                ]),
+                { caption: `Most frequent ${config.specialName} values in ${year}.` },
+              )
+            : ""
+        }
+        <p class="note">
+          Frequency is a rear-view mirror. A number that led ${year} has no better chance in the
+          next drawing — see
+          <a href="${link("guides/hot-and-cold-numbers-tested.html", 1)}">hot and cold numbers tested</a>
+          and
+          <a href="${link("guides/independent-trials.html", 1)}">independent trials</a>.
+        </p>
+
+        <h2>Sums and odd/even distribution</h2>
+        <p>
+          The lowest white-ball sum of ${year} was <b>${data.sumMin.value}</b> on
+          ${dateLong(data.sumMin.draw.d)}:
+        </p>
+        <p class="draw-highlight">${balls(config, data.sumMin.draw)}</p>
+        <p>
+          The highest was <b>${data.sumMax.value}</b> on ${dateLong(data.sumMax.draw.d)}
+          — a spread of ${data.sumMax.value - data.sumMin.value} points:
+        </p>
+        <p class="draw-highlight">${balls(config, data.sumMax.draw)}</p>
+        ${table(
+          ["Odd:even split", "Drawings", "Share of year"],
+          data.oddEvenDist.map((row) => [
+            `<b>${row.odd} odd / ${row.even} even</b>`,
+            String(row.count),
+            pct(row.share),
+          ]),
+          { caption: `Odd/even split of the five white balls across all ${data.count} drawings in ${year}.` },
+        )}
+        ${table(
+          ["Measure", String(year), `All ${num(game.history.count)} drawings`],
           [
             ["Drawings", String(data.count), num(game.history.count)],
             ["Average sum", data.sumMean.toFixed(1), game.shape.sumMean.toFixed(1)],
             [
               "Drawings with consecutive numbers",
-              pct(data.consecutiveShare),
+              `${data.consecutiveCount} (${pct(data.consecutiveShare)})`,
               pct(game.shape.consecutiveRate),
             ],
             [
@@ -224,64 +365,31 @@ export function yearPage(ctx, gameId, year) {
           { className: "table--compare" },
         )}
 
-        <h2>Most and least drawn numbers of ${year}</h2>
+        <h2>Consecutive-number pairs</h2>
         <p>
-          With ${data.count} drawings and five balls each, every number "should" appear about
-          <b>${expected.toFixed(1)} times</b> if the machine is fair. The spread below is what
-          fair randomness actually looks like over a single year — a leader several appearances
-          clear of the field, and a tail of numbers that barely showed up.
-        </p>
-        ${table(
-          ["Rank", "Number", "Times drawn", "Share of ${year} drawings".replace("${year}", year)],
-          data.hottest.map((entry, i) => [
-            `#${i + 1}`,
-            `<b>${entry.n}</b>`,
-            `${entry.count}×`,
-            pct(entry.count / data.count),
-          ]),
-          { caption: `The five most-drawn white balls of ${year}.` },
-        )}
-        <p>
-          ${config.name}'s most frequent number in ${year} was <b>${data.hottest[0].n}</b>, drawn
-          ${data.hottest[0].count} times — in ${pct(hottestShare)} of the year's drawings.
-          ${
-            data.missing.length
-              ? `<b>${data.missing.length}</b> numbers were never drawn at all in this period
-                 (${data.missing.slice(0, 12).join(", ")}${data.missing.length > 12 ? ", …" : ""}).`
-              : `Every number from 1 to ${config.mainMax} came up at least once, with the quietest
-                 appearing just ${data.coldest[0].count} time${data.coldest[0].count === 1 ? "" : "s"}
-                 (${data.coldest
-                   .slice(0, 6)
-                   .map((x) => x.n)
-                   .join(", ")}${data.coldest.length > 6 ? ", …" : ""}).`
-          }
-          The most common ${config.specialName} was <b>${data.topSpecial.n}</b>, with
-          ${data.topSpecial.count} appearances.
-        </p>
-        <p class="note">
-          None of this predicts anything. A number that led one year has no better chance the
-          next, and the ranking reshuffles completely from year to year — which is exactly what
-          <a href="${link("guides/hot-and-cold-numbers-tested.html", 1)}">testing the full record
-          against simulated fair draws</a> shows.
+          <b>${data.consecutiveCount}</b> of ${data.count} drawings (${pct(data.consecutiveShare)})
+          included at least one consecutive white-ball pair (for example 14–15). Across the full
+          ${config.matrixLabel} archive that rate is ${pct(game.shape.consecutiveRate)}. Consecutive
+          pairs are common in random samples; they are not a signal to seek or avoid on a ticket.
         </p>
 
-        <h2>Extremes of the year</h2>
-        <p>
-          The lowest-scoring drawing of ${year} came on ${dateLong(data.sumMin.draw.d)}, when the
-          five white balls added up to just <b>${data.sumMin.value}</b>:
-        </p>
-        <p class="draw-highlight">${balls(config, data.sumMin.draw)}</p>
-        <p>
-          The highest was ${dateLong(data.sumMax.draw.d)}, totalling
-          <b>${data.sumMax.value}</b> — a spread of
-          ${data.sumMax.value - data.sumMin.value} points across a single year:
-        </p>
-        <p class="draw-highlight">${balls(config, data.sumMax.draw)}</p>
-
-        ${adSlot("results-year")}
+${adSlot("results-year") ? `        ${adSlot("results-year")}\n` : ""}
 
         <h2>Every ${config.name} drawing in ${year}</h2>
         ${resultsTable(config, data.draws)}
+
+        <h2>How to interpret these ${year} figures</h2>
+        ${interpret.map((p) => `<p>${p}</p>`).join("\n        ")}
+
+        <h2>Source and methodology</h2>
+        <p>
+          Counts on this page are computed from the site's bundled ${config.name} draw file for
+          calendar year ${year} only (Eastern Time drawing dates). Matrix context:
+          ${data.matrixNote} Full method and correction policy:
+          <a href="${link("methodology.html", 1)}">Methodology</a>.
+          Draw snapshot last refreshed ${fetchedNote}. Always verify a ticket with your state
+          lottery — this page is a convenience copy, not an official record.
+        </p>
 
         <footer class="article-foot">
           <p class="disclaimer-text">
@@ -315,6 +423,29 @@ export function yearPage(ctx, gameId, year) {
         }
       </nav>
 
+      <section class="panel prose year-related">
+        <h2>Related years, guides and tools</h2>
+        <ul class="year-related__list">
+${[
+  `<li><a href="${link(gameHref(gameId), 1)}">${config.name} statistics dashboard</a></li>`,
+  `<li><a href="index.html">Results archive hub</a></li>`,
+  older ? `<li><a href="${yearHref(gameId, older.year)}">${config.name} ${older.year} results</a></li>` : "",
+  newer ? `<li><a href="${yearHref(gameId, newer.year)}">${config.name} ${newer.year} results</a></li>` : "",
+  `<li><a href="${link("tools/odds-explorer.html", 1)}">Odds Explorer</a></li>`,
+  `<li><a href="${link("tools/ticket-match-checker.html", 1)}">Ticket Match checker</a></li>`,
+  `<li><a href="${link("guides/independent-trials.html", 1)}">Independent trials guide</a></li>`,
+  `<li><a href="${link("guides/hot-and-cold-numbers-tested.html", 1)}">Hot and cold numbers tested</a></li>`,
+  `<li><a href="${link("methodology.html", 1)}">Methodology and corrections</a></li>`,
+  gameId === "megamillions" && Number(year) >= 2025
+    ? `<li><a href="${link("guides/mega-millions-2025-rule-change.html", 1)}">Mega Millions 2025 rule change</a></li>`
+    : "",
+  gameId === "powerball" && Number(year) <= 2016
+    ? `<li><a href="${link("guides/powerball-2015-rule-change.html", 1)}">Powerball 2015 rule change</a></li>`
+    : "",
+].filter(Boolean).map((li) => `          ${li}`).join("\n")}
+        </ul>
+      </section>
+
       ${sourceList(
         gameId === "megamillions" ? ["nyMega", "mmDrawings", "mmHowTo"] : ["nyPower", "pbResults", "pbPrizes"],
         1,
@@ -336,4 +467,3 @@ export function yearPageSpecs(ctx) {
   }
   return pages;
 }
-
