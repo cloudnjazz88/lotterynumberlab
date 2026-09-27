@@ -355,6 +355,10 @@ function jsonLd(page, depth) {
     .join("\n    ");
 }
 
+export function brandMarkMarkup() {
+  return "<span class=\"brand-mark\" aria-hidden=\"true\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\" width=\"50\" height=\"50\" focusable=\"false\"><defs><radialGradient id=\"nlBall\" cx=\"32%\" cy=\"28%\" r=\"72%\"><stop offset=\"0%\" stop-color=\"#fff6d4\"/><stop offset=\"38%\" stop-color=\"#ffc233\"/><stop offset=\"100%\" stop-color=\"#d9840c\"/></radialGradient></defs><circle cx=\"32\" cy=\"32\" r=\"30\" fill=\"url(#nlBall)\"/><circle cx=\"32\" cy=\"32\" r=\"30\" fill=\"none\" stroke=\"#b86e08\" stroke-width=\"1.25\" opacity=\".5\"/><ellipse cx=\"23\" cy=\"21\" rx=\"11\" ry=\"7.5\" fill=\"#fff\" opacity=\".28\"/><text x=\"32\" y=\"37.5\" text-anchor=\"middle\" font-family=\"Inter,Segoe UI,system-ui,sans-serif\" font-size=\"17\" font-weight=\"800\" fill=\"#0b1a3a\" letter-spacing=\"-0.04em\" textLength=\"38\" lengthAdjust=\"spacingAndGlyphs\">5+1</text></svg></span>";
+}
+
 export function layout(page) {
   const depth = page.slug.includes("/") ? page.slug.split("/").length - 1 : 0;
   const base = SITE.url.replace(/\/$/, "");
@@ -405,7 +409,7 @@ export function layout(page) {
 
     <header class="topbar">
       <a class="brand" href="${link("/", depth)}">
-        <div class="brand-mark"><span>${page.game === "powerball" ? "PB" : page.game === "megamillions" ? "MM" : "US"}</span></div>
+        ${brandMarkMarkup()}
         <div class="brand-text">
           <span class="brand-name">${SITE.name}</span>
           <span class="brand-sub" id="brandSub">${page.brandSub || SITE.tagline}</span>

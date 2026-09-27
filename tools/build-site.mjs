@@ -485,19 +485,7 @@ Canonical: ${base}/.well-known/security.txt
 written.push(
   await write(
     "favicon.svg",
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <radialGradient id="b" cx="34%" cy="28%">
-      <stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#ffc233"/>
-      <stop offset="1" stop-color="#ff8f0f"/>
-    </radialGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="#0b1128"/>
-  <circle cx="32" cy="32" r="20" fill="url(#b)"/>
-  <text x="32" y="40" font-family="Segoe UI, system-ui, sans-serif" font-size="22"
-    font-weight="700" text-anchor="middle" fill="#241a02">5</text>
-</svg>
-`,
+    "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\">\n  <defs>\n    <radialGradient id=\"b\" cx=\"34%\" cy=\"28%\">\n      <stop offset=\"0\" stop-color=\"#fff6d4\"/><stop offset=\".5\" stop-color=\"#ffc233\"/>\n      <stop offset=\"1\" stop-color=\"#d9840c\"/>\n    </radialGradient>\n  </defs>\n  <rect width=\"64\" height=\"64\" rx=\"14\" fill=\"#0b1128\"/>\n  <circle cx=\"32\" cy=\"32\" r=\"22\" fill=\"url(#b)\"/>\n  <ellipse cx=\"25\" cy=\"24\" rx=\"8\" ry=\"5\" fill=\"#fff\" opacity=\".25\"/>\n  <text x=\"32\" y=\"38\" font-family=\"Segoe UI, system-ui, sans-serif\" font-size=\"14\"\n    font-weight=\"800\" text-anchor=\"middle\" fill=\"#0b1a3a\" letter-spacing=\"-0.06em\"\n    textLength=\"34\" lengthAdjust=\"spacingAndGlyphs\">5+1</text>\n</svg>\n",
   ),
 );
 
