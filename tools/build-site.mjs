@@ -537,6 +537,7 @@ const assets = [
   "src/tools/spending-calculator.js",
   "src/tools/ticket-match-checker.js",
   "src/tools/odds-explorer.js",
+  "src/tools/lottery-what-if-calculator.js",
   "data/draws.js",
 ];
 const publish = [...new Set([...written, ...assets])];
