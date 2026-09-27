@@ -179,19 +179,47 @@ export function homeBody(ctx, guides) {
     guides.find((g) => g.slug === "hot-and-cold-numbers-tested") || guides[6],
     guides.find((g) => g.slug === "record-jackpots-and-taxes") || guides[2],
   ].filter(Boolean);
+  const mmCount = num(mm.history.count);
+  const pbCount = num(pb.history.count);
 
-  return `      <section class="hero hero--compact">
-        <p class="hero__eyebrow">INDEPENDENT LOTTERY DATA</p>
-        <h1>Understand the numbers before you play.</h1>
-        <p class="hero__lead">
-          Verified Mega Millions and Powerball results, honest odds, and tools that
-          explain what the numbers mean — without hype or predictions.
-        </p>
-        <div class="hero-ctas hero-ctas--compact">
-          <a class="hero-cta" href="tools/index.html">Explore the tools</a>
-          <a class="hero-cta hero-cta--secondary" href="results/index.html">Browse results</a>
+  return `      <section class="hero hero--compact hero--split">
+        <div class="hero__copy">
+          <p class="hero__eyebrow">INDEPENDENT LOTTERY DATA</p>
+          <h1>Understand the numbers before you play.</h1>
+          <p class="hero__lead">
+            Verified Mega Millions and Powerball results, honest odds, and tools that
+            explain what the numbers mean — without hype or predictions.
+          </p>
+          <div class="hero-ctas hero-ctas--compact">
+            <a class="hero-cta" href="tools/index.html">Explore the tools</a>
+            <a class="hero-cta hero-cta--secondary" href="results/index.html">Browse results</a>
+          </div>
+          <p class="hero__note">${SITE.timeZoneNote} This site does not sell tickets.</p>
         </div>
-        <p class="hero__note">${SITE.timeZoneNote} This site does not sell tickets.</p>
+        <a class="hero-featured" href="tools/lottery-what-if-calculator.html">
+          <div class="hero-featured__top">
+            <span class="hero-featured__eyebrow">FEATURED TOOL</span>
+            <span class="hero-featured__badge">NEW</span>
+          </div>
+          <h2 class="hero-featured__title">What if you played the same numbers every drawing?</h2>
+          <p class="hero-featured__desc">Replay one fixed Mega Millions or Powerball line across the bundled drawing history.</p>
+          <p class="hero-featured__coverage">Mega Millions · ${mmCount} drawings · Powerball · ${pbCount} drawings</p>
+          <div class="hero-featured__visual" aria-hidden="true">
+            <p class="hero-featured__line-label">Mega Millions example line</p>
+            <div class="hero-featured__balls">
+              <span class="hf-ball">07</span><span class="hf-ball">14</span><span class="hf-ball">22</span><span class="hf-ball">35</span><span class="hf-ball">48</span>
+              <span class="hf-ball hf-ball--bonus hf-ball--mm" title="Mega Ball">12</span>
+            </div>
+            <p class="hero-featured__line-note">Example line · not a recommendation</p>
+          </div>
+          <ul class="hero-featured__chips">
+            <li>Past match tiers</li>
+            <li>Hypothetical spend</li>
+            <li>Estimated base prizes</li>
+          </ul>
+          <span class="hero-featured__cta">Replay your numbers <span aria-hidden="true">→</span></span>
+          <p class="hero-featured__footer">Historical simulation · Not a prediction</p>
+        </a>
       </section>
 
       <section class="latest-strip" aria-labelledby="latest-heading">
@@ -209,40 +237,73 @@ export function homeBody(ctx, guides) {
         ${homeRecentPanel(mm, pb)}
       </section>
 
-      <section class="panel panel--warm panel--utility" aria-labelledby="tools-rail-heading">
-        <h2 class="section__title" id="tools-rail-heading">What do you want to know?</h2>
-        <p class="section__lead section__lead--warm">
-          Five starting points — each link is a real page, not a fake checker.
-        </p>
-        <ul class="utility-rail">
-          <li class="utility-rail__item">
-            <a href="tools/ticket-match-checker.html">
-              <span class="utility-rail__label">Check numbers</span>
-              <span class="utility-rail__hint">Compare your numbers with a published drawing or search past results</span>
+      <section class="panel panel--warm home-tools" aria-labelledby="home-tools-heading">
+        <div class="home-tools__head">
+          <p class="home-tools__eyebrow">INTERACTIVE TOOLS</p>
+          <h2 class="section__title" id="home-tools-heading">Try the lottery tools</h2>
+          <p class="section__lead section__lead--warm">
+            Check a ticket, replay your numbers, compare the odds, or see what repeated play costs.
+          </p>
+          <a class="text-link home-tools__all" href="tools/index.html">View all tools <span aria-hidden="true">→</span></a>
+        </div>
+        <ul class="home-tools__grid">
+          <li>
+            <a class="home-tool-card" href="tools/lottery-what-if-calculator.html">
+              <h3 class="home-tool-card__title">What If</h3>
+              <div class="home-tool-card__visual" aria-hidden="true">
+                <span class="htv-ball">12</span><span class="htv-ball">24</span><span class="htv-ball">31</span><span class="htv-ball">45</span><span class="htv-ball">52</span>
+                <span class="htv-ball htv-ball--bonus">08</span>
+                <span class="htv-repeat">Historical replay</span>
+              </div>
+              <p class="home-tool-card__desc">Replay one fixed line across past Mega Millions and Powerball drawings.</p>
+              <span class="home-tool-card__cta">Open What If <span aria-hidden="true">→</span></span>
             </a>
           </li>
-          <li class="utility-rail__item">
-            <a href="tools/lottery-what-if-calculator.html">
-              <span class="utility-rail__label">What if I played these?</span>
-              <span class="utility-rail__hint">Replay the same numbers across past drawings — hypothetical only</span>
+          <li>
+            <a class="home-tool-card" href="tools/ticket-match-checker.html">
+              <h3 class="home-tool-card__title">Ticket Match</h3>
+              <div class="home-tool-card__visual home-tool-card__visual--ticket" aria-hidden="true">
+                <svg class="htv-ticket" viewBox="0 0 120 48" width="120" height="48" focusable="false">
+                  <rect x="2" y="6" width="116" height="36" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="22" cy="24" r="7" fill="currentColor" opacity="0.85"/>
+                  <circle cx="40" cy="24" r="7" fill="currentColor" opacity="0.85"/>
+                  <circle cx="58" cy="24" r="7" fill="currentColor" opacity="0.85"/>
+                  <circle cx="76" cy="24" r="7" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+                  <circle cx="94" cy="24" r="7" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+                  <circle cx="108" cy="24" r="6" class="htv-ticket__bonus"/>
+                </svg>
+                <span class="htv-chip">3 white + bonus</span>
+              </div>
+              <p class="home-tool-card__desc">Check a ticket against a published drawing or search past results.</p>
+              <span class="home-tool-card__cta">Open Ticket Checker <span aria-hidden="true">→</span></span>
             </a>
           </li>
-          <li class="utility-rail__item">
-            <a href="tools/odds-explorer.html">
-              <span class="utility-rail__label">Compare odds</span>
-              <span class="utility-rail__hint">Odds explorer: jackpot and prize-tier chances across tickets</span>
+          <li>
+            <a class="home-tool-card" href="tools/odds-explorer.html">
+              <h3 class="home-tool-card__title">Odds Explorer</h3>
+              <div class="home-tool-card__visual home-tool-card__visual--odds" aria-hidden="true">
+                <span class="htv-odds">1 in 290,472,336</span>
+                <div class="htv-bars">
+                  <span style="--w:100%"></span>
+                  <span style="--w:62%"></span>
+                  <span style="--w:38%"></span>
+                  <span style="--w:18%"></span>
+                </div>
+              </div>
+              <p class="home-tool-card__desc">Compare jackpot and prize-tier chances across ticket counts.</p>
+              <span class="home-tool-card__cta">Open Odds Explorer <span aria-hidden="true">→</span></span>
             </a>
           </li>
-          <li class="utility-rail__item">
-            <a href="guides/record-jackpots-and-taxes.html">
-              <span class="utility-rail__label">Estimate take-home</span>
-              <span class="utility-rail__hint">Tax guide: cash option and what winners actually receive</span>
-            </a>
-          </li>
-          <li class="utility-rail__item">
-            <a href="tools/lottery-spending-calculator.html">
-              <span class="utility-rail__label">Track spending</span>
-              <span class="utility-rail__hint">Spending calculator: weekly to multi-year ticket cost</span>
+          <li>
+            <a class="home-tool-card" href="tools/lottery-spending-calculator.html">
+              <h3 class="home-tool-card__title">Spending</h3>
+              <div class="home-tool-card__visual home-tool-card__visual--spend" aria-hidden="true">
+                <span class="htv-spend">$10/week</span>
+                <span class="htv-spend-arrow" aria-hidden="true">→</span>
+                <span class="htv-spend htv-spend--year">$520/year</span>
+              </div>
+              <p class="home-tool-card__desc">See what repeated play costs from weekly tickets to multi-year totals.</p>
+              <span class="home-tool-card__cta">Open Spending Calculator <span aria-hidden="true">→</span></span>
             </a>
           </li>
         </ul>
@@ -273,6 +334,11 @@ export function homeBody(ctx, guides) {
               .join("")}
           </ul>
         </div>
+        <p class="home-guide-callout">
+          Looking for take-home after taxes?
+          <a class="text-link" href="guides/record-jackpots-and-taxes.html">Record jackpots and the tax math</a>
+          is a guide — not a calculator.
+        </p>
         <p class="section__after">
           <a class="text-link" href="guides/index.html">Browse all guides →</a>
           ·

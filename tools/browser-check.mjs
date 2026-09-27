@@ -189,7 +189,7 @@ const home = await page.evaluate(() =>
     title: card.querySelector("h2")?.textContent.trim() || "",
     balls: [...card.querySelectorAll(".ball")].map((b) => b.textContent.trim()),
     hasJackpot: !!card.querySelector(".jackpot-est, .latest-card__next"),
-    utilityRail: !!document.querySelector(".utility-rail"),
+    homeTools: !!document.querySelector(".home-tools"),
     trustStrip: !!document.querySelector(".trust-strip"),
   })),
 );
@@ -213,6 +213,9 @@ const homeChrome = await page.evaluate(() => {
     ]),
   );
   return {
+    homeToolCards: document.querySelectorAll(".home-tool-card").length,
+    homeTools: !!document.querySelector(".home-tools"),
+    heroFeatured: !!document.querySelector("a.hero-featured"),
     utilityRail: document.querySelectorAll(".utility-rail__item").length,
     trustStrip: !!document.querySelector(".trust-strip"),
     recentArchive: document.querySelectorAll(".recent-col").length,
@@ -227,9 +230,12 @@ const homeChrome = await page.evaluate(() => {
   };
 });
 console.log(`  hero: ${homeChrome.hero}`);
-console.log(`  utility rail items: ${homeChrome.utilityRail} · trust strip: ${homeChrome.trustStrip}`);
+console.log(`  home tools: ${homeChrome.homeToolCards} cards, featured=${homeChrome.heroFeatured} · trust: ${homeChrome.trustStrip}`);
 console.log(`  home-recent MM=${homeChrome.mmCount} PB=${homeChrome.pbCount} (latest MM ${homeChrome.mmLatest}, PB ${homeChrome.pbLatest})`);
-if (homeChrome.utilityRail !== 5) problems.push(`home: utility rail should have 5 items, has ${homeChrome.utilityRail}`);
+if (!homeChrome.homeTools) problems.push("home: missing Interactive Tools section");
+if (homeChrome.homeToolCards !== 4) problems.push(`home: tools grid should have 4 cards, has ${homeChrome.homeToolCards}`);
+if (!homeChrome.heroFeatured) problems.push("home: missing hero featured What If card");
+if (homeChrome.utilityRail !== 0) problems.push(`home: legacy utility rail should be removed, has ${homeChrome.utilityRail}`);
 if (!homeChrome.trustStrip) problems.push("home: missing trust strip");
 if (homeChrome.recentArchive !== 0) problems.push("home: last-8 archive should be removed");
 if (!homeChrome.homeRecent) problems.push("home: missing Recent drawings panel");
