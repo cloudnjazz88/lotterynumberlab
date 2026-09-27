@@ -329,8 +329,8 @@ const pages = [
       },
       {
         q: "Are Megaplier and Power Play included?",
-        a: "No. V1 uses the official base prize table only, without multipliers, taxes, or jurisdiction rules.",
-        plain: "No. V1 uses the official base prize table only, without multipliers, taxes, or jurisdiction rules.",
+        a: "No. Optional Megaplier and Power Play are excluded. For Mega Millions drawings on/after Apr 8, 2025, totals use published base amounts before the built-in multiplier (the per-ticket multiplier is not in the drawing history). Taxes and jurisdiction rules are also excluded.",
+        plain: "No. Optional Megaplier and Power Play are excluded. For Mega Millions drawings on/after Apr 8, 2025, totals use published base amounts before the built-in multiplier (the per-ticket multiplier is not in the drawing history). Taxes and jurisdiction rules are also excluded.",
       },
       {
         q: "Can I use dates outside the bundled matrix?",

@@ -717,10 +717,12 @@ export function whatIfCalculatorPage(ctx) {
         <aside class="callout callout--warn">
   <h3>Estimated and hypothetical only</h3>
   <p>
-            Dollar figures use the official base prize table only. Megaplier, Power Play,
-            taxes, and jurisdiction rules are excluded. Jackpot-tier patterns are counted
-            but historical jackpot cash is <strong>not</strong> estimated. Nothing here means
-            you are owed a prize.
+            Dollar figures use official base prize amounts by drawing date. Mega Millions
+            ticket cost is $2 before Apr 8, 2025 and $5 from that drawing on. Post-change
+            totals use base-before-multiplier amounts (built-in 2X–10X multipliers are not
+            in the draw history). Optional Megaplier, Power Play, taxes, and jurisdiction
+            rules are excluded. Jackpot-tier patterns are counted but historical jackpot
+            cash is <strong>not</strong> estimated. Nothing here means you are owed a prize.
           </p>
 </aside>
 
@@ -816,10 +818,7 @@ export function whatIfCalculatorPage(ctx) {
             appear in a long window; that still does not turn lottery play into a reliable return.
           </p>
           <p>
-            Figures here are historical and hypothetical. They use the official base prize
-            table and current ticket prices (${mm.config.ticketPrice} Mega Millions,
-            ${pb.config.ticketPrice} Powerball). They are not a prediction and not a way to
-            verify a claim with your state lottery.
+            Figures here are historical and hypothetical. Mega Millions ticket cost uses $2 before Apr 8, 2025 and $5 from that drawing on; Powerball stays $2. Prize totals use official base amounts by era (legacy MM table before the change; base-before-multiplier afterward). They are not a prediction and not a way to verify a claim with your state lottery.
           </p>
         </section>
 
@@ -835,16 +834,16 @@ export function whatIfCalculatorPage(ctx) {
           <p>
             Scope: bundled current-matrix history only
             (Mega Millions from October 31, 2017, Powerball from October 7, 2015;
-            latest MM September 25, 2026, PB September 23, 2026).
-            Older incompatible matrices are not merged. Megaplier and Power Play are not included in V1.
+            latest MM ${dateLong(mmLatest.d)}, PB ${dateLong(pbLatest.d)}).
+            Older incompatible matrices are not merged. Optional Megaplier / Power Play are excluded; post-Apr 2025 MM built-in multipliers are not applied (base-before-multiplier only).
           </p>
         </section>
 
         <section aria-labelledby="wi-assumptions">
           <h2 id="wi-assumptions">Assumptions</h2>
           <ul>
-            <li>Official base prize amounts only; jackpot cash is never invented.</li>
-            <li>Current published ticket prices for hypothetical spend.</li>
+            <li>Official base prize amounts by era (MM legacy before Apr 8, 2025; base-before-multiplier afterward); jackpot cash is never invented.</li>
+            <li>Per-drawing historical ticket prices (Mega Millions $2 before Apr 8, 2025; $5 from Apr 8, 2025 onward; Powerball $2).</li>
             <li>Eastern Time drawing dates as shipped in this site&apos;s snapshot.</li>
             <li>Identical tickets on a drawing scale fixed prizes and cost; they do not change per-ticket odds.</li>
             <li>Empty ranges show an empty state instead of inventing drawings.</li>
@@ -875,7 +874,7 @@ export function whatIfCalculatorPage(ctx) {
         <section aria-labelledby="wi-limits">
           <h2 id="wi-limits">Limitations</h2>
           <ul>
-            <li>No Megaplier / Power Play multipliers.</li>
+            <li>No optional Megaplier / Power Play; post-Apr 2025 MM built-in multipliers not applied (base-before-multiplier only).</li>
             <li>No tax withholding or annuity vs cash modeling.</li>
             <li>No jurisdiction-specific prize rules or promotions.</li>
             <li>Jackpot advertised amounts vary; they are not estimated here.</li>
@@ -911,10 +910,10 @@ export function whatIfCalculatorPage(ctx) {
             Full method: <a href="${link("methodology.html", depth)}">methodology</a>.
           </p>
           <p>
-            Snapshot basis: Mega Millions 930 drawings
-            (October 31, 2017  – September 25, 2026);
-            Powerball 1,406 drawings
-            (October 7, 2015  – September 23, 2026).
+            Snapshot basis: Mega Millions ${num(mm.history.count)} drawings
+            (${dateLong(mmFirst.d)} – ${dateLong(mmLatest.d)});
+            Powerball ${num(pb.history.count)} drawings
+            (${dateLong(pbFirst.d)} – ${dateLong(pbLatest.d)}).
           </p>
         </section>
 
@@ -927,7 +926,7 @@ export function whatIfCalculatorPage(ctx) {
           <h3>Why is the jackpot not given a dollar amount?</h3>
           <p>Advertised jackpots change by drawing. A jackpot-tier pattern is counted, but historical jackpot cash is not estimated here.</p>
           <h3>Are Megaplier and Power Play included?</h3>
-          <p>No. V1 uses the official base prize table only, without multipliers, taxes, or jurisdiction rules.</p>
+          <p>No. Optional Megaplier and Power Play are excluded. For Mega Millions drawings on/after Apr 8, 2025, totals use published base amounts before the built-in multiplier (the per-ticket multiplier is not in the drawing history). Taxes and jurisdiction rules are also excluded.</p>
           <h3>Can I use dates outside the bundled matrix?</h3>
           <p>No. Only current-matrix history shipped with this site is analyzed. Future dates and incompatible older matrices are excluded.</p>
           <h3>Is this official winner verification?</h3>

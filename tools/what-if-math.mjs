@@ -14,9 +14,49 @@ import { MM_PRIZES, PB_PRIZES } from "./compute-context.mjs";
 
 export { GAME_RANGES, validateTicket, matchTicket, drawingDateBounds };
 
+/** Current published play prices (MM post-2025-04-08; PB unchanged). */
 export const TICKET_PRICE_USD = {
   megamillions: 5,
   powerball: 2,
+};
+
+/** First Mega Millions drawing at $5 with built-in multiplier (official). */
+export const MM_TICKET_PRICE_CHANGE_DATE = "2025-04-08";
+
+/** Mega Millions play price before the Apr 8, 2025 drawing. */
+export const MM_TICKET_PRICE_LEGACY_USD = 2;
+
+/**
+ * Per-drawing ticket price by Eastern Time drawing date.
+ * Mega Millions: drawings before 2025-04-08 are $2; on/after that date $5.
+ * Powerball: $2 for all bundled dates.
+ */
+export function ticketPriceForDrawing(gameId, drawingDate) {
+  if (gameId === "powerball") return TICKET_PRICE_USD.powerball;
+  if (gameId === "megamillions") {
+    if (typeof drawingDate === "string" && drawingDate < MM_TICKET_PRICE_CHANGE_DATE) {
+      return MM_TICKET_PRICE_LEGACY_USD;
+    }
+    return TICKET_PRICE_USD.megamillions;
+  }
+  return null;
+}
+
+/**
+ * Official MM base prizes for drawings before 2025-04-08 (no Megaplier).
+ * Only 0+1 and 1+1 differ from the post-change base-before-multiplier table.
+ * Source: Wisconsin Lottery / Mega Millions consortium transition materials.
+ */
+export const MM_PRIZES_BEFORE_2025_04_08 = {
+  "5+1": { label: "Jackpot", value: null },
+  "5+0": { label: "$1,000,000", value: 1_000_000 },
+  "4+1": { label: "$10,000", value: 10_000 },
+  "4+0": { label: "$500", value: 500 },
+  "3+1": { label: "$200", value: 200 },
+  "3+0": { label: "$10", value: 10 },
+  "2+1": { label: "$10", value: 10 },
+  "1+1": { label: "$4", value: 4 },
+  "0+1": { label: "$2", value: 2 },
 };
 
 export const MAX_TICKETS_PER_DRAWING = 100;
@@ -33,18 +73,25 @@ export function tierKey(whiteMatches, bonusMatch) {
   return `${Number(whiteMatches) || 0}+${bonusMatch ? 1 : 0}`;
 }
 
-export function basePrizesFor(gameId) {
-  if (gameId === "megamillions") return MM_PRIZES;
+export function basePrizesFor(gameId, drawingDate) {
   if (gameId === "powerball") return PB_PRIZES;
+  if (gameId === "megamillions") {
+    if (typeof drawingDate === "string" && drawingDate < MM_TICKET_PRICE_CHANGE_DATE) {
+      return MM_PRIZES_BEFORE_2025_04_08;
+    }
+    // Post-2025-04-08: published base amounts before the built-in multiplier.
+    return MM_PRIZES;
+  }
   return null;
 }
 
 /**
- * Map a match pattern to official base prize metadata.
- * Unknown / non-winning patterns → null prize (no estimate).
+ * Map a match pattern to official base prize metadata for a drawing date.
+ * Unknown / non-winning patterns -> null prize (no estimate).
+ * drawingDate selects pre- vs post-2025-04-08 Mega Millions base tables.
  */
-export function lookupBasePrize(gameId, whiteMatches, bonusMatch) {
-  const prizes = basePrizesFor(gameId);
+export function lookupBasePrize(gameId, whiteMatches, bonusMatch, drawingDate) {
+  const prizes = basePrizesFor(gameId, drawingDate);
   if (!prizes) return { key: tierKey(whiteMatches, bonusMatch), isWinning: false };
   const key = tierKey(whiteMatches, bonusMatch);
   const row = prizes[key];
@@ -61,7 +108,40 @@ export function lookupBasePrize(gameId, whiteMatches, bonusMatch) {
   };
 }
 
-/** Add calendar days to an ISO YYYY-MM-DD (UTC noon to avoid DST edge cases on date-only). */
+/** Build per-price-band ticket cost breakdown for a drawing list. */
+export function buildTicketCostBreakdown(gameId, drawsInRange, ticketsPerDrawing) {
+  const tickets = Number(ticketsPerDrawing) || 0;
+  const bands = new Map();
+  for (const draw of drawsInRange || []) {
+    const price = ticketPriceForDrawing(gameId, draw && draw.d);
+    if (price == null) continue;
+    const cur = bands.get(price) || { price, drawings: 0, tickets: 0, subtotal: 0 };
+    cur.drawings += 1;
+    cur.tickets += tickets;
+    cur.subtotal += price * tickets;
+    bands.set(price, cur);
+  }
+  const ordered = [...bands.values()].sort((a, b) => a.price - b.price);
+  return ordered.map((b) => {
+    let dateRule;
+    if (gameId === "megamillions") {
+      dateRule =
+        b.price === MM_TICKET_PRICE_LEGACY_USD
+          ? "Before Apr 8, 2025"
+          : "Apr 8, 2025 and later";
+    } else {
+      dateRule = "All drawings";
+    }
+    return {
+      price: b.price,
+      drawings: b.drawings,
+      tickets: b.tickets,
+      subtotal: b.subtotal,
+      dateRule,
+    };
+  });
+}
+
 export function addIsoDays(isoDate, days) {
   const [y, m, d] = isoDate.split("-").map(Number);
   const dt = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
@@ -220,7 +300,11 @@ export function analyzeWhatIf(input) {
   if (!period.ok) return { ok: false, error: period.error };
 
   const drawsInRange = filterDrawsByPeriod(input.draws, period.start, period.end);
-  const price = TICKET_PRICE_USD[gameId];
+  const ticketCostBreakdown = buildTicketCostBreakdown(gameId, drawsInRange, ticketsPerDrawing);
+  const priceKindsUsed = ticketCostBreakdown.map((b) => b.price);
+  const ticketPriceMixed = priceKindsUsed.length > 1;
+  const ticketPrice = ticketPriceMixed ? null : priceKindsUsed[0] ?? TICKET_PRICE_USD[gameId];
+  const hypotheticalSpent = ticketCostBreakdown.reduce((a, b) => a + b.subtotal, 0);
   const game = ticket.game;
 
   if (!drawsInRange.length) {
@@ -238,7 +322,10 @@ export function analyzeWhatIf(input) {
       periodEnd: period.end,
       drawingsAnalyzed: 0,
       ticketsPerDrawing,
-      ticketPrice: price,
+      ticketPrice: TICKET_PRICE_USD[gameId],
+      ticketPriceMixed: false,
+      priceKindsUsed: [],
+      ticketCostBreakdown: [],
       hypotheticalSpent: 0,
       estimatedBasePrizes: 0,
       estimatedBasePrizesLabel: "$0",
@@ -251,13 +338,15 @@ export function analyzeWhatIf(input) {
       meaningfulMatches: [],
       meaningfulMatchLimit: MEANINGFUL_MATCH_LIMIT,
       meaningfulTruncated: false,
-      assumptions: assumptionsList(game, price),
+      assumptions: assumptionsList(game, { mixed: false, price: TICKET_PRICE_USD[gameId] }),
       message:
         "No drawings fall in this date range within the bundled current-matrix history. Try a wider period or different custom dates.",
     };
   }
 
   const tierCounts = Object.create(null);
+  const tierPrizeTotals = Object.create(null);
+  const tierUnitValues = Object.create(null);
   let noMatchCount = 0;
   let jackpotTierCount = 0;
   let estimatedBasePrizes = 0;
@@ -268,14 +357,18 @@ export function analyzeWhatIf(input) {
     const key = tierKey(m.whiteMatches, m.bonusMatch);
     tierCounts[key] = (tierCounts[key] || 0) + 1;
 
-    const prize = lookupBasePrize(gameId, m.whiteMatches, m.bonusMatch);
+    const prize = lookupBasePrize(gameId, m.whiteMatches, m.bonusMatch, draw.d);
     const isNoMatch = !prize.isWinning;
     if (isNoMatch) noMatchCount += 1;
 
     if (prize.isJackpot) {
       jackpotTierCount += 1;
     } else if (prize.isWinning && prize.value != null) {
-      estimatedBasePrizes += prize.value * ticketsPerDrawing;
+      const add = prize.value * ticketsPerDrawing;
+      estimatedBasePrizes += add;
+      tierPrizeTotals[key] = (tierPrizeTotals[key] || 0) + add;
+      if (!tierUnitValues[key]) tierUnitValues[key] = new Set();
+      tierUnitValues[key].add(prize.value);
     }
 
     if (prize.isWinning) {
@@ -311,26 +404,32 @@ export function analyzeWhatIf(input) {
   const meaningfulTruncated = allMatches.length > MEANINGFUL_MATCH_LIMIT;
   const meaningfulMatches = allMatches.slice(0, MEANINGFUL_MATCH_LIMIT);
 
-  const hypotheticalSpent = price * ticketsPerDrawing * drawsInRange.length;
   const net = estimatedBasePrizes - hypotheticalSpent;
   const returnRate = hypotheticalSpent > 0 ? estimatedBasePrizes / hypotheticalSpent : null;
 
   // Distribution across official winning tiers + no-match
   const distribution = [];
-  const prizes = basePrizesFor(gameId);
+  // Prefer post-change labels for keys; per-row totals come from era-correct sums.
+  const prizes = basePrizesFor(gameId, period.end);
   for (const key of Object.keys(prizes)) {
     const count = tierCounts[key] || 0;
     if (count === 0) continue;
     const row = prizes[key];
+    const units = tierUnitValues[key] ? [...tierUnitValues[key]] : [];
+    const unitMixed = units.length > 1;
+    const unit = units.length === 1 ? units[0] : null;
     distribution.push({
       key,
       count,
-      label: row.value == null ? row.label : row.label,
+      label: row.label,
       isJackpot: row.value == null,
+      prizeTotal: row.value == null ? null : tierPrizeTotals[key] || 0,
+      unit,
+      unitMixed,
     });
   }
   if (noMatchCount > 0) {
-    distribution.push({ key: "no-match", count: noMatchCount, label: "No prize-tier match", isJackpot: false });
+    distribution.push({ key: "no-match", count: noMatchCount, label: "No prize-tier match", isJackpot: false, prizeTotal: 0, unit: null, unitMixed: false });
   }
 
   return {
@@ -348,7 +447,10 @@ export function analyzeWhatIf(input) {
     periodEnd: period.end,
     drawingsAnalyzed: drawsInRange.length,
     ticketsPerDrawing,
-    ticketPrice: price,
+    ticketPrice,
+    ticketPriceMixed,
+    priceKindsUsed,
+    ticketCostBreakdown,
     hypotheticalSpent,
     estimatedBasePrizes,
     estimatedBasePrizesLabel: formatUsd(estimatedBasePrizes),
@@ -367,14 +469,24 @@ export function analyzeWhatIf(input) {
     meaningfulMatchLimit: MEANINGFUL_MATCH_LIMIT,
     meaningfulTruncated,
     meaningfulTotal: allMatches.length,
-    assumptions: assumptionsList(game, price),
+    assumptions: assumptionsList(game, { mixed: ticketPriceMixed, price: ticketPrice, breakdown: ticketCostBreakdown }),
   };
 }
 
-function assumptionsList(game, price) {
+function assumptionsList(game, priceInfo) {
+  const info = priceInfo && typeof priceInfo === "object" ? priceInfo : { price: priceInfo, mixed: false };
+  let priceLine;
+  if (info.mixed) {
+    priceLine = "Mega Millions hypothetical spend uses per-drawing historical prices: $2 before Apr 8, 2025 and $5 from Apr 8, 2025 onward (Powerball stays $2).";
+  } else if (info.price != null) {
+    priceLine = `Ticket price used for hypothetical spend: $${info.price} per drawing (date-based historical price for this period).`;
+  } else {
+    priceLine = "Ticket prices follow official historical play prices for each drawing date.";
+  }
   return [
-    `Official base prize table only for ${game.name} (${game.matrixLabel}). Megaplier / Power Play, taxes, jurisdiction rules, and promotions are excluded.`,
-    `Ticket price used for hypothetical spend: $${price} (current published price). Historical price changes are not modeled.`,
+    `Official base prize amounts only for ${game.name} (${game.matrixLabel}). Pre-Apr 8, 2025 Mega Millions uses the legacy base table; later drawings use published base amounts before the built-in multiplier. Optional Megaplier (retired) and Power Play, taxes, jurisdiction rules, and promotions are excluded.`,
+    priceLine,
+    "Post-Apr 8, 2025 Mega Millions built-in multipliers (2X–10X) are assigned at purchase and are not in this drawing history, so prize totals use base-before-multiplier amounts — not a full paid prize with multiplier.",
     "Jackpot-tier matches are counted but cash value is not estimated — advertised jackpots vary by drawing.",
     "The same numbers are treated as independent trials on each drawing. Hot/cold history does not change per-draw odds.",
     "Multi-ticket input scales cost and fixed base prizes linearly; it does not improve odds per ticket.",
@@ -449,10 +561,27 @@ export function formatReturnPerDollar(rate) {
   return formatUsd(cents / 100);
 }
 
-export function formatReturnPerDollarSentence(rate) {
+export function formatReturnPerDollarSentence(rate, options = {}) {
   const bit = formatReturnPerDollar(rate);
   if (!bit) return null;
+  if (options && options.qualifyBaseBeforeMultiplier) {
+    return `That is about ${bit} in base prizes before the built-in multiplier for every $1 spent — not a definitive final return after multiplier.`;
+  }
   return `That is about ${bit} returned for every $1 spent.`;
+}
+
+/**
+ * MM prize-card era for presentation: post / mixed / pre.
+ * Any drawing on/after 2025-04-08 => post or mixed (via $5 price band).
+ */
+export function mmPrizePresentationMode(result) {
+  if (!result || result.gameId !== "megamillions") return null;
+  const kinds = result.priceKindsUsed || [];
+  const hasPost = kinds.includes(TICKET_PRICE_USD.megamillions);
+  const hasPre = kinds.includes(MM_TICKET_PRICE_LEGACY_USD);
+  if (hasPost && hasPre) return "mixed";
+  if (hasPost) return "post";
+  return "pre";
 }
 
 /**
@@ -487,9 +616,8 @@ export function buildPrizeResultRows(result) {
     const w = Number(wStr) || 0;
     const bonusMatch = Number(bStr) === 1;
     const matchLabel = formatMatchTierLabel(w, bonusMatch, specialName);
-    const prize = lookupBasePrize(result.gameId, w, bonusMatch);
 
-    if (row.isJackpot || prize.isJackpot || prize.value == null) {
+    if (row.isJackpot) {
       rows.push({
         key: row.key,
         kind: "jackpot",
@@ -505,10 +633,41 @@ export function buildPrizeResultRows(result) {
       continue;
     }
 
-    const unit = prize.value;
-    const total = unit * tickets * row.count;
+    // Prefer analyzer-provided era-correct totals; fall back to single-table lookup.
+    let total;
+    let unit = row.unit;
+    if (typeof row.prizeTotal === "number") {
+      total = row.prizeTotal;
+    } else {
+      const prize = lookupBasePrize(result.gameId, w, bonusMatch, result.periodEnd);
+      if (prize.isJackpot || prize.value == null) {
+        rows.push({
+          key: row.key,
+          kind: "jackpot",
+          title: "Jackpot",
+          matchLabel,
+          count: row.count,
+          countLabel: `${row.count} winning drawing${row.count === 1 ? "" : "s"}`,
+          total: null,
+          totalLabel: "Amount not estimated",
+          isJackpot: true,
+          ratio: drawings > 0 ? row.count / drawings : 0,
+        });
+        continue;
+      }
+      unit = prize.value;
+      total = unit * tickets * row.count;
+    }
+
     subtotalSum += total;
-    const baseLabel = `${formatUsd(unit)} base prize`;
+    let baseLabel;
+    if (row.unitMixed) {
+      baseLabel = "Base prize (era-mixed amounts)";
+    } else if (unit != null) {
+      baseLabel = `${formatUsd(unit)} base prize`;
+    } else {
+      baseLabel = "Base prize";
+    }
     rows.push({
       key: row.key,
       kind: "prize",
@@ -527,9 +686,6 @@ export function buildPrizeResultRows(result) {
   return { rows, subtotalSum };
 }
 
-/**
- * Presentation view-model from an analyzeWhatIf result. No new prize math.
- */
 export function buildResultsPresentation(result) {
   if (!result || !result.ok || result.empty) {
     return { ok: false, empty: Boolean(result && result.empty), message: result && result.message };
@@ -539,6 +695,8 @@ export function buildResultsPresentation(result) {
   const prizes = result.estimatedBasePrizes;
   const net = result.net;
   const hasJackpot = (result.jackpotTierCount || 0) > 0;
+  const mmMode = mmPrizePresentationMode(result);
+  const mmUsesBuiltInMultiplierBase = mmMode === "post" || mmMode === "mixed";
 
   let outcome;
   let conclusionEyebrow = null;
@@ -558,8 +716,11 @@ export function buildResultsPresentation(result) {
     conclusionAmount = "Jackpot value not estimated";
     narrative =
       "This run includes a jackpot-tier match. Because the historical jackpot amount is not estimated, total prizes and overall gain or loss cannot be calculated.";
-    narrativeSecondary =
-      `Excluding the jackpot value, known base prizes total ${formatUsd(prizes)} against ${formatUsd(spent)} in ticket cost.`;
+    narrativeSecondary = mmUsesBuiltInMultiplierBase
+      ? (mmMode === "mixed"
+          ? `Excluding the jackpot value, known base prizes total ${formatUsd(prizes)} (pre–Apr 8 without optional Megaplier, later before the built-in multiplier) against ${formatUsd(spent)} in ticket cost.`
+          : `Excluding the jackpot value, known base prizes before the built-in multiplier total ${formatUsd(prizes)} against ${formatUsd(spent)} in ticket cost.`)
+      : `Excluding the jackpot value, known base prizes total ${formatUsd(prizes)} against ${formatUsd(spent)} in ticket cost.`;
     // Hide generic return-per-dollar when jackpot-tier is present.
     returnSentence = null;
   } else {
@@ -571,19 +732,45 @@ export function buildResultsPresentation(result) {
       conclusionHeadline = `You would have lost an estimated ${formatUsd(Math.abs(net))}`;
       conclusionLabel = "Estimated loss";
       conclusionAmount = formatUsd(net);
-      narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a net loss of ${formatUsd(Math.abs(net))}.`;
+      if (mmMode === "post") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes before the built-in multiplier, for a net loss of ${formatUsd(Math.abs(net))}.`;
+      } else if (mmMode === "mixed") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes (pre–Apr 8 without optional Megaplier, later before the built-in multiplier), for a net loss of ${formatUsd(Math.abs(net))}.`;
+      } else if (mmMode === "pre") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes without Megaplier, for a net loss of ${formatUsd(Math.abs(net))}.`;
+      } else {
+        narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a net loss of ${formatUsd(Math.abs(net))}.`;
+      }
     } else if (outcome === "gain") {
       conclusionHeadline = `You would have gained an estimated ${formatUsd(net)}`;
       conclusionLabel = "Estimated gain";
       conclusionAmount = `+${formatUsd(net)}`;
-      narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a net gain of ${formatUsd(net)}.`;
+      if (mmMode === "post") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes before the built-in multiplier, for a net gain of ${formatUsd(net)}.`;
+      } else if (mmMode === "mixed") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes (pre–Apr 8 without optional Megaplier, later before the built-in multiplier), for a net gain of ${formatUsd(net)}.`;
+      } else if (mmMode === "pre") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes without Megaplier, for a net gain of ${formatUsd(net)}.`;
+      } else {
+        narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a net gain of ${formatUsd(net)}.`;
+      }
     } else {
       conclusionHeadline = "Estimated break-even";
       conclusionLabel = "Estimated break-even";
       conclusionAmount = "$0";
-      narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a break-even net of $0.`;
+      if (mmMode === "post") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes before the built-in multiplier, for a break-even net of $0.`;
+      } else if (mmMode === "mixed") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes (pre–Apr 8 without optional Megaplier, later before the built-in multiplier), for a break-even net of $0.`;
+      } else if (mmMode === "pre") {
+        narrative = `You would have spent ${formatUsd(spent)} and matched ${formatUsd(prizes)} in base prizes without Megaplier, for a break-even net of $0.`;
+      } else {
+        narrative = `You would have spent ${formatUsd(spent)} and received an estimated ${formatUsd(prizes)} in base prizes, for a break-even net of $0.`;
+      }
     }
-    returnSentence = formatReturnPerDollarSentence(result.returnRate);
+    returnSentence = formatReturnPerDollarSentence(result.returnRate, {
+      qualifyBaseBeforeMultiplier: mmUsesBuiltInMultiplierBase,
+    });
   }
 
   const { rows: prizeRows, subtotalSum } = buildPrizeResultRows(result);
@@ -618,11 +805,33 @@ export function buildResultsPresentation(result) {
     returnPerDollar: hasJackpot ? null : formatReturnPerDollar(result.returnRate),
     cards: {
       totalTicketCost: { label: "Total ticket cost", amount: formatUsd(spent) },
-      estimatedPrizes: {
-        label: hasJackpot ? "Known estimated prizes" : "Estimated prizes",
-        amount: formatUsd(prizes),
-        helper: hasJackpot ? "Excludes jackpot value" : "Official base prize amounts only",
-      },
+      estimatedPrizes: (() => {
+        if (mmUsesBuiltInMultiplierBase) {
+          return {
+            label: "Base prizes before multiplier",
+            amount: formatUsd(prizes),
+            helper: hasJackpot
+              ? "Excludes jackpot value; base amounts before built-in multiplier"
+              : "Official base amounts before the built-in multiplier (2×–10× not applied)",
+          };
+        }
+        if (mmMode === "pre") {
+          return {
+            label: "Base prizes without Megaplier",
+            amount: formatUsd(prizes),
+            helper: hasJackpot
+              ? "Excludes jackpot value"
+              : "Official base amounts only (optional Megaplier not included)",
+          };
+        }
+        return {
+          label: hasJackpot ? "Known estimated prizes" : "Estimated prizes",
+          amount: formatUsd(prizes),
+          helper: hasJackpot
+            ? "Excludes jackpot value"
+            : "Official base amounts only (before MM built-in multiplier; Megaplier excluded)",
+        };
+      })(),
       estimatedNet: {
         label: hasJackpot ? "Net excluding jackpot value" : "Estimated net",
         amount: formatUsdSigned(net, { forcePlus: net > 0 }),
@@ -630,10 +839,26 @@ export function buildResultsPresentation(result) {
     },
     // Conclusion already carries jackpot-unknown copy; avoid a redundant banner.
     jackpotBanner: null,
+    ticketCostBreakdown: (result.ticketCostBreakdown || []).map((b) => ({
+      price: b.price,
+      priceLabel: formatUsd(b.price),
+      drawings: b.drawings,
+      tickets: b.tickets,
+      subtotal: b.subtotal,
+      subtotalLabel: formatUsd(b.subtotal),
+      dateRule: b.dateRule,
+    })),
+    ticketPriceMixed: Boolean(result.ticketPriceMixed),
+    priceKindsUsed: result.priceKindsUsed || [],
     runDetails: {
       drawingsAnalyzed: result.drawingsAnalyzed,
       ticketsPerDrawing: result.ticketsPerDrawing,
-      ticketPrice: formatUsd(result.ticketPrice),
+      ticketPrice: result.ticketPriceMixed
+        ? "Mixed ($2 and $5)"
+        : result.ticketPrice != null
+          ? `${formatUsd(result.ticketPrice)} per drawing`
+          : "—",
+      ticketPriceMixed: Boolean(result.ticketPriceMixed),
       winningDrawings: result.meaningfulTotal || 0,
       noPrizeDrawings: result.noMatchCount || 0,
       bestMatch: bestMatchLabel,
@@ -646,7 +871,7 @@ export function buildResultsPresentation(result) {
     winningTotal: result.meaningfulTotal || 0,
     winningLimit: result.meaningfulMatchLimit || MEANINGFUL_MATCH_LIMIT,
     disclaimer:
-      "Historical estimate only. Prize totals use official base prize amounts for the current game matrix. Jackpot cash values, taxes, Megaplier, Power Play, and jurisdiction-specific rules are not included. This is not claim verification.",
+      "Historical estimate only. Mega Millions ticket cost uses $2 before Apr 8, 2025 and $5 from that drawing on. Prize totals use official base amounts (legacy table before Apr 8, 2025; base-before-multiplier afterward). Built-in multipliers, optional Megaplier, Power Play, jackpot cash, taxes, and jurisdiction rules are not included. This is not claim verification.",
     picksLabel: `${(result.whites || []).map((n) => String(n).padStart(2, "0")).join("-")} + ${result.specialAbbr} ${String(result.bonus).padStart(2, "0")}`,
     periodLabel: result.period,
   };

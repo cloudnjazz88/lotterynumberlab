@@ -20,12 +20,17 @@ import {
   BANNED_CLAIM_WORDS,
   MEANINGFUL_MATCH_LIMIT,
   TICKET_PRICE_USD,
+  ticketPriceForDrawing,
+  MM_TICKET_PRICE_CHANGE_DATE,
+  MM_TICKET_PRICE_LEGACY_USD,
+  buildTicketCostBreakdown,
   validateTicket,
   matchTicket,
   buildResultsPresentation,
   buildPrizeResultRows,
   formatReturnPerDollar,
   formatReturnPerDollarSentence,
+  mmPrizePresentationMode,
   formatIsoDateShort,
   formatMatchTierLabel,
 } from "./what-if-math.mjs";
@@ -126,8 +131,18 @@ const pbDraws = loadDraws("powerball");
   assert.equal(r.ok, true);
   assert.equal(r.empty, false);
   assert.equal(r.drawingsAnalyzed, mmDraws.length);
-  assert.equal(r.ticketPrice, TICKET_PRICE_USD.megamillions);
-  assert.equal(r.hypotheticalSpent, 5 * mmDraws.length);
+  const preCount = mmDraws.filter((d) => d.d < MM_TICKET_PRICE_CHANGE_DATE).length;
+  const postCount = mmDraws.filter((d) => d.d >= MM_TICKET_PRICE_CHANGE_DATE).length;
+  const expectedSpent = preCount * 2 + postCount * 5;
+  assert.equal(preCount + postCount, mmDraws.length);
+  assert.ok(r.ticketPriceMixed);
+  assert.equal(r.ticketPrice, null);
+  assert.deepEqual(r.priceKindsUsed, [2, 5]);
+  assert.equal(r.hypotheticalSpent, expectedSpent);
+  assert.equal(
+    r.ticketCostBreakdown.reduce((a, b) => a + b.subtotal, 0),
+    expectedSpent,
+  );
   assert.ok(r.assumptions.length >= 5);
   assert.ok(r.meaningfulMatches.length <= MEANINGFUL_MATCH_LIMIT);
   // net = prizes - spent
@@ -330,7 +345,9 @@ const pbDraws = loadDraws("powerball");
     period: "last1y",
     ticketsPerDrawing: 1,
   });
-  assert.equal(r.hypotheticalSpent, TICKET_PRICE_USD.megamillions * 1 * r.drawingsAnalyzed);
+  const expectedLast1y = buildTicketCostBreakdown("megamillions", filterDrawsByPeriod(mmDraws, resolvePeriod(mmDraws, "last1y").start, resolvePeriod(mmDraws, "last1y").end), 1)
+    .reduce((a, b) => a + b.subtotal, 0);
+  assert.equal(r.hypotheticalSpent, expectedLast1y);
   assert.equal(r.net, r.estimatedBasePrizes - r.hypotheticalSpent);
   const view = buildResultsPresentation(r);
   if (r.net < 0) {
@@ -364,8 +381,10 @@ const pbDraws = loadDraws("powerball");
   });
   assert.equal(r.meaningfulTotal, 0);
   assert.equal(r.estimatedBasePrizes, 0);
-  assert.equal(r.hypotheticalSpent, 5 * 2);
-  assert.equal(r.net, -10);
+  assert.equal(r.hypotheticalSpent, 2 * 2);
+  assert.equal(r.net, -4);
+  assert.equal(r.ticketPrice, 2);
+  assert.equal(r.ticketPriceMixed, false);
   const view = buildResultsPresentation(r);
   assert.equal(view.outcome, "loss");
   assert.equal(view.winningDrawings.length, 0);
@@ -374,29 +393,23 @@ const pbDraws = loadDraws("powerball");
 }
 
 {
-  // break-even synthetic: one $10 MM prize, spend $10
-  const draws = [{ d: "2021-02-02", n: [1, 2, 3, 8, 9], s: 20 }]; // 3+0 = $10
-  const r = analyzeWhatIf({
-    gameId: "megamillions",
-    whites: [1, 2, 3, 4, 5],
-    bonus: 6,
-    draws,
-    period: "all",
-    ticketsPerDrawing: 2, // spend 5*2*1=10, prizes 10*2=20 -> gain
-  });
-  // adjust: tickets 1 => spend 5, prizes 10 => gain; for break-even need spend==prizes
+  // break-even synthetic: one $10 MM prize, five $2 drawings => spend $10
   const even = analyzeWhatIf({
     gameId: "megamillions",
     whites: [1, 2, 3, 4, 5],
     bonus: 6,
     draws: [
-      { d: "2021-02-02", n: [1, 2, 3, 8, 9], s: 20 }, // $10
-      { d: "2021-02-05", n: [10, 11, 12, 13, 14], s: 20 }, // no prize
+      { d: "2021-02-02", n: [1, 2, 3, 8, 9], s: 20 }, // 3+0 $10
+      { d: "2021-02-05", n: [10, 11, 12, 13, 14], s: 20 },
+      { d: "2021-02-09", n: [10, 11, 12, 13, 14], s: 20 },
+      { d: "2021-02-12", n: [10, 11, 12, 13, 14], s: 20 },
+      { d: "2021-02-16", n: [10, 11, 12, 13, 14], s: 20 },
     ],
     period: "all",
-    ticketsPerDrawing: 1, // spend 10, prizes 10
+    ticketsPerDrawing: 1,
   });
   assert.equal(even.hypotheticalSpent, 10);
+  assert.equal(even.ticketPrice, 2);
   assert.equal(even.estimatedBasePrizes, 10);
   assert.equal(even.net, 0);
   const view = buildResultsPresentation(even);
@@ -411,6 +424,16 @@ const pbDraws = loadDraws("powerball");
   assert.equal(
     formatReturnPerDollarSentence(0.12),
     "That is about 12" + String.fromCharCode(0xa2) + " returned for every $1 spent.",
+  );
+  assert.ok(
+    formatReturnPerDollarSentence(0.12, { qualifyBaseBeforeMultiplier: true }).includes(
+      "base prizes before the built-in multiplier",
+    ),
+  );
+  assert.ok(
+    formatReturnPerDollarSentence(0.12, { qualifyBaseBeforeMultiplier: true }).includes(
+      "not a definitive final return",
+    ),
   );
   assert.equal(formatIsoDateShort("2026-07-07"), "Jul 7, 2026");
   assert.equal(formatMatchTierLabel(2, true, "Mega Ball"), "2 white + Mega Ball");
@@ -458,6 +481,261 @@ const pbDraws = loadDraws("powerball");
   pass("PB multi-ticket presentation subtots");
 }
 
+
+{
+  // MM ticketPriceForDrawing boundaries
+  assert.equal(ticketPriceForDrawing("megamillions", "2025-04-04"), 2);
+  assert.equal(ticketPriceForDrawing("megamillions", "2025-04-07"), 2);
+  assert.equal(ticketPriceForDrawing("megamillions", "2025-04-08"), 5);
+  assert.equal(ticketPriceForDrawing("megamillions", "2026-01-01"), 5);
+  assert.equal(ticketPriceForDrawing("powerball", "2025-04-04"), 2);
+  assert.equal(ticketPriceForDrawing("powerball", "2025-04-08"), 2);
+  assert.equal(MM_TICKET_PRICE_CHANGE_DATE, "2025-04-08");
+  assert.equal(MM_TICKET_PRICE_LEGACY_USD, 2);
+  pass("MM/PB ticketPriceForDrawing boundaries");
+}
+
+{
+  // Mixed MM: 2 pre + 3 post
+  const draws = [
+    { d: "2025-04-01", n: [10, 20, 30, 40, 50], s: 3 },
+    { d: "2025-04-04", n: [10, 20, 30, 40, 50], s: 25 },
+    { d: "2025-04-08", n: [10, 20, 30, 40, 50], s: 17 },
+    { d: "2025-04-11", n: [10, 20, 30, 40, 50], s: 19 },
+    { d: "2025-04-15", n: [10, 20, 30, 40, 50], s: 2 },
+  ];
+  const one = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws,
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(one.hypotheticalSpent, 19);
+  assert.equal(one.ticketPriceMixed, true);
+  assert.deepEqual(one.priceKindsUsed, [2, 5]);
+  assert.equal(one.ticketCostBreakdown[0].subtotal, 4);
+  assert.equal(one.ticketCostBreakdown[1].subtotal, 15);
+  const four = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws,
+    period: "all",
+    ticketsPerDrawing: 4,
+  });
+  assert.equal(four.hypotheticalSpent, 76);
+  const view = buildResultsPresentation(one);
+  assert.equal(view.ticketPriceMixed, true);
+  assert.equal(view.runDetails.ticketPrice, "Mixed ($2 and $5)");
+  assert.equal(view.ticketCostBreakdown.length, 2);
+  assert.equal(view.cards.totalTicketCost.amount, formatUsd(19));
+  pass("MM mixed-era ticket cost 2pre+3post ×1=$19 ×4=$76");
+}
+
+{
+  // Custom before / after / crossing + tickets 1,3,100
+  const before = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: mmDraws,
+    period: "custom",
+    customStart: "2025-03-01",
+    customEnd: "2025-04-04",
+    ticketsPerDrawing: 3,
+  });
+  assert.equal(before.ok, true);
+  assert.equal(before.ticketPrice, 2);
+  assert.equal(before.ticketPriceMixed, false);
+  assert.equal(before.hypotheticalSpent, 2 * 3 * before.drawingsAnalyzed);
+
+  const after = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: mmDraws,
+    period: "custom",
+    customStart: "2025-04-08",
+    customEnd: "2025-04-30",
+    ticketsPerDrawing: 100,
+  });
+  assert.equal(after.ok, true);
+  assert.equal(after.ticketPrice, 5);
+  assert.equal(after.hypotheticalSpent, 5 * 100 * after.drawingsAnalyzed);
+
+  const cross = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: mmDraws,
+    period: "custom",
+    customStart: "2025-04-01",
+    customEnd: "2025-04-15",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(cross.ok, true);
+  assert.equal(cross.ticketPriceMixed, true);
+  const exp = buildTicketCostBreakdown("megamillions", filterDrawsByPeriod(mmDraws, "2025-04-01", "2025-04-15"), 1)
+    .reduce((a, b) => a + b.subtotal, 0);
+  assert.equal(cross.hypotheticalSpent, exp);
+  pass("MM custom before/after/crossing + tickets 3/100");
+}
+
+{
+  // Era-correct low-tier prizes: 0+1 was $2 before change, $5 after (base)
+  const legacy = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: [{ d: "2025-04-04", n: [10, 11, 12, 13, 14], s: 6 }],
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(legacy.estimatedBasePrizes, 2);
+  const modern = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: [{ d: "2025-04-08", n: [10, 11, 12, 13, 14], s: 6 }],
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(modern.estimatedBasePrizes, 5);
+  pass("MM era-correct 0+1 base prizes $2 legacy / $5 post");
+}
+
+{
+  // last5y / all current-matrix use date-based spend (not flat $5)
+  const last5 = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: mmDraws,
+    period: "last5y",
+    ticketsPerDrawing: 1,
+  });
+  const p5 = resolvePeriod(mmDraws, "last5y");
+  const filtered5 = filterDrawsByPeriod(mmDraws, p5.start, p5.end);
+  const exp5 = buildTicketCostBreakdown("megamillions", filtered5, 1).reduce((a, b) => a + b.subtotal, 0);
+  assert.equal(last5.hypotheticalSpent, exp5);
+  assert.notEqual(last5.hypotheticalSpent, 5 * last5.drawingsAnalyzed);
+  pass("MM last5y/all date-based spend not flat $5");
+}
+
+{
+  // Presentation labels + narrative: pre / post / mixed MM + PB unchanged
+  const pre = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: [
+      { d: "2021-02-02", n: [1, 2, 3, 8, 9], s: 20 }, // 3+0 $10
+      { d: "2021-02-05", n: [10, 11, 12, 13, 14], s: 20 },
+    ],
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(mmPrizePresentationMode(pre), "pre");
+  const preView = buildResultsPresentation(pre);
+  assert.equal(preView.cards.estimatedPrizes.label, "Base prizes without Megaplier");
+  assert.ok(preView.narrative.includes("matched"));
+  assert.ok(preView.narrative.includes("base prizes without Megaplier"));
+  assert.ok(!preView.narrative.includes("received an estimated"));
+
+  const post = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: [
+      { d: "2025-04-08", n: [1, 2, 3, 8, 9], s: 20 }, // 3+0 $10 post
+      { d: "2025-04-11", n: [10, 11, 12, 13, 14], s: 20 },
+    ],
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(mmPrizePresentationMode(post), "post");
+  const postView = buildResultsPresentation(post);
+  assert.equal(postView.cards.estimatedPrizes.label, "Base prizes before multiplier");
+  assert.ok(postView.narrative.includes("matched"));
+  assert.ok(postView.narrative.includes("base prizes before the built-in multiplier"));
+  assert.ok(!postView.narrative.includes("received an estimated"));
+  assert.ok(postView.returnSentence.includes("base prizes before the built-in multiplier"));
+  assert.ok(postView.returnSentence.includes("not a definitive final return"));
+
+  const mixed = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: [
+      { d: "2025-04-04", n: [1, 2, 3, 8, 9], s: 20 }, // 3+0 $10 pre
+      { d: "2025-04-08", n: [1, 2, 3, 8, 9], s: 20 }, // 3+0 $10 post
+    ],
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(mmPrizePresentationMode(mixed), "mixed");
+  const mixedView = buildResultsPresentation(mixed);
+  assert.equal(mixedView.cards.estimatedPrizes.label, "Base prizes before multiplier");
+  assert.ok(mixedView.narrative.includes("pre–Apr 8 without optional Megaplier"));
+  assert.ok(mixedView.narrative.includes("built-in multiplier"));
+  assert.ok(!mixedView.narrative.includes("received an estimated"));
+
+  const postJack = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 7,
+    draws: [
+      { d: "2025-05-02", n: [1, 2, 3, 4, 5], s: 7 }, // jackpot
+      { d: "2025-05-06", n: [1, 2, 3, 8, 9], s: 20 }, // 3+0
+    ],
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(postJack.jackpotTierCount, 1);
+  const postJackView = buildResultsPresentation(postJack);
+  assert.equal(postJackView.outcome, "indeterminate");
+  assert.equal(postJackView.cards.estimatedPrizes.label, "Base prizes before multiplier");
+  assert.ok(postJackView.narrativeSecondary.includes("before the built-in multiplier"));
+
+  const pb = analyzeWhatIf({
+    gameId: "powerball",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: [
+      { d: "2021-02-02", n: [1, 2, 3, 8, 9], s: 20 }, // 3+0 $7
+      { d: "2021-02-05", n: [10, 11, 12, 13, 14], s: 20 },
+    ],
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  assert.equal(mmPrizePresentationMode(pb), null);
+  const pbView = buildResultsPresentation(pb);
+  assert.equal(pbView.cards.estimatedPrizes.label, "Estimated prizes");
+  assert.ok(pbView.narrative.includes("received an estimated"));
+  pass("MM/PB prize card labels + narrative era wording");
+}
+
+{
+  const r = analyzeWhatIf({
+    gameId: "megamillions",
+    whites: [1, 2, 3, 4, 5],
+    bonus: 6,
+    draws: mmDraws,
+    period: "all",
+    ticketsPerDrawing: 1,
+  });
+  const preCount = mmDraws.filter((d) => d.d < MM_TICKET_PRICE_CHANGE_DATE).length;
+  const postCount = mmDraws.filter((d) => d.d >= MM_TICKET_PRICE_CHANGE_DATE).length;
+  assert.equal(r.hypotheticalSpent, preCount * 2 + postCount * 5);
+  // Pin current bundled all-matrix spend for review regressions
+  assert.equal(r.hypotheticalSpent, 2322);
+  const view = buildResultsPresentation(r);
+  assert.equal(view.cards.estimatedPrizes.label, "Base prizes before multiplier");
+  assert.ok(view.narrative.includes("pre–Apr 8 without optional Megaplier") || view.narrative.includes("built-in multiplier"));
+  pass(`MM all-matrix spend ${r.hypotheticalSpent} + mixed label`);
+}
 
 if (process.exitCode) {
   console.error("\nwhat-if tests failed");

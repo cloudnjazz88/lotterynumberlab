@@ -108,16 +108,16 @@ check(
   "MM latest numbers 25 57 58 67 68 + 16",
   mmLatest.n.join(",") === "25,57,58,67,68" && mmLatest.s === 16,
 );
-check("PB latest date 2026-09-23", pbLatest.d === "2026-09-23");
+check("PB latest date 2026-09-26", pbLatest.d === "2026-09-26");
 check(
-  "PB latest numbers 5 15 26 29 30 + 14",
-  pbLatest.n.join(",") === "5,15,26,29,30" && pbLatest.s === 14,
+  "PB latest numbers 14 40 52 55 57 + 24",
+  pbLatest.n.join(",") === "14,40,52,55,57" && pbLatest.s === 24,
 );
 
 const mmCmp = compareSelected([25, 57, 58, 67, 68], 16, mmLatest);
 check("MM exact match vs latest", mmCmp.ok && mmCmp.whiteMatches === 5 && mmCmp.bonusMatch === true);
 
-const pbCmp = compareSelected([5, 15, 26, 29, 30], 14, pbLatest);
+const pbCmp = compareSelected([14, 40, 52, 55, 57], 24, pbLatest);
 check("PB exact match vs latest", pbCmp.ok && pbCmp.whiteMatches === 5 && pbCmp.bonusMatch === true);
 
 const hist = rankHistory([25, 57, 58, 67, 68], 16, mmDraws, { limit: 10 });

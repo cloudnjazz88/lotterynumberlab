@@ -4386,6 +4386,51 @@ main:has(.year-page) {
   overflow-wrap: anywhere;
 }
 
+.wi-cost-breakdown {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0.15rem 0 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-panel) 85%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+  min-width: 0;
+}
+
+.wi-cost-breakdown__row,
+.wi-cost-breakdown__total {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.92rem;
+}
+
+.wi-cost-breakdown__rule {
+  color: var(--text);
+}
+
+.wi-cost-breakdown__total {
+  margin-top: 0.15rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+  font-weight: 650;
+}
+
+.wi-details__price dd {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 520px) {
+  .wi-details {
+    grid-template-columns: 1fr;
+  }
+  .wi-cost-breakdown {
+    margin-top: 0.25rem;
+  }
+}
+
+
 .wi-prize-results {
   list-style: none;
   margin: 0;
