@@ -6,6 +6,13 @@
 import { num, pct, oneIn, money, table, callout, dateLong, adSlot, sourceList } from "./site.mjs";
 import { comparisonRows } from "../tools/more-tickets-math.mjs";
 import { illustrativeAnnuityShareRows } from "../tools/shared-jackpot-math.mjs";
+import {
+  WINNER_DISCLOSURE_RULES,
+  WINNER_DISCLOSURE_VERIFIED_ON,
+  DISCLOSURE_CATEGORY_LABELS,
+  disclosureCategoryCounts,
+  jurisdictionDirectoryRows,
+} from "./winner-disclosure-rules.mjs";
 
 /* ---------------------------------- 1 ------------------------------------- */
 
@@ -2854,6 +2861,425 @@ ${conceptTable}
 };
 
 
+/* --------------------------------- 14 ------------------------------------ */
+
+const winnerAnonymity = {
+  slug: "can-lottery-winners-stay-anonymous",
+  kicker: "Money",
+  title: "Can Lottery Winners Stay Anonymous?",
+  seoTitle: "Can Lottery Winners Stay Anonymous? State-by-State Rules",
+  dek: "Whether a lottery winner can remain anonymous usually depends on where the ticket was sold and claimed. Compare disclosure categories, thresholds, and privacy limits across U.S. jurisdictions.",
+  description:
+    "Lottery winner anonymity depends on where the ticket was sold. Compare current disclosure rules, prize thresholds and privacy limits by U.S. jurisdiction.",
+  published: "2026-09-28",
+  updated: "2026-09-28",
+  publicationMeta:
+    "Winner disclosure rules verified against official lottery and government sources",
+  faq: [
+    {
+      q: "Can lottery winners stay anonymous everywhere?",
+      a: "No. Official Powerball guidance says every jurisdiction has its own law. Some require name and city disclosure; some allow anonymity or limited confidentiality; some only delay disclosure. Confirm the selling lottery's rules.",
+      plain:
+        "No. Official Powerball guidance says every jurisdiction has its own law. Some require name and city disclosure; some allow anonymity or limited confidentiality; some only delay disclosure. Confirm the selling lottery's rules.",
+    },
+    {
+      q: "Does where I live or where I bought the ticket control anonymity?",
+      a: "Usually the jurisdiction where the ticket was purchased and claimed controls the claim and disclosure rules. Powerball states prizes must be claimed where the ticket was purchased. Living elsewhere does not automatically import another state's anonymity rule.",
+      plain:
+        "Usually the jurisdiction where the ticket was purchased and claimed controls the claim and disclosure rules. Powerball states prizes must be claimed where the ticket was purchased. Living elsewhere does not automatically import another state's anonymity rule.",
+    },
+    {
+      q: "Is claiming through a trust or LLC the same as staying anonymous?",
+      a: "No. A trust or entity claim is a claim vehicle. It is not the same as a statute that keeps a winner's name confidential, temporary confidentiality, delayed disclosure, or a lottery declining a photo. Some jurisdictions allow entity claims; others reject them for claiming.",
+      plain:
+        "No. A trust or entity claim is a claim vehicle. It is not the same as a statute that keeps a winner's name confidential, temporary confidentiality, delayed disclosure, or a lottery declining a photo. Some jurisdictions allow entity claims; others reject them for claiming.",
+    },
+    {
+      q: "What is temporary confidentiality?",
+      a: "Temporary confidentiality or delayed disclosure means a name may be withheld for a defined period and then becomes disclosable. It is not permanent anonymity. Florida's statute, for example, makes certain large-prize names confidential for 90 days after claim, then the exemption ends.",
+      plain:
+        "Temporary confidentiality or delayed disclosure means a name may be withheld for a defined period and then becomes disclosable. It is not permanent anonymity. Florida's statute, for example, makes certain large-prize names confidential for 90 days after claim, then the exemption ends.",
+    },
+    {
+      q: "Do Alabama, Alaska, Hawaii, Nevada, and Utah sell Mega Millions or Powerball?",
+      a: "No. Official Mega Millions materials describe sales in 45 states plus the District of Columbia and the U.S. Virgin Islands. Powerball also includes Puerto Rico. Those five states have no direct Mega Millions or Powerball sales.",
+      plain:
+        "No. Official Mega Millions materials describe sales in 45 states plus the District of Columbia and the U.S. Virgin Islands. Powerball also includes Puerto Rico. Those five states have no direct Mega Millions or Powerball sales.",
+    },
+    {
+      q: "Does this guide cover United Kingdom Powerball sales?",
+      a: "No. Powerball began United Kingdom sales in 2026, but this guide is limited to U.S. states and U.S. jurisdictions (50 states, the District of Columbia, Puerto Rico, and the U.S. Virgin Islands).",
+      plain:
+        "No. Powerball began United Kingdom sales in 2026, but this guide is limited to U.S. states and U.S. jurisdictions (50 states, the District of Columbia, Puerto Rico, and the U.S. Virgin Islands).",
+    },
+    {
+      q: "Is this legal advice?",
+      a: "No. Lottery Number Lab is informational entertainment. Disclosure statutes and lottery practices change. Confirm current claim and disclosure rules with the lottery that sold the ticket and with qualified counsel. This is not legal, tax, or claims advice.",
+      plain:
+        "No. Lottery Number Lab is informational entertainment. Disclosure statutes and lottery practices change. Confirm current claim and disclosure rules with the lottery that sold the ticket and with qualified counsel. This is not legal, tax, or claims advice.",
+    },
+  ],
+  body(ctx) {
+    const rules = jurisdictionDirectoryRows(WINNER_DISCLOSURE_RULES);
+    const counts = disclosureCategoryCounts(rules);
+    const sumCounts = (c) => Object.values(c).reduce((a, b) => a + b, 0);
+    const salesLabel = (r) => {
+      if (r.salesStatus === "no_direct_sales") return "Neither";
+      if (r.salesStatus === "powerball_only") return "PB only";
+      if (r.megaMillions && r.powerball) return "MM + PB";
+      if (r.powerball) return "PB";
+      if (r.megaMillions) return "MM";
+      return "See notes";
+    };
+    const keyLimit = (r) => {
+      if (r.anonymityType === "official_guidance_not_explicit") {
+        return (
+          r.importantLimits ||
+          "Official guidance reviewed does not state a clear general anonymity or public-disclosure rule — confirm with the lottery before claiming"
+        );
+      }
+      if (r.anonymityType === "unresolved") return "Confirm with the selling lottery before claiming";
+      if (r.anonymityType === "no_sales") return "No direct MM/PB ticket sales";
+      if (r.threshold) return r.threshold;
+      if (r.confidentialityPeriod) return r.confidentialityPeriod;
+      if (r.importantLimits) return r.importantLimits;
+      if (r.publicName) return r.publicName;
+      return "See official source";
+    };
+    const sourceCell = (r) => {
+      if (!r.officialSourceUrl) return "—";
+      const title = r.officialSourceTitle || "Official source";
+      return `<a href="${r.officialSourceUrl}" target="_blank" rel="noopener nofollow">${title}</a>`;
+    };
+
+    const directory = table(
+      ["Jurisdiction", "MM/PB", "Disclosure status", "Key condition / limit", "Official source"],
+      rules.map((r) => [
+        r.jurisdiction,
+        salesLabel(r),
+        DISCLOSURE_CATEGORY_LABELS[r.anonymityType],
+        keyLimit(r),
+        sourceCell(r),
+      ]),
+      {
+        className: "table--disclosure",
+        caption:
+          "All 53 U.S. jurisdictions in this guide (50 states + District of Columbia + Puerto Rico + U.S. Virgin Islands). Alphabetical. Verified " +
+          WINNER_DISCLOSURE_VERIFIED_ON +
+          " against official lottery and government sources where linked. Where official guidance is not explicit, the directory says so rather than guessing Yes/No.",
+      },
+    );
+
+    const conceptTable = table(
+      ["Concept", "What it usually means", "What it is not"],
+      [
+        [
+          "Anonymous claim",
+          "A rule that keeps the winner's identity from public disclosure (often with remaining lottery/IRS knowledge)",
+          "A trust claim, a delayed press release, or declining a photo",
+        ],
+        [
+          "Conditional anonymity",
+          "Anonymity available only above a prize threshold, for certain games, or after a written election",
+          "Automatic anonymity for every prize amount",
+        ],
+        [
+          "Temporary confidentiality / delayed disclosure",
+          "A defined holdback period after which the name becomes disclosable",
+          "Permanent anonymity",
+        ],
+        [
+          "Limited public info",
+          "Some fields public (for example city or prize) while name is withheld, or name shortened",
+          "Full secrecy of all claim facts",
+        ],
+        [
+          "Trust / LLC / entity claim",
+          "A claim vehicle; some lotteries publish the entity name while beneficial owners may or may not stay private",
+          "A synonym for statutory anonymity",
+        ],
+        [
+          "Name omitted from press release / no photo",
+          "Publicity practice by the lottery",
+          "A guarantee against public-records disclosure",
+        ],
+      ],
+      {
+        caption:
+          "Do not treat these labels as synonyms. The directory uses primary disclosure categories, not a Yes/No anonymity column.",
+      },
+    );
+
+    const conditionalRows = rules.filter((r) => r.anonymityType === "conditional");
+    const temporaryRows = rules.filter((r) => r.anonymityType === "temporary");
+    const trustRows = rules.filter((r) => r.trustOrEntityClaim);
+
+    const conditionalTable = table(
+      ["Jurisdiction", "Threshold / condition", "Important limit", "Official source"],
+      conditionalRows.map((r) => [
+        r.jurisdiction,
+        r.threshold || "—",
+        r.importantLimits || r.confidentialityPeriod || "—",
+        sourceCell(r),
+      ]),
+      { caption: "Conditional anonymity jurisdictions (must show conditions)." },
+    );
+
+    const temporaryTable = table(
+      ["Jurisdiction", "Period", "What becomes public later", "Official source"],
+      temporaryRows.map((r) => [
+        r.jurisdiction,
+        r.confidentialityPeriod || "—",
+        r.publicName || "—",
+        sourceCell(r),
+      ]),
+      { caption: "Temporary confidentiality / delayed disclosure — not permanent anonymity." },
+    );
+
+    const trustTable = table(
+      ["Jurisdiction", "Trust / entity note", "Disclosure category"],
+      trustRows.map((r) => [
+        r.jurisdiction,
+        r.trustOrEntityClaim,
+        DISCLOSURE_CATEGORY_LABELS[r.anonymityType],
+      ]),
+      {
+        caption:
+          "Jurisdictions where official materials discuss trusts/entities. Trust claim ≠ anonymity.",
+      },
+    );
+
+    const guidanceNotExplicitList = rules
+      .filter((r) => r.anonymityType === "official_guidance_not_explicit")
+      .map((r) => r.jurisdiction)
+      .join("; ");
+
+    const countCallout = callout(
+      "Classification totals",
+      `<ul>
+  <li>Broad anonymity available: <b>${counts.broad}</b></li>
+  <li>Conditional anonymity: <b>${counts.conditional}</b></li>
+  <li>Temporary confidentiality / delayed disclosure: <b>${counts.temporary}</b></li>
+  <li>Public disclosure generally required: <b>${counts.public}</b></li>
+  <li>No direct MM/PB sales: <b>${counts.no_sales}</b></li>
+  <li>Official guidance not explicit: <b>${counts.official_guidance_not_explicit}</b></li>
+</ul>
+<p>These ${sumCounts(counts)} jurisdictions are the full directory. Official guidance not explicit means the materials reviewed did not state a clear general rule. It is not a finding that anonymity is allowed or that disclosure is required.</p>`,
+      "note",
+    );
+
+    return `
+<p class="lede">
+  Whether a lottery winner can remain anonymous usually depends on the jurisdiction where the
+  ticket was purchased and claimed, not simply where the winner lives. Official Powerball guidance
+  states that prizes must be claimed in the jurisdiction where the winning ticket was purchased,
+  and that every jurisdiction has its own law on winners remaining anonymous.
+</p>
+
+${callout(
+  "United Kingdom note",
+  "<p>Powerball began United Kingdom sales in 2026, but this guide is limited to U.S. states and U.S. jurisdictions (50 states, the District of Columbia, Puerto Rico, and the U.S. Virgin Islands). The United Kingdom is not in the directory below.</p>",
+  "note",
+)}
+
+${countCallout}
+
+<h2>1. Claim where the ticket was sold</h2>
+<p>
+  Multi-state jackpot games are sold by individual lotteries. Official Powerball FAQs state that
+  prizes must be claimed in the jurisdiction where the winning ticket was purchased. Mega Millions
+  materials likewise say winning tickets must be redeemed in the state or jurisdiction where they
+  were purchased. Disclosure and anonymity rules follow that selling jurisdiction's law and lottery
+  practice — not a single national anonymity rule.
+</p>
+<p>
+  See also
+  <a href="what-happens-to-unclaimed-lottery-prizes.html">what happens to unclaimed lottery prizes</a>
+  and
+  <a href="what-happens-when-multiple-people-win-the-lottery-jackpot.html">what happens when multiple people win a jackpot</a>
+  for related claim mechanics.
+</p>
+
+<h2>2. What anonymity is not</h2>
+<p>
+  Public discussion often collapses different ideas into one word: anonymous. Official materials
+  and statutes distinguish claim privacy, public-records rules, publicity practices, and claim
+  vehicles. This guide keeps those labels separate.
+</p>
+${conceptTable}
+
+<h2>3. How to read the disclosure categories</h2>
+<p>
+  The directory uses six primary categories. It is
+  <strong>not</strong> a Yes/No anonymity table.
+</p>
+<ul>
+  <li><b>Broad anonymity available</b> — Official materials support withholding the winner's name from public disclosure without a high prize threshold (limits may still apply).</li>
+  <li><b>Conditional anonymity</b> — Anonymity or confidentiality is available only under stated conditions (threshold, game type, written election, FOIA caveats).</li>
+  <li><b>Temporary confidentiality / delayed disclosure</b> — A holdback period, after which disclosure is generally required. Not permanent anonymity.</li>
+  <li><b>Public disclosure generally required</b> — Name and/or city are generally public (sometimes with limited field redactions or safety exceptions).</li>
+  <li><b>No direct MM/PB sales</b> — No state lottery sells Mega Millions or Powerball tickets.</li>
+  <li><b>Official guidance not explicit</b> — Official materials reviewed did not provide a clear general anonymity option or a clear public-disclosure rule. That is not a finding that anonymity is allowed, and it is not a finding that disclosure is required. Confirm with the selling lottery before claiming.</li>
+</ul>
+
+<p>
+  A missing clear rule is not the same as anonymity being allowed, and it is not the same as
+  disclosure being required. If the directory says official guidance is not explicit, confirm
+  current claim and publicity rules with the lottery that sold the ticket before you claim.
+</p>
+
+<h2>4. Where Mega Millions and Powerball are sold</h2>
+<p>
+  Official Mega Millions materials describe play in 45 states plus the District of Columbia and the
+  U.S. Virgin Islands (47 localities). Official Powerball and participating-lottery materials also
+  include Puerto Rico for Powerball. Alabama, Alaska, Hawaii, Nevada, and Utah have no direct
+  Mega Millions or Powerball sales. Puerto Rico is Powerball-only in this directory; Mega Millions
+  is not listed for Puerto Rico on the official Where to Play page.
+</p>
+
+<h2>5. Broad anonymity (where confirmed)</h2>
+<p>
+  In some jurisdictions, official lottery FAQs or statutes support keeping a winner's name from
+  public disclosure without a high dollar threshold. Even then, the lottery typically must still
+  know the person who purchased the ticket for eligibility and tax reporting, and some claim facts
+  (city, prize amount, retailer) may remain public.
+</p>
+<p>
+  Confirmed broad-anonymity examples in this research set include Delaware, Kansas, Maryland,
+  Mississippi, Missouri, Montana, New Jersey, North Dakota, Oregon, South Carolina, and Wyoming — each with its own
+  wording and limits in the directory.
+</p>
+
+<h2>6. Conditional anonymity: thresholds and elections</h2>
+<p>
+  Conditional rules require a prize threshold, a written request, a game-type limit, or similar
+  conditions. Threshold phrasing matters: "over," "at least," "greater than," and "equal to or
+  exceeding" are not interchangeable.
+</p>
+${conditionalTable}
+
+<h2>7. Temporary confidentiality is not anonymity</h2>
+<p>
+  A delayed-disclosure statute can withhold a name for a fixed period and then release it. That is
+  category temporary — not broad anonymity.
+</p>
+${temporaryTable}
+
+<h2>8. Public disclosure, photos, and trust or LLC claims</h2>
+<p>
+  Where public disclosure is generally required, official materials may still withhold street
+  address or telephone numbers, limit photos, or discuss trusts. Those practices are not synonyms
+  for anonymity. California's Winner's Handbook, for example, states that a trust cannot claim a
+  prize and that the winner's name remains public. Ohio materials treat individual claimant names
+  as public records while describing trust-claim documentation rules separately.
+</p>
+${trustTable}
+<p>
+  For cash-versus-annuity choice mechanics that can interact with disclosure timing in some
+  statutes (for example Texas installment rules), see
+  <a href="record-jackpots-and-taxes.html">record jackpots and taxes</a>.
+</p>
+
+<h2>9. Directory of all 53 jurisdictions</h2>
+<p>
+  Alphabetical directory. Jump groups are plain HTML details elements — no JavaScript filters. Where official guidance is not explicit, the row says so and asks you to confirm with that lottery before claiming.
+</p>
+${
+  counts.official_guidance_not_explicit
+    ? callout(
+        "Official guidance not explicit",
+        `<p>For <b>${guidanceNotExplicitList}</b>, materials reviewed did not state a general winner-anonymity option or a clear public-disclosure rule. Silence is not permission to stay anonymous, and silence is not proof that names must be published. Confirm with Puerto Rico’s lottery authority before claiming.</p>`,
+        "note",
+      )
+    : ""
+}
+<details open>
+  <summary>Full 53-jurisdiction directory</summary>
+  ${directory}
+</details>
+
+<h2>Practical takeaway</h2>
+<p>
+  Start with the selling lottery's claim and disclosure rules, not a national Yes/No list. Separate
+  anonymity, temporary confidentiality, limited public fields, publicity practices, and trust claims.
+  Confirm thresholds and periods from the official source linked in the directory. If you play,
+  keep spend inside an entertainment budget you can lose without harm —
+  <a href="../responsible-play.html">responsible play</a> resources are available if lottery play
+  stops feeling optional. Past results and odds context live in
+  <a href="../results/index.html">past numbers</a> and
+  <a href="../methodology.html">methodology</a>.
+</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq-list">
+  <dt>Can lottery winners stay anonymous everywhere?</dt>
+  <dd>
+    No. Official Powerball guidance says every jurisdiction has its own law. Some require name and
+    city disclosure; some allow anonymity or limited confidentiality; some only delay disclosure.
+    Confirm the selling lottery's rules.
+  </dd>
+  <dt>Does where I live or where I bought the ticket control anonymity?</dt>
+  <dd>
+    Usually the jurisdiction where the ticket was purchased and claimed controls the claim and
+    disclosure rules. Powerball states prizes must be claimed where the ticket was purchased.
+    Living elsewhere does not automatically import another state's anonymity rule.
+  </dd>
+  <dt>Is claiming through a trust or LLC the same as staying anonymous?</dt>
+  <dd>
+    No. A trust or entity claim is a claim vehicle. It is not the same as a statute that keeps a
+    winner's name confidential, temporary confidentiality, delayed disclosure, or a lottery
+    declining a photo. Some jurisdictions allow entity claims; others reject them for claiming.
+  </dd>
+  <dt>What is temporary confidentiality?</dt>
+  <dd>
+    Temporary confidentiality or delayed disclosure means a name may be withheld for a defined
+    period and then becomes disclosable. It is not permanent anonymity. Florida's statute, for
+    example, makes certain large-prize names confidential for 90 days after claim, then the
+    exemption ends.
+  </dd>
+  <dt>Do Alabama, Alaska, Hawaii, Nevada, and Utah sell Mega Millions or Powerball?</dt>
+  <dd>
+    No. Official Mega Millions materials describe sales in 45 states plus the District of Columbia
+    and the U.S. Virgin Islands. Powerball also includes Puerto Rico. Those five states have no
+    direct Mega Millions or Powerball sales.
+  </dd>
+  <dt>Does this guide cover United Kingdom Powerball sales?</dt>
+  <dd>
+    No. Powerball began United Kingdom sales in 2026, but this guide is limited to U.S. states and
+    U.S. jurisdictions (50 states, the District of Columbia, Puerto Rico, and the U.S. Virgin
+    Islands).
+  </dd>
+  <dt>Is this legal advice?</dt>
+  <dd>
+    No. Lottery Number Lab is informational entertainment. Disclosure statutes and lottery practices
+    change. Confirm current claim and disclosure rules with the lottery that sold the ticket and
+    with qualified counsel. This is not legal, tax, or claims advice.
+  </dd>
+</dl>
+
+<section class="sources">
+  <h2>Sources and methodology</h2>
+  <p>
+    Disclosure categories, thresholds, temporary periods, sales availability, and concept
+    distinctions were checked against official Powerball and Mega Millions FAQs plus jurisdiction
+    statutes, administrative codes, and official lottery claim/FAQ pages linked in the directory.
+    Verification date: ${WINNER_DISCLOSURE_VERIFIED_ON}. Where official guidance was not explicit, categories were not filled from blogs, SEO lists, Wikipedia, or news roundups. This page is informational entertainment, not
+    legal, tax, or claims advice.
+  </p>
+  <ul>
+    <li><a href="https://www.powerball.com/faqs" target="_blank" rel="noopener nofollow">Powerball — FAQs</a> (claim where purchased; anonymity varies by jurisdiction; UK sales note; accessed September 28, 2026)</li>
+    <li><a href="https://www.megamillions.com/faqs.aspx" target="_blank" rel="noopener nofollow">Mega Millions — FAQs</a> (redeem where purchased; public disclosure laws vary; accessed September 28, 2026)</li>
+    <li><a href="https://www.megamillions.com/where-to-play" target="_blank" rel="noopener nofollow">Mega Millions — Where to Play</a> (45 states + DC + U.S. Virgin Islands; accessed September 28, 2026)</li>
+    <li>Jurisdiction-specific statutes and lottery pages linked in the directory table (verified September 28, 2026)</li>
+  </ul>
+  <p>
+    See also <a href="../methodology.html">our methodology and corrections policy</a>.
+  </p>
+</section>
+`;
+  },
+};
+
 export const GUIDES = [
 oddsCompared,
   independentTrials,
@@ -2868,4 +3294,5 @@ oddsCompared,
   sharedJackpot,
   quickPickVsManual,
   unclaimedPrizes,
+  winnerAnonymity,
 ];

@@ -14,7 +14,7 @@
     "validate-routes": "node tools/worker-routes-test.mjs",
     "verify-seo": "node tools/verify-seo.mjs",
     "smoke": "node tools/browser-check.mjs",
-    "check": "node tools/validate.mjs && node tools/draw-validate-test.mjs && node tools/methodology-updated-test.mjs && node tools/jackpot-validate-test.mjs && node tools/awaiting-update-test.mjs && node tools/asset-version-test.mjs && node tools/worker-routes-test.mjs && node tools/spending-calculator-test.mjs && node tools/ticket-match-test.mjs && node tools/odds-explorer-test.mjs && node tools/simulate-extremes-test.mjs && node tools/home-recent-test.mjs && node tools/year-analysis-test.mjs && node tools/what-if-test.mjs && node tools/more-tickets-guide-test.mjs && node tools/shared-jackpot-guide-test.mjs && node tools/quick-pick-guide-test.mjs && node tools/unclaimed-prizes-guide-test.mjs && node tools/verify-seo.mjs && node tools/browser-check.mjs",
+    "check": "node tools/validate.mjs && node tools/draw-validate-test.mjs && node tools/methodology-updated-test.mjs && node tools/jackpot-validate-test.mjs && node tools/awaiting-update-test.mjs && node tools/asset-version-test.mjs && node tools/worker-routes-test.mjs && node tools/spending-calculator-test.mjs && node tools/ticket-match-test.mjs && node tools/odds-explorer-test.mjs && node tools/simulate-extremes-test.mjs && node tools/home-recent-test.mjs && node tools/year-analysis-test.mjs && node tools/what-if-test.mjs && node tools/more-tickets-guide-test.mjs && node tools/shared-jackpot-guide-test.mjs && node tools/quick-pick-guide-test.mjs && node tools/unclaimed-prizes-guide-test.mjs && node tools/winner-anonymity-guide-test.mjs && node tools/verify-seo.mjs && node tools/browser-check.mjs",
     "validate-methodology": "node tools/methodology-updated-test.mjs",
     "verify-production": "node tools/verify-production.mjs",
     "validate-spending": "node tools/spending-calculator-test.mjs",
@@ -27,7 +27,8 @@
     "validate-more-tickets": "node tools/more-tickets-guide-test.mjs",
     "validate-shared-jackpot": "node tools/shared-jackpot-guide-test.mjs",
     "validate-quick-pick": "node tools/quick-pick-guide-test.mjs",
-    "validate-unclaimed": "node tools/unclaimed-prizes-guide-test.mjs"
+    "validate-unclaimed": "node tools/unclaimed-prizes-guide-test.mjs",
+    "validate-winner-anonymity": "node tools/winner-anonymity-guide-test.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "^24.10.0"

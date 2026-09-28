@@ -3845,6 +3845,18 @@ main:has(.year-page) {
   max-width: 100%;
   min-width: 0;
 }
+
+/* Disclosure directory: long labels wrap inside cells; the table itself scrolls
+   inside .table-wrap so the page does not grow horizontally. */
+.table--disclosure {
+  min-width: 44rem;
+}
+.table--disclosure th,
+.table--disclosure td {
+  overflow-wrap: break-word;
+  vertical-align: top;
+  white-space: normal;
+}
 .panel.prose,
 .prose--article {
   min-width: 0;

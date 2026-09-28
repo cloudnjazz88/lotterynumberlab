@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Verification for the unclaimed-prizes guide: registration, rendered HTML,
  * official rule language, concept distinctions, hub count, and links.
  */
@@ -16,8 +16,8 @@ const check = (label, ok, extra = "") => {
 
 const guide = GUIDES.find((g) => g.slug === "what-happens-to-unclaimed-lottery-prizes");
 check("guide registered in GUIDES", !!guide);
-check("GUIDES length is 13", GUIDES.length === 13, `len=${GUIDES.length}`);
-check("guide is 13th entry", GUIDES[12] === guide);
+check("GUIDES length is 14", GUIDES.length === 14, `len=${GUIDES.length}`);
+check("guide is among registered Money guides", GUIDES.includes(guide));
 check("kicker is Money", guide?.kicker === "Money");
 check("published 2026-09-28", guide?.published === "2026-09-28" && guide?.updated === "2026-09-28");
 check(
@@ -173,8 +173,8 @@ check(
 );
 
 const hub = readFileSync(resolve(ROOT, "guides/index.html"), "utf8");
-check("guides hub says Thirteen guides", hub.includes("Thirteen guides covering"));
-check("guides hub has no leftover Twelve guides", !hub.includes("Twelve guides covering"));
+check("guides hub says Fourteen guides", hub.includes("Fourteen guides covering"));
+check("guides hub has no leftover Thirteen guides", !hub.includes("Thirteen guides covering"));
 check("guides hub has no leftover Eleven guides", !hub.includes("Eleven guides covering"));
 check(
   "guides hub lists new guide card",
