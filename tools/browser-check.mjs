@@ -64,6 +64,7 @@ const PAGES = [
   "guides/does-buying-more-lottery-tickets-improve-your-odds.html",
   "guides/what-happens-when-multiple-people-win-the-lottery-jackpot.html",
   "guides/quick-pick-vs-choosing-your-own-lottery-numbers.html",
+  "guides/what-happens-to-unclaimed-lottery-prizes.html",
   "results/index.html",
   "tools/index.html",
   "tools/lottery-spending-calculator.html",
@@ -176,7 +177,7 @@ context = "guides/index.html";
 await page.goto(pageUrl("guides/index.html"), { waitUntil: "load" });
 const hubCards = await page.evaluate(() => document.querySelectorAll(".guide-card").length);
 console.log(`\nguides hub lists ${hubCards} guides`);
-if (hubCards !== 12) problems.push(`guides hub should list 12 guides, lists ${hubCards}`);
+if (hubCards !== 13) problems.push(`guides hub should list 13 guides, lists ${hubCards}`);
 
 /* --------------------------------- home ----------------------------------- */
 

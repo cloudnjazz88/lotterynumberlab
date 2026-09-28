@@ -2491,6 +2491,369 @@ ${sameOddsTable}
   },
 };
 
+/* --------------------------------- 13 ------------------------------------ */
+
+const unclaimedPrizes = {
+  slug: "what-happens-to-unclaimed-lottery-prizes",
+  kicker: "Money",
+  title: "What Happens to Unclaimed Lottery Prizes?",
+  seoTitle: "What Happens to Unclaimed Lottery Prizes After the Claim Deadline?",
+  dek: "Claim deadlines vary by the lottery that sold the ticket. An unclaimed multi-state jackpot is returned to participating lotteries by sales share, then each jurisdiction applies its own law.",
+  description:
+    "Learn what happens when a Powerball or Mega Millions prize is not claimed, why deadlines vary by state, and where unclaimed jackpot money goes.",
+  published: "2026-09-28",
+  updated: "2026-09-28",
+  publicationMeta:
+    "Claim rules verified against official Powerball, Mega Millions and state lottery materials",
+  faq: [
+    {
+      q: "How long do I have to claim a Powerball or Mega Millions prize?",
+      a: "Claim periods typically range from 90 days to one year from the draw date, depending on the lottery that sold the ticket. Check the back of the ticket and the selling lottery's claim instructions. This is not legal advice.",
+      plain:
+        "Claim periods typically range from 90 days to one year from the draw date, depending on the lottery that sold the ticket. Check the back of the ticket and the selling lottery's claim instructions. This is not legal advice.",
+    },
+    {
+      q: "What happens to an unclaimed Powerball or Mega Millions jackpot?",
+      a: "It does not simply roll into the next jackpot. Participating lotteries receive back their shares based on sales for that draw run, and each jurisdiction then uses the returned money according to its own law.",
+      plain:
+        "It does not simply roll into the next jackpot. Participating lotteries receive back their shares based on sales for that draw run, and each jurisdiction then uses the returned money according to its own law.",
+    },
+    {
+      q: "Does an unclaimed jackpot roll over into the next drawing?",
+      a: "No. Official Powerball and Mega Millions materials describe returning unclaimed Grand Prize or jackpot funds to participating lotteries in proportion to their sales contribution, not rolling that unclaimed jackpot into the next advertised jackpot.",
+      plain:
+        "No. Official Powerball and Mega Millions materials describe returning unclaimed Grand Prize or jackpot funds to participating lotteries in proportion to their sales contribution, not rolling that unclaimed jackpot into the next advertised jackpot.",
+    },
+    {
+      q: "Are claim deadlines the same in every state?",
+      a: "No. Deadlines are set by the selling jurisdiction. Powerball and Mega Millions both describe a common range of about 90 days to one year, with important state-level differences such as California's 180-day draw-game rule and one-year Mega Millions and Powerball jackpot exception.",
+      plain:
+        "No. Deadlines are set by the selling jurisdiction. Powerball and Mega Millions both describe a common range of about 90 days to one year, with important state-level differences such as California's 180-day draw-game rule and one-year Mega Millions and Powerball jackpot exception.",
+    },
+    {
+      q: "Can I find an expired lottery ticket through a general unclaimed-property search?",
+      a: "Do not treat general unclaimed-property searches as a way to recover an expired lottery ticket. An unclaimed winning lottery prize is handled under lottery claim rules. Lost tickets, uncashed payments, and general unclaimed property are different concepts.",
+      plain:
+        "Do not treat general unclaimed-property searches as a way to recover an expired lottery ticket. An unclaimed winning lottery prize is handled under lottery claim rules. Lost tickets, uncashed payments, and general unclaimed property are different concepts.",
+    },
+    {
+      q: "Does the retailer who sold the ticket receive the unclaimed prize?",
+      a: "No. Official materials describe unclaimed prizes as kept by the lottery jurisdiction, with unclaimed jackpot shares returned to participating lotteries. Retailer commissions or selling incentives are separate from the winning prize itself.",
+      plain:
+        "No. Official materials describe unclaimed prizes as kept by the lottery jurisdiction, with unclaimed jackpot shares returned to participating lotteries. Retailer commissions or selling incentives are separate from the winning prize itself.",
+    },
+    {
+      q: "Does Lottery Number Lab verify claims or confirm that a ticket won?",
+      a: "No. Lottery Number Lab does not verify claims. Tools such as Ticket Match are educational comparisons against published drawing history, not official claim verification. Confirm winning numbers and claim steps with the lottery that sold the ticket.",
+      plain:
+        "No. Lottery Number Lab does not verify claims. Tools such as Ticket Match are educational comparisons against published drawing history, not official claim verification. Confirm winning numbers and claim steps with the lottery that sold the ticket.",
+    },
+  ],
+  body(ctx) {
+    const deadlineTable = table(
+      ["Jurisdiction (example)", "Draw-game deadline", "Jackpot exception", "What the example shows"],
+      [
+        [
+          "California",
+          "Postmarked or received within <b>180 days</b> of the winning draw date",
+          "Mega Millions and Powerball <b>Jackpots</b>: postmarked or received within <b>one year</b> from the winning draw date",
+          "A jurisdiction can set one deadline for most draw games and a longer deadline for multi-state jackpots",
+        ],
+        [
+          "New York",
+          "Winning draw game tickets expire <b>one year</b> from the date of the draw",
+          "Same one-year draw-game rule (verify current instructions)",
+          "Jurisdictions set their own rules; New York's published one-year deadline applies to draw games generally",
+        ],
+      ],
+      {
+        caption:
+          "Examples only, not a 50-state chart. Verified September 28, 2026 against official California Lottery and New York Lottery claim materials. Always confirm the ticket's selling lottery.",
+      },
+    );
+
+    const conceptTable = table(
+      ["Concept", "What it usually means", "What it is not"],
+      [
+        [
+          "Unclaimed winning ticket",
+          "A valid winning ticket that was not claimed by the selling lottery's deadline",
+          "Automatic rollover into the next jackpot, or a findable listing in a general unclaimed-property database",
+        ],
+        [
+          "Lost ticket",
+          "A ticket you no longer have; lottery tickets are often bearer instruments unless signed",
+          "The same as an already-filed claim, or a guarantee the lottery can recreate the ticket",
+        ],
+        [
+          "Uncashed payment",
+          "A prize that was already awarded or processed but a payment instrument was not cashed",
+          "An unclaimed winning ticket that never entered the claim process",
+        ],
+        [
+          "General unclaimed property",
+          "Assets held by a holder under a state's abandoned-property rules (bank accounts, rebates, and similar)",
+          "A substitute path for recovering an expired lottery ticket after the claim deadline",
+        ],
+      ],
+      {
+        caption:
+          "Keep these labels separate. Lottery claim deadlines and general unclaimed-property programs answer different questions.",
+      },
+    );
+
+    return `
+<p class="lede">
+  A winning ticket generally expires if it is not claimed by the selling lottery's deadline.
+  Claim periods vary by jurisdiction. An unclaimed Powerball or Mega Millions jackpot does not
+  simply roll into the next jackpot; the participating lotteries receive back their shares, and
+  each jurisdiction handles the returned money according to its own law.
+</p>
+
+<h2>The claim deadline comes first</h2>
+<p>
+  Before asking where unclaimed prize money goes, ask whether the claim window is still open.
+  Powerball's official FAQ says ticket expiration dates typically vary from
+  <strong>90 days to one year</strong> depending on the selling jurisdiction, that the expiration
+  date is often listed on the back of the ticket, and that players should check with their lottery
+  if it is not listed. Mega Millions' FAQ similarly states that claim periods vary by jurisdiction
+  and range from <strong>90 days to one year from the draw date</strong>.
+</p>
+<p>
+  Prizes are claimed in the jurisdiction where the ticket was purchased. The practical rule is
+  simple: read the ticket, then follow the selling lottery's claim instructions. This guide is
+  orientation, not legal advice, and it is not a substitute for the lottery that sold your ticket.
+</p>
+
+${adSlot("guide-mid")}
+
+<h2>What happens after a ticket expires?</h2>
+<p>
+  Once the selling lottery's claim deadline passes without a valid claim, the prize is treated as
+  unclaimed under that lottery's rules. For multi-state jackpots, the next step is not "the money
+  disappears" and it is not "the next advertised jackpot absorbs it." Official materials describe
+  a return of shares to the participating lotteries, followed by local use under each
+  jurisdiction's law.
+</p>
+${callout(
+  "After the deadline: four stages",
+  `<ol>
+    <li><b>Deadline passes</b> without a valid claim in the selling jurisdiction.</li>
+    <li><b>Prize becomes unclaimed</b> under that lottery's rules.</li>
+    <li><b>Participating lotteries receive their shares</b> of an unclaimed multi-state jackpot, based on sales for the draw run.</li>
+    <li><b>Local law determines the final use</b> in each jurisdiction (other games, a general fund, education or other beneficiaries, promotions, or otherwise as required by law).</li>
+  </ol>`,
+  "note",
+)}
+
+<h2>An unclaimed jackpot does not simply roll over</h2>
+<p>
+  Powerball's FAQ is direct: unclaimed prizes are kept by the lottery jurisdiction. If a
+  <strong>Grand Prize</strong> goes unclaimed, the money must be returned to all lotteries
+  <strong>in proportion to their sales for the draw run</strong>. Those lotteries then distribute
+  the money based on their own jurisdiction's laws to other lottery games, to their jurisdiction's
+  general fund, or otherwise as required by law.
+</p>
+<p>
+  Mega Millions' FAQ matches the same core idea in its own wording: if a jackpot is not claimed
+  within the required time in the selling state or jurisdiction, <strong>each participating lottery
+  gets back all the money they contributed (through ticket sales) to the unclaimed jackpot</strong>.
+  Each lottery then uses unclaimed prizes for purposes set by lottery legislation in that
+  jurisdiction. Examples on the official FAQ include returning money to a prize pool for
+  promotions and additional prizes, sending it to beneficiaries such as education and scholarships,
+  or using it for multiple purposes.
+</p>
+<p>
+  That is different from an ordinary jackpot roll when <em>no</em> ticket wins. A roll advances
+  the prize for the next drawing because nobody hit it. An unclaimed jackpot means a winning
+  ticket existed, the claim window closed, and the contributed jackpot funds are returned to the
+  lotteries that funded them.
+</p>
+
+<h2>Claim deadlines are not the same everywhere</h2>
+<p>
+  National FAQs give the common range. Individual lotteries write the deadline that applies to a
+  specific ticket. The table below is a pair of official examples only. It is not a nationwide
+  deadline chart, and it is not legal advice.
+</p>
+${deadlineTable}
+<p>
+  California Lottery's claim page states that a draw game ticket must be
+  <strong>postmarked or received</strong> by Lottery offices within <strong>180 days</strong> of
+  the winning draw date, <strong>except</strong> that Mega Millions and Powerball
+  <strong>Jackpots</strong> must be postmarked or received within <strong>one year</strong> from
+  the winning draw date.
+</p>
+<p>
+  New York Lottery's How to Claim page states that winning draw game tickets expire
+  <strong>one year from the date of the draw</strong>, and its mail guidance reminds players that
+  Draw Game prizes must be claimed within one year of the draw date. New York Gaming Commission
+  rules likewise provide that no prize claim shall be valid if submitted to the commission after
+  one year has elapsed from the draw date, as required by Tax Law section 1614(a). Prize-size
+  columns on the New York claim page describe where and how to claim; they do not change the claim
+  deadline.
+</p>
+
+<h2>A real unclaimed Mega Millions jackpot</h2>
+<p>
+  Official Mega Millions news has used a concrete historical example. In a December 21, 2024
+  jackpot update, Mega Millions noted that the <strong>advertised $68&nbsp;million</strong> prize
+  won in New York on December 24, 2002, eventually went unclaimed. In a multi-state game like Mega
+  Millions, unclaimed jackpots revert to the participating states based on their contribution to
+  sales, and the funds are then distributed as defined by lottery legislation in each jurisdiction.
+</p>
+<p>
+  That case is useful because it separates three ideas: a winning ticket existed, the claim window
+  closed without a claim, and the contributed jackpot money returned to the participating
+  lotteries rather than simply becoming the next drawing's advertised jackpot.
+</p>
+
+<h2>Lost ticket, unclaimed ticket and unclaimed property</h2>
+<p>
+  People often collapse several different problems into one search box. Keep the labels separate.
+</p>
+${conceptTable}
+<p>
+  Mega Millions' FAQ states that Mega Millions and participating lotteries are not responsible for
+  lost or stolen tickets, that players should sign the back of the ticket, and that lottery tickets
+  are bearer instruments: unless signed, anyone in possession of the ticket can file a prize claim.
+  A lost ticket is therefore first a possession and proof problem, not automatically an
+  "unclaimed property" listing.
+</p>
+<p>
+  An unclaimed winning ticket is a deadline problem under lottery rules. General unclaimed-property
+  programs are a different legal track for other kinds of abandoned assets. This guide does
+  <strong>not</strong> send readers to a general unclaimed-property search as a way to recover an
+  expired lottery ticket.
+</p>
+
+<h2>Does the retailer get the unclaimed prize?</h2>
+<p>
+  No. Official Powerball and Mega Millions materials describe unclaimed prizes as kept by the
+  lottery jurisdiction, with unclaimed jackpot shares returned to participating lotteries according
+  to sales contribution. Retailers may earn commissions or other selling incentives under local
+  rules, but those incentives are not the same thing as receiving the winning prize that went
+  unclaimed. Do not invent a nationwide retailer-bonus rule from this page.
+</p>
+
+<h2>A practical ticket-checking routine</h2>
+<p>
+  If you play at all, a short routine beats relying on memory after a big draw. Lottery Number Lab
+  does <strong>not</strong> verify claims. Ticket Match on this site compares numbers against
+  published drawing history for education; it is not official claim verification.
+</p>
+<ol>
+  <li>Sign the back of the ticket as soon as you buy it, following the selling lottery's instructions.</li>
+  <li>Photograph the front and back, including the draw date, serial information, and any claim deadline printed on the ticket.</li>
+  <li>Store the physical ticket somewhere safe until you have checked the official result and, if needed, completed a claim.</li>
+  <li>After the drawing, compare your numbers with the selling lottery's official results (or the official Powerball / Mega Millions results), not with a social-media screenshot alone.</li>
+  <li>If the ticket appears to win, stop and follow the selling lottery's claim steps for that prize level. Do not mail a ticket without reading the lottery's current mail instructions.</li>
+  <li>Watch the claim deadline on the ticket and on the lottery's claim page. California, New York, and every other jurisdiction can differ.</li>
+  <li>If you are unsure, contact the lottery that sold the ticket. Do not treat a website tool, including this site, as proof that a prize is owed or that a claim was filed.</li>
+</ol>
+
+<h2>What this guide cannot tell you</h2>
+<p>
+  This page cannot tell you whether any specific ticket is still claimable, whether your state will
+  recreate a lost ticket, how a particular jurisdiction spends returned unclaimed funds this year,
+  or what tax result would apply to a prize. It does not estimate how often prizes go unclaimed, and
+  it does not invent a 50-state deadline table. For a live ticket, the selling lottery is the
+  authority.
+</p>
+
+<h2>Practical takeaway</h2>
+<p>
+  Treat the claim deadline as part of owning a ticket. Deadlines generally depend on the lottery
+  that sold it. An unclaimed multi-state jackpot is returned to participating lotteries by sales
+  share, then handled under local law; it does not simply become the next jackpot. Keep lost
+  tickets, unclaimed tickets, and general unclaimed property conceptually separate. If you play,
+  keep spend inside an entertainment budget you can lose without harm.
+  <a href="../responsible-play.html">Responsible play</a> resources are there if lottery play
+  stops feeling optional.
+</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq-list">
+  <dt>How long do I have to claim a Powerball or Mega Millions prize?</dt>
+  <dd>
+    Claim periods typically range from 90 days to one year from the draw date, depending on the
+    lottery that sold the ticket. Check the back of the ticket and the selling lottery's claim
+    instructions. This is not legal advice.
+  </dd>
+  <dt>What happens to an unclaimed Powerball or Mega Millions jackpot?</dt>
+  <dd>
+    It does not simply roll into the next jackpot. Participating lotteries receive back their
+    shares based on sales for that draw run, and each jurisdiction then uses the returned money
+    according to its own law.
+  </dd>
+  <dt>Does an unclaimed jackpot roll over into the next drawing?</dt>
+  <dd>
+    No. Official Powerball and Mega Millions materials describe returning unclaimed Grand Prize or
+    jackpot funds to participating lotteries in proportion to their sales contribution, not rolling
+    that unclaimed jackpot into the next advertised jackpot.
+  </dd>
+  <dt>Are claim deadlines the same in every state?</dt>
+  <dd>
+    No. Deadlines are set by the selling jurisdiction. Powerball and Mega Millions both describe a
+    common range of about 90 days to one year, with important state-level differences such as
+    California's 180-day draw-game rule and one-year Mega Millions and Powerball jackpot exception.
+  </dd>
+  <dt>Can I find an expired lottery ticket through a general unclaimed-property search?</dt>
+  <dd>
+    Do not treat general unclaimed-property searches as a way to recover an expired lottery ticket.
+    An unclaimed winning lottery prize is handled under lottery claim rules. Lost tickets, uncashed
+    payments, and general unclaimed property are different concepts.
+  </dd>
+  <dt>Does the retailer who sold the ticket receive the unclaimed prize?</dt>
+  <dd>
+    No. Official materials describe unclaimed prizes as kept by the lottery jurisdiction, with
+    unclaimed jackpot shares returned to participating lotteries. Retailer commissions or selling
+    incentives are separate from the winning prize itself.
+  </dd>
+  <dt>Does Lottery Number Lab verify claims or confirm that a ticket won?</dt>
+  <dd>
+    No. Lottery Number Lab does not verify claims. Tools such as Ticket Match are educational
+    comparisons against published drawing history, not official claim verification. Confirm winning
+    numbers and claim steps with the lottery that sold the ticket.
+  </dd>
+</dl>
+
+<section class="sources">
+  <h2>Sources and methodology</h2>
+  <p>
+    Claim-window ranges, unclaimed-jackpot share returns, lost-ticket bearer language, California
+    postmark-or-received rules, New York one-year draw-game language, and the 2002 New York
+    advertised $68&nbsp;million unclaimed Mega Millions example were checked against official
+    Powerball, Mega Millions, California Lottery, and New York Lottery materials on September 28,
+    2026. This page is informational entertainment, not legal, tax, or claims advice.
+  </p>
+  <ul>
+    <li><a href="https://www.powerball.com/faqs" target="_blank" rel="noopener nofollow">Powerball — FAQs</a> (claim windows typically 90 days to one year; unclaimed prizes kept by the jurisdiction; unclaimed Grand Prize returned in proportion to sales for the draw run; accessed September 28, 2026)</li>
+    <li><a href="https://www.megamillions.com/faqs.aspx" target="_blank" rel="noopener nofollow">Mega Millions — FAQs</a> (claim periods 90 days to one year from the draw date; unclaimed jackpot shares returned to participating lotteries; lost/stolen ticket and bearer-instrument language; drawings at 11:00 p.m. ET; accessed September 28, 2026)</li>
+    <li><a href="https://www.calottery.com/en/claim-a-prize" target="_blank" rel="noopener nofollow">California Lottery — Claim a Prize</a> (draw game tickets postmarked or received within 180 days; Mega Millions and Powerball Jackpots within one year; accessed September 28, 2026)</li>
+    <li><a href="https://nylottery.ny.gov/how-to-claim" target="_blank" rel="noopener nofollow">New York Lottery — How to Claim a Prize</a> (winning draw game tickets expire one year from the date of the draw; Draw Game prizes must be claimed within one year of the draw date; accessed September 28, 2026)</li>
+    <li><a href="https://www.megamillions.com/News/2024/Jackpot-Nears-%241-Billion-for-Christmas-Eve-Drawing.aspx" target="_blank" rel="noopener nofollow">Mega Millions — Jackpot Nears $1 Billion for Christmas Eve Drawing</a> (December 21, 2024; advertised $68&nbsp;million New York prize from December 24, 2002 eventually unclaimed; unclaimed jackpots revert by sales contribution; accessed September 28, 2026)</li>
+  </ul>
+  <p>
+    See also <a href="../methodology.html">our methodology and corrections policy</a>.
+  </p>
+</section>
+
+<h2>Related guides and tools</h2>
+<ul>
+  <li><a href="what-happens-when-multiple-people-win-the-lottery-jackpot.html">What happens when multiple people win the lottery jackpot?</a> — ticket-level splits are a different question from unclaimed prizes</li>
+  <li><a href="../results/index.html">Past winning numbers</a> — published drawing history to compare against a ticket</li>
+  <li><a href="../tools/ticket-match-checker.html">Ticket Match</a> — educational number comparison, not official claim verification</li>
+  <li><a href="record-jackpots-and-taxes.html">Record jackpots and the tax math winners actually face</a></li>
+  <li><a href="expected-value-of-a-lottery-ticket.html">What is the expected value of a lottery ticket?</a></li>
+  <li><a href="../responsible-play.html">Responsible play</a></li>
+  <li><a href="../methodology.html">Methodology and corrections</a></li>
+</ul>
+`;
+  },
+};
+
+
 export const GUIDES = [
 oddsCompared,
   independentTrials,
@@ -2504,4 +2867,5 @@ oddsCompared,
   moreTicketsOdds,
   sharedJackpot,
   quickPickVsManual,
+  unclaimedPrizes,
 ];
