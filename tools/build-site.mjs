@@ -111,7 +111,7 @@ function guidesHub() {
         <p class="hero__eyebrow">Guides</p>
         <h1>Mega Millions and Powerball odds guides</h1>
         <p class="hero__lead">
-          Fourteen guides covering the probability, the prize structures, the tax arithmetic and the
+          Fifteen guides covering the probability, the prize structures, the tax arithmetic and the
           rule changes behind Mega Millions and Powerball. Every figure is computed from the
           published ball matrices and from
           ${num(ctx.mm.history.count + ctx.pb.history.count)} recorded drawings — if a number

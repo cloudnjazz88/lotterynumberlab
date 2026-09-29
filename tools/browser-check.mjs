@@ -66,6 +66,7 @@ const PAGES = [
   "guides/quick-pick-vs-choosing-your-own-lottery-numbers.html",
   "guides/what-happens-to-unclaimed-lottery-prizes.html",
   "guides/can-lottery-winners-stay-anonymous.html",
+  "guides/what-to-do-if-you-win-the-lottery.html",
   "results/index.html",
   "tools/index.html",
   "tools/lottery-spending-calculator.html",
@@ -178,7 +179,7 @@ context = "guides/index.html";
 await page.goto(pageUrl("guides/index.html"), { waitUntil: "load" });
 const hubCards = await page.evaluate(() => document.querySelectorAll(".guide-card").length);
 console.log(`\nguides hub lists ${hubCards} guides`);
-if (hubCards !== 14) problems.push(`guides hub should list 14 guides, lists ${hubCards}`);
+if (hubCards !== 15) problems.push(`guides hub should list 15 guides, lists ${hubCards}`);
 
 /* --------------------------------- home ----------------------------------- */
 

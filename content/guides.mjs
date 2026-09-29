@@ -3280,6 +3280,417 @@ ${
   },
 };
 
+/* --------------------------------- 15 ------------------------------------ */
+
+const claimChecklistFaq = [
+  {
+    q: "What is the first thing to do after winning the lottery?",
+    a: "Verify the ticket through an official source and secure the original. Then check the selling lottery's instructions, claim deadline and disclosure rules before making a major claim public.",
+  },
+  {
+    q: "Should I sign a winning lottery ticket immediately?",
+    a: "Many lotteries instruct individual winners to sign the ticket, but procedures differ. Follow the official instructions of the lottery that sold it. For a major prize involving a group, trust or ownership question, obtain jurisdiction-specific guidance before completing or altering the ticket.",
+  },
+  {
+    q: "Can I claim a Powerball or Mega Millions ticket in another state?",
+    a: "No. Powerball and Mega Millions prizes must be claimed through the jurisdiction where the ticket was purchased.",
+  },
+  {
+    q: "Should I tell anyone before claiming?",
+    a: "Keep the circle limited while you verify the ticket and rules. If the ticket is group-owned, communicate with the owners and preserve the ownership record. For a large prize, qualified professional advice may be appropriate before public disclosure or claiming.",
+  },
+  {
+    q: "Do lottery taxes come out automatically?",
+    a: "Certain winnings are subject to federal reporting and withholding, but withholding may not equal the final tax due. State and local rules may also apply.",
+  },
+  {
+    q: "Can a trust claim the prize and keep me anonymous?",
+    a: "Not automatically. Trust and entity-claim rules vary, and a trust is not the same as statutory anonymity. Check the selling jurisdiction's rules before relying on that approach.",
+  },
+  {
+    q: "How long do I have to claim?",
+    a: "The deadline depends on the jurisdiction, game and sometimes prize type. Confirm the exact deadline with the lottery that sold the ticket.",
+  },
+  {
+    q: "Does a lottery charge a fee before releasing a prize?",
+    a: "Official claim and tax procedures may apply, but an unsolicited demand to send money, gift cards, cryptocurrency or banking details to release a supposed prize is a major scam warning.",
+  },
+];
+
+const whatToDoIfYouWin = {
+  slug: "what-to-do-if-you-win-the-lottery",
+  kicker: "Money",
+  title: "What Should You Do If You Win the Lottery?",
+  seoTitle: "What to Do If You Win the Lottery: A Step-by-Step Checklist",
+  dek: "A large lottery win creates several decisions at once, but it does not require an immediate public announcement or a rushed claim. Verify the result, protect the ticket and follow the selling jurisdiction's rules.",
+  description:
+    "Won a lottery prize? Follow a careful sequence to verify and protect the ticket, check claim rules, document shared ownership and prepare before claiming.",
+  published: "2026-09-28",
+  updated: "2026-09-28",
+  publicationMeta:
+    "Checked against official Powerball, Mega Millions, IRS, FTC, and state-lottery claim guidance",
+  faq: claimChecklistFaq.map((item) => ({ ...item, plain: item.a })),
+  body() {
+    const prep = table(
+      ["Question", "Where to verify it"],
+      [
+        ["Is the ticket a winner?", "Official game or selling-lottery results"],
+        ["Who owns the ticket?", "Purchase and pool records"],
+        ["Where must it be claimed?", "Lottery that sold the ticket"],
+        ["When does it expire?", "Selling lottery's current claim guidance"],
+        ["Should the ticket be signed now?", "Ticket instructions and selling-lottery guidance"],
+        ["What information may become public?", "Selling jurisdiction's disclosure rule"],
+        ["Is cash or annuity available?", "Official game and claim documents"],
+        ["What tax forms and withholding apply?", "Lottery documents and current tax guidance"],
+        ["Is an appointment required?", "Claim center or lottery headquarters"],
+        ["Are requests for fees legitimate?", "Official lottery contact and FTC scam guidance"],
+      ],
+      {
+        caption: "Questions to answer before filing a major claim.",
+      },
+    );
+
+    const faqHtml = claimChecklistFaq
+      .map((item) => `  <dt>${item.q}</dt>\n  <dd>${item.a}</dd>`)
+      .join("\n");
+
+    return `
+<p class="lede">
+  A large lottery win creates several decisions at once, but it does not require an immediate
+  public announcement or a rushed trip to lottery headquarters. First verify the result, protect
+  the ticket, identify the lottery that sold it and learn that jurisdiction's claim rules.
+</p>
+<p>
+  The right process depends on the prize amount and where the ticket was purchased. A $20 ticket
+  and a jackpot are not claimed the same way. An individual ticket and a ticket bought by a group
+  can also raise different ownership questions.
+</p>
+<p>
+  This checklist explains the order in which to handle those questions. It is general information,
+  not legal, tax or financial advice.
+</p>
+
+<h2>The short version</h2>
+<ol>
+  <li>Verify the result through an official lottery source.</li>
+  <li>Protect the original ticket and preserve a clear record of it.</li>
+  <li>Do not publish the ticket or barcode.</li>
+  <li>Identify the selling jurisdiction and its claim deadline.</li>
+  <li>Confirm what that jurisdiction requires before signing or completing the ticket.</li>
+  <li>Document any shared ownership before someone submits the claim.</li>
+  <li>For a major prize, review disclosure, payout and tax questions before claiming.</li>
+  <li>Submit the claim only through the selling lottery's official process.</li>
+</ol>
+<p>
+  The order matters. Some choices can be reviewed before a claim is filed but become difficult or
+  impossible to change afterward.
+</p>
+
+<h2>1. Verify the ticket against an official result</h2>
+<p>
+  Start with the official lottery website or an authorized ticket-checking method. Do not rely
+  solely on a social post, news graphic, search snippet or message from another person.
+  <a href="../tools/ticket-match-checker.html">Ticket Match</a> can compare a line with published
+  drawings. It is not official claim verification.
+</p>
+<p>Confirm all of the following:</p>
+<ul>
+  <li>the game</li>
+  <li>the drawing date</li>
+  <li>every number on the same play line</li>
+  <li>the separate Mega Ball or Powerball</li>
+  <li>any multiplier printed on the ticket</li>
+  <li>whether the ticket contains more than one play</li>
+</ul>
+<p>
+  For Powerball and Mega Millions, the five white balls can match in any order. The bonus ball is
+  separate and must match the bonus ball drawn. Numbers from different play lines or different
+  tickets cannot be combined.
+</p>
+<p>
+  Keep the original ticket even if an app or retailer scan reports a win. The physical ticket,
+  registered online play or other official purchase record is what the selling lottery validates.
+</p>
+
+<h2>2. Protect the ticket and its identifying information</h2>
+<p>Treat an apparent winning ticket as an important original document.</p>
+<p>
+  Keep it dry, flat and away from heat, direct sunlight and anything that could damage the barcode
+  or printed information. Make clear photographs or scans of the front and back for your records,
+  but do not post them online or send them casually.
+</p>
+<p>A photograph is useful documentation. It is not normally a substitute for the original ticket.</p>
+<p>Do not expose:</p>
+<ul>
+  <li>the barcode</li>
+  <li>validation numbers</li>
+  <li>a claim number</li>
+  <li>a complete online account screen</li>
+  <li>personal information written on the ticket</li>
+</ul>
+<p>
+  If the ticket was purchased through an official lottery account, secure that account. Use a
+  unique password, enable any available account security and preserve the purchase confirmation.
+</p>
+
+<h2>3. Check the selling lottery's instructions before completing the ticket</h2>
+<p>
+  Many lotteries tell players to sign the back of a winning ticket. For example,
+  <a href="https://www.arizonalottery.com/winners/how-to-claim-prizes/" target="_blank" rel="noopener nofollow">Arizona Lottery's official claim instructions</a>
+  begin with signing the ticket.
+</p>
+<p>
+  That does not make one instruction universal for every possible jackpot situation. Tickets, claim
+  forms and ownership rules differ by jurisdiction. A large prize may also involve a group purchase,
+  a trust or another potential claimant structure.
+</p>
+<p>
+  Before writing on a major winning ticket, read the current instructions from the lottery that sold
+  it. If ownership or claim-structure questions exist, obtain jurisdiction-specific advice promptly.
+  Never alter, erase or overwrite information already placed on the ticket.
+</p>
+<p>For an ordinary individual ticket with clear official instructions, follow those instructions exactly.</p>
+
+<h2>4. Find the claim deadline and the correct claim location</h2>
+<p>
+  <a href="https://www.powerball.com/faqs" target="_blank" rel="noopener nofollow">Powerball</a>
+  states that prizes must be claimed in the jurisdiction where the winning ticket was purchased.
+  <a href="https://www.megamillions.com/faqs.aspx" target="_blank" rel="noopener nofollow">Mega Millions</a>
+  likewise directs players to the selling lottery for the applicable deadline and claim procedure.
+</p>
+<p>
+  Claim periods are not uniform. Depending on the jurisdiction and game, a deadline may be measured
+  in days or up to a year from the drawing. Some jurisdictions also give jackpot winners a different
+  period from other draw-game winners.
+</p>
+<p>Write down:</p>
+<ul>
+  <li>the drawing date</li>
+  <li>the exact claim deadline</li>
+  <li>the location or method required for that prize amount</li>
+  <li>whether an appointment is required</li>
+  <li>the identification and tax documents requested</li>
+  <li>any separate deadline for choosing cash or annuity</li>
+</ul>
+<p>
+  Do not use an approximate deadline from a national article. Confirm it on the official website of
+  the lottery that sold the ticket. What happens after a deadline passes is covered in
+  <a href="what-happens-to-unclaimed-lottery-prizes.html">what happens to unclaimed lottery prizes</a>.
+</p>
+<p>
+  Small prizes may be payable by a retailer. Larger prizes may require a claim center or lottery
+  headquarters. A multistate game does not mean that any participating state can pay the ticket.
+</p>
+
+<h2>5. Establish who owns the ticket</h2>
+<p>
+  If you bought the ticket only for yourself, ownership may be straightforward. If coworkers,
+  relatives or friends contributed money, determine the ownership record before anyone claims it.
+</p>
+<p>Preserve relevant evidence such as:</p>
+<ul>
+  <li>a written pool agreement</li>
+  <li>contribution records</li>
+  <li>group messages</li>
+  <li>copies of the ticket shared before the drawing</li>
+  <li>the agreed division of prizes</li>
+  <li>the name of the person holding the original</li>
+</ul>
+<p>
+  Do not assume that the lottery will reconstruct an informal agreement after a dispute begins. Do
+  not let one participant claim a group-owned ticket as an individual without first confirming the
+  correct procedure.
+</p>
+<p>
+  A lottery pool is different from
+  <a href="what-happens-when-multiple-people-win-the-lottery-jackpot.html">multiple independent jackpot-winning tickets</a>.
+  One pool-owned ticket has one prize claim that may then be divided among its owners. Multiple
+  winning tickets divide the jackpot at the game level.
+</p>
+
+${adSlot("guide-mid")}
+
+<h2>6. Check the disclosure rule before making the claim public</h2>
+<p>
+  Winner privacy is controlled mainly by the jurisdiction where the ticket was purchased and
+  claimed. There is no single national anonymity rule. Jurisdiction-by-jurisdiction rules are in
+  <a href="can-lottery-winners-stay-anonymous.html">Can Lottery Winners Stay Anonymous?</a>
+</p>
+<p>Depending on the jurisdiction, a winner's name may be:</p>
+<ul>
+  <li>protected broadly</li>
+  <li>protected only above a prize threshold</li>
+  <li>withheld temporarily</li>
+  <li>generally subject to public disclosure</li>
+  <li>handled under a rule that distinguishes name, city, prize and other claim information</li>
+</ul>
+<p>
+  A trust or LLC is not automatically the same as anonymity. Some lotteries permit entity claims,
+  some disclose the entity, some require information about the people behind it and some do not
+  allow a trust to claim the ticket.
+</p>
+<p>
+  Check the selling jurisdiction's current disclosure rule before assuming that a legal entity,
+  declining a photograph or avoiding an interview will keep a winner's identity confidential.
+</p>
+
+<h2>7. Build a small professional team for a major prize</h2>
+<p>
+  A routine prize does not require a team of advisers. A life-changing prize can justify
+  independent legal, tax and financial advice before the claim is submitted.
+</p>
+<p>Look for professionals whose duties are clear and whose compensation you understand:</p>
+<ul>
+  <li>an attorney licensed in the relevant jurisdiction</li>
+  <li>a tax professional familiar with large gambling winnings</li>
+  <li>a financial adviser whose registration, services and fees can be independently verified</li>
+</ul>
+<p>
+  The
+  <a href="https://www.palottery.pa.gov/palotterywebsite/media/misc/palotterywinnershandbook.pdf" target="_blank" rel="noopener nofollow">Pennsylvania Lottery's winner materials</a>
+  encourage jackpot and top-prize winners to seek trustworthy financial and legal advice. The
+  purpose is not to create a complicated structure for its own sake. It is to understand decisions
+  that may become permanent after the claim.
+</p>
+<p>
+  Be cautious when an adviser approaches you first, promises secrecy without reviewing the
+  applicable law or pressures you to transfer money quickly.
+</p>
+
+<h2>8. Separate three decisions that are often confused</h2>
+<h3>Claiming the ticket</h3>
+<p>This establishes the valid winner under the selling lottery's procedure.</p>
+<h3>Choosing cash or annuity</h3>
+<p>
+  A jackpot winner may have to choose between the available cash value and the advertised annuity.
+  This decision concerns timing and form of payment, not whether the ticket won.
+</p>
+<h3>Planning for taxes and the money afterward</h3>
+<p>
+  Federal and possibly state or local tax rules affect what the winner ultimately keeps. Federal withholding is not necessarily the final federal tax bill.
+</p>
+<p>
+  Do not choose cash or annuity solely by comparing the advertised jackpot with the cash value. The
+  decision can depend on taxes, spending control, investment assumptions, estate planning and
+  personal circumstances.
+</p>
+<p>
+  Lottery Number Lab's
+  <a href="record-jackpots-and-taxes.html">cash-versus-annuity and tax guide</a>
+  explains the mechanics separately. This checklist is about preparing for that decision, not
+  selecting one option for every winner.
+</p>
+
+<h2>9. Expect tax documentation</h2>
+<p>
+  The
+  <a href="https://www.irs.gov/taxtopics/tc419" target="_blank" rel="noopener nofollow">IRS</a>
+  treats lottery prizes as gambling winnings. Certain payments produce
+  <a href="https://www.irs.gov/forms-pubs/about-form-w-2-g" target="_blank" rel="noopener nofollow">Form W-2G</a>,
+  which reports the winnings and any federal income tax withheld.
+</p>
+<p>Keep copies of:</p>
+<ul>
+  <li>the validated ticket or official purchase record</li>
+  <li>the claim form</li>
+  <li>the payment election</li>
+  <li>Form W-2G</li>
+  <li>withholding records</li>
+  <li>documents showing group ownership or divided winnings</li>
+  <li>professional invoices and written advice relevant to the claim</li>
+</ul>
+<p>
+  Withholding is a prepayment, not a guarantee that the entire federal obligation has been
+  satisfied. State and local treatment depends on the relevant jurisdictions.
+</p>
+
+<h2>10. Use only official claim channels</h2>
+<p>
+  A genuine ticket should be handled through the lottery that sold it. Be skeptical of calls,
+  emails or messages claiming that an unrelated organization must release the prize.
+</p>
+<p>
+  The
+  <a href="https://consumer.ftc.gov/articles/fake-prize-sweepstakes-and-lottery-scams" target="_blank" rel="noopener nofollow">Federal Trade Commission</a>
+  warns that a demand to pay an advance fee for “taxes,” processing, shipping or customs before
+  receiving a supposed prize is a sign of a scam.
+</p>
+<p>
+  A real lottery prize may create actual tax obligations, but those obligations do not begin with
+  sending gift cards, cryptocurrency, wire transfers or banking credentials to an unsolicited caller.
+</p>
+<p>
+  If you did not buy or otherwise officially enter the game being described, a message saying that
+  you won is not evidence of a prize.
+</p>
+
+<h2>What not to do</h2>
+<aside class="callout callout--note">
+  <ul>
+    <li>Do not post a ticket photo or barcode.</li>
+    <li>Do not combine numbers from different play lines.</li>
+    <li>Do not assume every jurisdiction has the same deadline.</li>
+    <li>Do not assume a trust or LLC guarantees anonymity.</li>
+    <li>Do not let one pool member claim the ticket without resolving ownership.</li>
+    <li>Do not rush the cash-or-annuity election.</li>
+    <li>Do not treat federal withholding as the final tax calculation.</li>
+    <li>Do not pay an unsolicited person to “release” a prize.</li>
+    <li>Do not miss a real claim deadline while trying to create the perfect plan.</li>
+  </ul>
+</aside>
+
+<h2>A practical claim-preparation sheet</h2>
+<p>Before filing a major claim, you should be able to answer these questions:</p>
+${prep}
+
+<h2>Practical takeaway</h2>
+<p>
+  Verify first, protect the original and then follow the rules of the jurisdiction that sold the
+  ticket. A major winner usually has more than one issue to resolve, but those issues should remain
+  separate: ownership, deadline, disclosure, payout choice and taxes.
+</p>
+<p>
+  Move carefully, but do not confuse care with delay. Confirm the real deadline immediately and work
+  backward from it. If lottery play stops feeling optional,
+  <a href="../responsible-play.html">responsible play</a> resources are available.
+</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq-list">
+${faqHtml}
+</dl>
+
+<section class="sources">
+  <h2>Sources and methodology</h2>
+  <p>
+    This guide separates nationwide game rules from jurisdiction-specific claim procedures. Claim
+    location was checked against official Powerball and Mega Millions guidance. Ticket handling
+    examples and professional-advice guidance were checked against official state-lottery materials.
+    Federal tax reporting was checked against IRS Form W-2G guidance and Topic No. 419. Scam warnings
+    were checked against Federal Trade Commission consumer guidance.
+  </p>
+  <p>
+    Claim deadlines, disclosure laws, ticket-signing instructions and entity-claim rules can change.
+    Always confirm current instructions with the lottery that sold the ticket. This page is
+    informational and is not legal, tax, financial or claims advice.
+  </p>
+  <ul>
+    <li><a href="https://www.powerball.com/faqs" target="_blank" rel="noopener nofollow">Powerball — FAQs</a> (claim jurisdiction: prizes are claimed where the ticket was purchased)</li>
+    <li><a href="https://www.megamillions.com/faqs.aspx" target="_blank" rel="noopener nofollow">Mega Millions — FAQs</a> (claim deadline and procedure vary; redeem through the selling lottery)</li>
+    <li><a href="https://www.irs.gov/taxtopics/tc419" target="_blank" rel="noopener nofollow">IRS — Topic No. 419, Gambling Income and Losses</a> (lottery prizes are gambling income)</li>
+    <li><a href="https://www.irs.gov/forms-pubs/about-form-w-2-g" target="_blank" rel="noopener nofollow">IRS — About Form W-2G</a> (reporting of certain gambling winnings and withholding)</li>
+    <li><a href="https://consumer.ftc.gov/articles/fake-prize-sweepstakes-and-lottery-scams" target="_blank" rel="noopener nofollow">FTC — Fake prize, sweepstakes, and lottery scams</a> (advance-fee and impersonation warnings)</li>
+    <li><a href="https://www.arizonalottery.com/winners/how-to-claim-prizes/" target="_blank" rel="noopener nofollow">Arizona Lottery — How to claim prizes</a> (signing instruction as one jurisdiction example, not a national rule)</li>
+    <li><a href="https://www.palottery.pa.gov/palotterywebsite/media/misc/palotterywinnershandbook.pdf" target="_blank" rel="noopener nofollow">Pennsylvania Lottery — Winners Handbook</a> (professional-advice guidance for jackpot and top-prize winners)</li>
+  </ul>
+  <p>
+    See also <a href="../methodology.html">our methodology and corrections policy</a>.
+  </p>
+</section>
+`;
+  },
+};
+
 export const GUIDES = [
 oddsCompared,
   independentTrials,
@@ -3295,4 +3706,5 @@ oddsCompared,
   quickPickVsManual,
   unclaimedPrizes,
   winnerAnonymity,
+  whatToDoIfYouWin,
 ];

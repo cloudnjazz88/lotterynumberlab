@@ -27,7 +27,7 @@ check("PB matrix 5/69+1/26-ish", /69/.test(ctx.pb.config.matrixLabel) && /26/.te
 
 const guide = GUIDES.find((g) => g.slug === "quick-pick-vs-choosing-your-own-lottery-numbers");
 check("guide registered in GUIDES", !!guide);
-check("GUIDES length is 14", GUIDES.length === 14, `len=${GUIDES.length}`);
+check("GUIDES length is 15", GUIDES.length === 15, `len=${GUIDES.length}`);
 check("H1 / title field", guide?.title === "Quick Pick vs. Choosing Your Own Lottery Numbers: Does Either Have Better Odds?");
 check(
   "SEO title field",
@@ -155,7 +155,7 @@ check(
 );
 
 const hub = readFileSync(resolve(ROOT, "guides/index.html"), "utf8");
-check("guides hub says Fourteen guides", hub.includes("Fourteen guides covering"));
+check("guides hub says Fifteen guides", hub.includes("Fifteen guides covering"));
 check("guides hub has no leftover Eleven guides", !hub.includes("Eleven guides covering"));
 check("guides hub has no leftover Thirteen guides", !hub.includes("Thirteen guides covering"));
 check(

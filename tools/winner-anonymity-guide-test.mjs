@@ -38,7 +38,7 @@ const EXPECTED_COUNTS = {
   unresolved: 0,
 };
 
-check("GUIDES length is 14", GUIDES.length === 14, `len=${GUIDES.length}`);
+check("GUIDES length is 15", GUIDES.length === 15, `len=${GUIDES.length}`);
 const guide = GUIDES.find((g) => g.slug === "can-lottery-winners-stay-anonymous");
 check("guide registered in GUIDES", !!guide);
 check("guide is last entry", GUIDES[13] === guide);
@@ -309,7 +309,7 @@ check(
 );
 
 const hub = readFileSync(resolve(ROOT, "guides/index.html"), "utf8");
-check("guides hub says Fourteen guides", hub.includes("Fourteen guides covering"));
+check("guides hub says Fifteen guides", hub.includes("Fifteen guides covering"));
 check("guides hub has no leftover Thirteen guides", !hub.includes("Thirteen guides covering"));
 check(
   "guides hub lists new guide card",
