@@ -730,7 +730,7 @@ const pbDraws = loadDraws("powerball");
   const postCount = mmDraws.filter((d) => d.d >= MM_TICKET_PRICE_CHANGE_DATE).length;
   assert.equal(r.hypotheticalSpent, preCount * 2 + postCount * 5);
   // Pin current bundled all-matrix spend for review regressions
-  assert.equal(r.hypotheticalSpent, 2322);
+  assert.equal(r.hypotheticalSpent, 2327);
   const view = buildResultsPresentation(r);
   assert.equal(view.cards.estimatedPrizes.label, "Base prizes before multiplier");
   assert.ok(view.narrative.includes("pre–Apr 8 without optional Megaplier") || view.narrative.includes("built-in multiplier"));

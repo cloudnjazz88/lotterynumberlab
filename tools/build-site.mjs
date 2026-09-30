@@ -55,7 +55,12 @@ function guideArticle(guide, index) {
     `figures computed from ${num(ctx.mm.history.count + ctx.pb.history.count)} drawings and the published game rules`;
   const prev = GUIDES[(index - 1 + GUIDES.length) % GUIDES.length];
   const next = GUIDES[(index + 1) % GUIDES.length];
-  const others = GUIDES.filter((g) => g.slug !== guide.slug).slice(0, 3);
+  const related = Array.isArray(guide.related)
+    ? guide.related.map((slug) => GUIDES.find((g) => g.slug === slug)).filter(Boolean)
+    : [];
+  const others = related.length
+    ? related
+    : GUIDES.filter((g) => g.slug !== guide.slug).slice(0, 3);
 
   return `      <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="${link("/", 1)}">Home</a>
@@ -111,7 +116,7 @@ function guidesHub() {
         <p class="hero__eyebrow">Guides</p>
         <h1>Mega Millions and Powerball odds guides</h1>
         <p class="hero__lead">
-          Fifteen guides covering the probability, the prize structures, the tax arithmetic and the
+          Sixteen guides covering the probability, the prize structures, the tax arithmetic and the
           rule changes behind Mega Millions and Powerball. Every figure is computed from the
           published ball matrices and from
           ${num(ctx.mm.history.count + ctx.pb.history.count)} recorded drawings — if a number

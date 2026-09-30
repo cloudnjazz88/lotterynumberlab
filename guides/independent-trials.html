@@ -72,7 +72,7 @@
           <p class="article-dek">A ball that has not appeared in 40 drawings is not "due". Here is what independence actually means, and what the full drawing record says when you test it properly.</p>
           <p class="article-meta">
             <time datetime="2026-08-24">Published August 24, 2026</time>
-            · figures computed from 2,337 drawings and the published game rules
+            · figures computed from 2,344 drawings and the published game rules
           </p>
         </header>
 
@@ -110,31 +110,31 @@
 <p>
   If some numbers really were favoured, the counts would not fit a uniform distribution. That
   is exactly what a chi-square goodness-of-fit test measures. Below, every drawing since each
-  game's current ball matrix began — 2,337 drawings in total — is tested against the
+  game's current ball matrix began — 2,344 drawings in total — is tested against the
   hypothesis that every ball is equally likely.
 </p>
 <div class="table-wrap"><table class="table--compare">
   <thead><tr><th></th><th>Mega Millions</th><th>Powerball</th></tr></thead>
-  <tbody><tr><td>Drawings tested</td><td>930</td><td>1,407</td></tr>
+  <tbody><tr><td>Drawings tested</td><td>931</td><td>1,413</td></tr>
   <tr><td>White balls</td><td>1–70</td><td>1–69</td></tr>
-  <tr><td>Expected appearances per ball</td><td>66.4</td><td>102.0</td></tr>
-  <tr><td>Chi-square statistic</td><td>61.8</td><td>77.9</td></tr>
+  <tr><td>Expected appearances per ball</td><td>66.5</td><td>102.4</td></tr>
+  <tr><td>Chi-square statistic</td><td>62.6</td><td>78.6</td></tr>
   <tr><td>Degrees of freedom</td><td>69</td><td>68</td></tr>
-  <tr><td>p-value</td><td>0.72</td><td>0.19</td></tr></tbody></table></div>
+  <tr><td>p-value</td><td>0.69</td><td>0.18</td></tr></tbody></table></div>
 <p>
   Under a fair game the chi-square statistic should land near its degrees of freedom
   (69 and 68 respectively), and it does. The p-values —
-  0.72 and 0.19 — are the probability of seeing a spread of
+  0.69 and 0.18 — are the probability of seeing a spread of
   counts at least this uneven purely by chance. Neither is anywhere near the conventional 0.05
   threshold. There is no statistical evidence of bias in either game.
 </p>
 
 <h2>But some numbers <em>have</em> come up far more often</h2>
 <p>
-  They have, and that is the point. In 1,407 Powerball drawings, ball
-  21 has appeared 125 times while ball
+  They have, and that is the point. In 1,413 Powerball drawings, ball
+  21 has appeared 126 times while ball
   13 has appeared only 76 times. A gap of
-  49 appearances looks like a signal. It is not.
+  50 appearances looks like a signal. It is not.
 </p>
 <p>
   To show why, we simulated 4,000 alternative histories of the same
@@ -143,12 +143,12 @@
 </p>
 <div class="table-wrap"><table>
   <thead><tr><th></th><th>Real record</th><th>Fair simulation (average)</th></tr></thead>
-  <tbody><tr><td>Mega Millions: most-drawn ball</td><td>86 (ball 10)</td><td>85.9</td></tr>
+  <tbody><tr><td>Mega Millions: most-drawn ball</td><td>87 (ball 10)</td><td>86.0</td></tr>
   <tr><td>Mega Millions: least-drawn ball</td><td>52 (ball 51)</td><td>48.5</td></tr>
-  <tr><td>Mega Millions: hottest-to-coldest gap</td><td>34</td><td>37.4</td></tr>
-  <tr><td>Powerball: most-drawn ball</td><td>125 (ball 21)</td><td>125.9</td></tr>
-  <tr><td>Powerball: least-drawn ball</td><td>76 (ball 13)</td><td>79.6</td></tr>
-  <tr><td>Powerball: hottest-to-coldest gap</td><td>49</td><td>46.3</td></tr></tbody></table></div>
+  <tr><td>Mega Millions: hottest-to-coldest gap</td><td>35</td><td>37.5</td></tr>
+  <tr><td>Powerball: most-drawn ball</td><td>126 (ball 21)</td><td>126.3</td></tr>
+  <tr><td>Powerball: least-drawn ball</td><td>76 (ball 13)</td><td>79.9</td></tr>
+  <tr><td>Powerball: hottest-to-coldest gap</td><td>50</td><td>46.4</td></tr></tbody></table></div>
 <p>
   The real "hot" and "cold" extremes sit essentially on top of what a provably fair machine
   produces. Spread of that size is not evidence of bias; it is the expected consequence of
@@ -162,7 +162,7 @@
 <h3>1. "A number is due after a long absence"</h3>
 <p>
   The longest current dry spell in Mega Millions belongs to ball 11, last
-  seen 55 drawings ago. Its probability of appearing tonight is
+  seen 56 drawings ago. Its probability of appearing tonight is
   5/70 — identical to every other ball, and identical to what it was the day
   after it last appeared. Dry spells of that length are ordinary: with
   70 balls and 5 drawn per game, the average wait between appearances is
@@ -171,14 +171,14 @@
 </p>
 <h3>2. "Numbers from the last drawing won't repeat"</h3>
 <p>
-  In 930 Mega Millions drawings, 33.0% contained at
+  In 931 Mega Millions drawings, 33.0% contained at
   least one ball from the immediately preceding drawing; for Powerball it is
   31.6%. Repeats are not rare — they are the norm in roughly a third of
   drawings, exactly as independence predicts.
 </p>
 <h3>3. "Consecutive numbers never come up"</h3>
 <p>
-  25.8% of Mega Millions drawings and
+  25.9% of Mega Millions drawings and
   26.3% of Powerball drawings contain at least one pair of
   consecutive numbers. Avoiding them on purpose removes about a quarter of the real winning
   patterns from your ticket for no reason at all.

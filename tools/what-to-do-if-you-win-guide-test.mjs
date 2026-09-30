@@ -30,7 +30,7 @@ const FAQ = [
   "Does a lottery charge a fee before releasing a prize?",
 ];
 
-check("GUIDES length is 15", GUIDES.length === 15, `len=${GUIDES.length}`);
+check("GUIDES length is 16", GUIDES.length === 16, `len=${GUIDES.length}`);
 const guide = GUIDES.find((g) => g.slug === SLUG);
 check("guide registered", !!guide);
 check("guide is last entry", GUIDES[14] === guide);
@@ -150,7 +150,10 @@ if (html) {
   check("claim-preparation table", html.includes("<th>Question</th>") && html.includes("<th>Where to verify it</th>") && html.includes("table-wrap"));
   check("what not to do section", html.includes("<h2>What not to do</h2>"));
   check("previous guide is anonymity", html.includes('href="can-lottery-winners-stay-anonymous.html"') && html.includes(">Previous<"));
-  check("next wraps to the odds guide", html.includes('href="mega-millions-vs-powerball-odds.html"') && html.includes(">Next<"));
+  check(
+    "next guide is the lump-sum comparison",
+    html.includes('article-nav__side--next" href="lottery-lump-sum-vs-annuity.html"'),
+  );
   check("keep reading present", html.includes('id="more-guides"'));
   check("no user-facing Unresolved", !/\bUnresolved\b/.test(html));
 
@@ -170,7 +173,7 @@ const sitemap = existsSync(resolve(ROOT, "sitemap.xml")) ? readFileSync(resolve(
 check("sitemap includes the guide", sitemap.includes(CANONICAL));
 
 const hub = existsSync(resolve(ROOT, "guides/index.html")) ? readFileSync(resolve(ROOT, "guides/index.html"), "utf8") : "";
-check("guides hub says Fifteen guides", hub.includes("Fifteen guides covering"));
+check("guides hub says Sixteen guides", hub.includes("Sixteen guides covering"));
 check("guides hub has no leftover Fourteen guides", !hub.includes("Fourteen guides covering"));
 check("guides hub card", hub.includes(`${SLUG}.html`));
 

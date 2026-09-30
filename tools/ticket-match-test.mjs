@@ -103,21 +103,21 @@ const pbLatest = pbDraws[0];
 console.log("  MM latest snapshot:", mmLatest.d, mmLatest.n.join("-"), "+", mmLatest.s);
 console.log("  PB latest snapshot:", pbLatest.d, pbLatest.n.join("-"), "+", pbLatest.s);
 
-check("MM latest date 2026-09-25", mmLatest.d === "2026-09-25");
+check("MM latest date 2026-09-29", mmLatest.d === "2026-09-29");
 check(
-  "MM latest numbers 25 57 58 67 68 + 16",
-  mmLatest.n.join(",") === "25,57,58,67,68" && mmLatest.s === 16,
+  "MM latest numbers 10 15 16 27 64 + 23",
+  mmLatest.n.join(",") === "10,15,16,27,64" && mmLatest.s === 23,
 );
-check("PB latest date 2026-09-26", pbLatest.d === "2026-09-26");
+check("PB latest date 2026-09-28", pbLatest.d === "2026-09-28");
 check(
-  "PB latest numbers 14 40 52 55 57 + 24",
-  pbLatest.n.join(",") === "14,40,52,55,57" && pbLatest.s === 24,
+  "PB latest numbers 17 21 29 42 49 + 7",
+  pbLatest.n.join(",") === "17,21,29,42,49" && pbLatest.s === 7,
 );
 
-const mmCmp = compareSelected([25, 57, 58, 67, 68], 16, mmLatest);
+const mmCmp = compareSelected([10, 15, 16, 27, 64], 23, mmLatest);
 check("MM exact match vs latest", mmCmp.ok && mmCmp.whiteMatches === 5 && mmCmp.bonusMatch === true);
 
-const pbCmp = compareSelected([14, 40, 52, 55, 57], 24, pbLatest);
+const pbCmp = compareSelected([17, 21, 29, 42, 49], 7, pbLatest);
 check("PB exact match vs latest", pbCmp.ok && pbCmp.whiteMatches === 5 && pbCmp.bonusMatch === true);
 
 const hist = rankHistory([25, 57, 58, 67, 68], 16, mmDraws, { limit: 10 });

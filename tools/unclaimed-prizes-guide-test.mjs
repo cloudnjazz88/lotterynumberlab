@@ -16,7 +16,7 @@ const check = (label, ok, extra = "") => {
 
 const guide = GUIDES.find((g) => g.slug === "what-happens-to-unclaimed-lottery-prizes");
 check("guide registered in GUIDES", !!guide);
-check("GUIDES length is 15", GUIDES.length === 15, `len=${GUIDES.length}`);
+check("GUIDES length is 16", GUIDES.length === 16, `len=${GUIDES.length}`);
 check("guide is among registered Money guides", GUIDES.includes(guide));
 check("kicker is Money", guide?.kicker === "Money");
 check("published 2026-09-28", guide?.published === "2026-09-28" && guide?.updated === "2026-09-28");
@@ -173,7 +173,7 @@ check(
 );
 
 const hub = readFileSync(resolve(ROOT, "guides/index.html"), "utf8");
-check("guides hub says Fifteen guides", hub.includes("Fifteen guides covering"));
+check("guides hub says Sixteen guides", hub.includes("Sixteen guides covering"));
 check("guides hub has no leftover Thirteen guides", !hub.includes("Thirteen guides covering"));
 check("guides hub has no leftover Eleven guides", !hub.includes("Eleven guides covering"));
 check(

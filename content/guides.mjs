@@ -422,32 +422,21 @@ ${table(
   prizes were shared — the ${records[5].date} Powerball jackpot was split
   ${records[5].tickets} ways, turning $${records[5].annuity.toFixed(3)}&nbsp;billion into
   $${num(records[5].cash / records[5].tickets, 1)}&nbsp;million of cash each. Second, the cash
-  value is consistently around ${pct(cashShare, 0)} of the advertised annuity, because the
-  annuity is 30 graduated payments and the lottery only holds the present value of that stream.
+  value is lower than the advertised annuity because it represents money available at the time
+  of the drawing rather than the total of 30 future payments. The ratio is not fixed: it changes
+  with the cost of funding the annuity, including the interest-rate environment. Use the cash
+  option published for the specific drawing.
 </p>
 
 <h2>Annuity or lump sum?</h2>
 <p>
-  Both Mega Millions and Powerball offer the same two choices, and roughly nine out of ten
-  winners take the cash.
+  Both games offer U.S. jackpot winners a cash option or an annuity consisting of one immediate
+  payment followed by 29 annual payments that increase by 5% each year. The published cash value
+  varies with the cost of funding the annuity and should not be estimated with a permanent
+  percentage. Neither option is universally better.
 </p>
-<ul>
-  <li>
-    <b>Annuity:</b> 30 payments over 29 years, each one 5% larger than the last. You receive
-    the full advertised amount, spread across three decades, and each payment is taxed in the
-    year it arrives.
-  </li>
-  <li>
-    <b>Lump sum:</b> the cash value — historically about ${pct(cashShare, 0)} of the advertised
-    figure, though the exact ratio moves with interest rates. All of it is taxable income in a
-    single year.
-  </li>
-</ul>
 <p>
-  Neither is universally better. The annuity is protection against yourself: it cannot be lost
-  to a bad investment, a lawsuit or a relative with a business idea. The lump sum wins on
-  arithmetic if you can reliably earn more than the discount rate baked into the annuity, and
-  it gives you control of the estate planning.
+  <a href="lottery-lump-sum-vs-annuity.html">Compare the payment structures in the full lump-sum vs. annuity guide.</a>
 </p>
 
 <h2>The tax arithmetic</h2>
@@ -3691,6 +3680,358 @@ ${faqHtml}
   },
 };
 
+/* --------------------------------- 16 ------------------------------------ */
+
+const lumpSumFaq = [
+  {
+    q: "Is the lottery lump sum the advertised jackpot?",
+    a: "No. The advertised jackpot is the estimated total of the annuity payments. The lump sum is the separately published cash value before applicable taxes.",
+  },
+  {
+    q: "How many payments are in a Powerball or Mega Millions annuity?",
+    a: "For U.S. jackpot winners, both games describe one immediate payment followed by 29 annual payments, for 30 payments in total.",
+  },
+  {
+    q: "Are the 30 annuity payments equal?",
+    a: "No. Each payment is 5% larger than the previous payment.",
+  },
+  {
+    q: "Why does the cash value change relative to the advertised jackpot?",
+    a: "The cost of funding future annuity payments changes with factors that include interest rates. Use the cash option published for the specific drawing rather than a fixed percentage.",
+  },
+  {
+    q: "Is the lump sum taxed only at the withholding rate?",
+    a: "Not necessarily. Withholding is a prepayment, not a guarantee of the final tax bill. Lottery winnings are taxable income, and additional federal, state or local tax may apply.",
+  },
+  {
+    q: "Is the annuity tax-free?",
+    a: "No. Annuity payments are still taxable income when received under the rules that apply to the winner.",
+  },
+  {
+    q: "What happens to remaining Powerball annuity payments if the winner dies?",
+    a: "Powerball says the remaining balance is paid to the winner's estate and annual payments may continue to heirs after a court order. Other provisions may depend on the paying lottery's law.",
+  },
+  {
+    q: "Can a winner change the choice after claiming?",
+    a: "Election procedures and deadlines vary by lottery. Treat the decision as potentially irrevocable and confirm the current rules with the lottery that sold the ticket before filing claim documents.",
+  },
+];
+
+const lumpSumVsAnnuity = {
+  slug: "lottery-lump-sum-vs-annuity",
+  kicker: "Money",
+  title: "Lottery Lump Sum vs. Annuity: How Do the Two Jackpot Options Compare?",
+  seoTitle: "Lottery Lump Sum vs. Annuity: Payments, Taxes and Tradeoffs",
+  dek: "A jackpot winner is usually shown two numbers: the advertised annuity and a smaller cash value. Both are before applicable taxes, and neither option is automatically better.",
+  description:
+    "Compare lottery lump-sum and annuity payments, including cash value, payment schedules, tax timing and questions to review before choosing.",
+  published: "2026-09-30",
+  updated: "2026-09-30",
+  publicationMeta:
+    "Cash and annuity rules checked against official Powerball, Mega Millions and IRS materials",
+  related: [
+    "record-jackpots-and-taxes",
+    "what-to-do-if-you-win-the-lottery",
+    "can-lottery-winners-stay-anonymous",
+  ],
+  faq: lumpSumFaq.map((item) => ({ ...item, plain: item.a })),
+  body() {
+    const definitions = table(
+      ["Term", "What it represents", "What it does not represent"],
+      [
+        [
+          "Advertised jackpot",
+          "The estimated total of the annuity payments before applicable taxes",
+          "Cash available immediately",
+        ],
+        [
+          "Cash value",
+          "The estimated one-time amount available before applicable taxes",
+          "The amount deposited after withholding and final taxes",
+        ],
+        [
+          "Take-home amount",
+          "What remains after applicable withholding, final tax and any other deductions",
+          "A number that can be known from the jackpot headline alone",
+        ],
+      ],
+    );
+
+    const comparison = table(
+      ["Question", "Lump sum", "Annuity"],
+      [
+        ["How is it paid?", "One payment", "One immediate payment plus 29 annual payments"],
+        [
+          "Is it the advertised jackpot total?",
+          "No; it is the published cash value",
+          "The 30 scheduled payments add to the advertised annuity amount before applicable taxes",
+        ],
+        ["Do payments increase?", "Not applicable", "Each scheduled payment is 5% larger than the prior payment"],
+        ["When does the winner control the principal?", "Immediately", "Gradually as each installment is paid"],
+        [
+          "When is income generally received?",
+          "Primarily in the year of the lump-sum payment",
+          "Across the years in which installments are paid",
+        ],
+        ["Does it remove tax obligations?", "No", "No"],
+        ["Does it remove financial risk?", "No", "No"],
+        ["Can the correct choice be determined from the larger headline alone?", "No", "No"],
+      ],
+      {
+        caption:
+          "Structural comparison of the U.S. jackpot payment options. Claim and tax details can vary by jurisdiction and winner.",
+      },
+    );
+
+    const faqHtml = lumpSumFaq
+      .map((item) => `  <dt>${item.q}</dt>\n  <dd>${item.a}</dd>`)
+      .join("\n");
+
+    return `
+<p class="lede">
+  A jackpot winner is usually shown two very different numbers: the advertised jackpot and a
+  smaller cash value. The advertised figure represents the total of an annuity paid over time.
+  The cash option is a one-time payment based on the money available to fund that stream of future
+  payments. Both figures are before applicable federal and jurisdictional taxes.
+</p>
+<p>
+  Neither option is automatically better. The choice changes when the money arrives, when taxable
+  income is recognized, how much control the winner receives immediately and how much long-term
+  management the winner must take on.
+</p>
+
+${callout(
+  "The basic U.S. choice",
+  `<p>For U.S. Powerball and Mega Millions jackpot winners, the basic choice is generally:</p>
+<ul>
+  <li><b>Cash option:</b> one lump-sum payment before applicable taxes.</li>
+  <li><b>Annuity option:</b> one immediate payment followed by 29 annual payments, with each payment 5% larger than the previous one.</li>
+</ul>
+<p>Claim procedures and election rules are set by the lottery that sold the ticket. Confirm the available options, deadline and required paperwork with that lottery before filing a claim.</p>`,
+  "note",
+)}
+
+<h2>The short answer</h2>
+<p>Choose neither option by comparing only the two headline totals.</p>
+<p>
+  The advertised annuity is larger because it adds together 30 payments made across 29 years. The
+  cash value is smaller because it represents money available now rather than the sum of future
+  payments. A useful comparison must also consider tax timing, spending needs, investment risk,
+  inflation, estate planning and the winner's ability to manage a large amount.
+</p>
+<p>
+  This page explains the structure of the choices. It does not calculate which option is best for
+  a particular winner.
+</p>
+
+<h2>Advertised jackpot, cash value and take-home amount are different numbers</h2>
+${definitions}
+<p>
+  <a href="https://www.powerball.com/faqs" target="_blank" rel="noopener nofollow">Powerball</a>
+  says the cash value is generally the amount required in the jackpot prize pool on the drawing
+  date to fund the estimated annuity. Its advertised cash and annuity figures remain estimates
+  until ticket sales and other funding details are final.
+  <a href="https://www.megamillions.com/difference-between-cash-value-and-annuity" target="_blank" rel="noopener nofollow">Mega Millions</a>
+  describes its cash option as a one-time payment equal to the cash in its jackpot prize pool.
+</p>
+<p>
+  That is why a website should not estimate the cash option by applying one permanent percentage
+  to the advertised jackpot. Interest rates and the cost of funding future payments affect the
+  relationship. Use the cash option published for that specific drawing and confirm the final
+  amount with the selling lottery.
+</p>
+
+<h2>How the annuity works</h2>
+<p>
+  For both games, the annuity consists of one immediate payment followed by 29 annual payments.
+  Each payment is 5% larger than the previous payment.
+</p>
+<p>
+  This is a graduated payment schedule, not 30 equal checks. Early payments are substantially
+  smaller than later payments.
+</p>
+<p>Mega Millions provides official illustrations:</p>
+<ul>
+  <li>For a $50 million advertised jackpot, the initial payment would be about $752,000 and later annual payments would grow to about $3.1 million.</li>
+  <li>For a $600 million advertised jackpot, the initial payment would be about $9 million and later annual payments would grow to about $37.1 million.</li>
+</ul>
+<p>
+  These examples describe the payment schedule before applicable taxes. They do not mean that the
+  winner receives the advertised jackpot at once.
+</p>
+
+<h2>How the lump sum works</h2>
+<p>
+  The lump sum, also called the cash option, is paid once before applicable taxes. It gives the
+  winner immediate control over the cash value rather than a claim to the remaining annual
+  installments.
+</p>
+<p>
+  The cash value is not a penalty subtracted from money already sitting in an account for the
+  winner. The advertised jackpot is the estimated total of a future payment stream; the cash value
+  is the current prize-pool amount associated with funding that stream.
+</p>
+<p>
+  Because the cash option is received at once, the winner also assumes immediate responsibility
+  for protecting, investing, spending and transferring a very large pool of money.
+</p>
+
+${adSlot("guide-mid")}
+
+<h2>Lump sum and annuity side by side</h2>
+${comparison}
+<p>
+  The annuity reduces the amount placed under the winner's control on day one, but it does not
+  make every future decision automatically safe. The lump sum provides flexibility, but flexibility
+  is not the same as a guaranteed better financial result.
+</p>
+
+<h2>Why the cash-to-annuity ratio changes</h2>
+<p>
+  Powerball identifies two major inputs to its advertised jackpot estimate: game sales and the
+  annuity factor. The annuity factor reflects the cost of securities used to fund the future
+  payments, and interest rates affect that cost.
+</p>
+<p>
+  As a result, two advertised jackpots of the same size can have different cash values at
+  different times. A historical average or a percentage from a previous drawing should not replace
+  the official cash option for the current prize.
+</p>
+
+<h2>How tax timing differs</h2>
+<p>
+  Lottery winnings are
+  <a href="https://www.irs.gov/taxtopics/tc419" target="_blank" rel="noopener nofollow">taxable gambling income</a>
+  under IRS guidance. The IRS says gambling winnings must be reported even when they are not shown
+  on
+  <a href="https://www.irs.gov/forms-pubs/about-form-w-2-g" target="_blank" rel="noopener nofollow">Form W-2G</a>,
+  and some winners may need to make estimated tax payments.
+</p>
+<p>
+  With a lump sum, a very large amount of income is generally received in one tax year. With an
+  annuity, taxable payments are generally received across multiple years. That difference changes
+  timing; it does not make either option tax-free.
+</p>
+<p>
+  Federal withholding is only a prepayment toward a tax obligation. It should not be described as
+  the winner's final tax rate or final bill. State, local, residency and nonresident rules can
+  also affect the result.
+  <a href="record-jackpots-and-taxes.html">Record jackpots and taxes</a>
+  walks through the site's historical jackpot and tax examples separately.
+</p>
+${callout(
+  "Tax rules are personal",
+  "<p>Tax laws, rates and personal circumstances change. A lottery employee, financial adviser or website article cannot replace advice from a qualified tax professional familiar with the winner's facts and claiming jurisdiction.</p>",
+  "note",
+)}
+
+<h2>A neutral worked example</h2>
+<p>
+  Suppose a lottery advertises a $100 million annuity and separately publishes a $45 million cash
+  option for that drawing. These are two payment structures for the same jackpot share, not a $55
+  million fee for choosing cash.
+</p>
+<ul>
+  <li><b>Cash choice:</b> $45 million is paid once before applicable taxes.</li>
+  <li><b>Annuity choice:</b> the scheduled payments total $100 million before applicable taxes across 30 payments, with each payment 5% larger than the previous one.</li>
+</ul>
+<p>
+  The $45 million figure is a hypothetical published cash option, not a current game quote and not
+  a fixed 45% rule.
+</p>
+<p>
+  The comparison cannot end there. A winner would still need to evaluate the timing of taxes,
+  near-term cash needs, investment and custody costs, risk tolerance, family and estate plans, and
+  the consequences of receiving or controlling the money over time.
+</p>
+
+<h2>What if an annuity winner dies?</h2>
+<p>
+  Powerball states that if a jackpot winner dies before receiving every annual installment, the
+  remaining balance is paid to the winner's estate. Annual payments may continue to heirs after
+  the lottery receives a court order, and other provisions may depend on the law of the lottery
+  paying the prize.
+</p>
+<p>
+  That wording is Powerball's description, not a universal estate rule for every game and
+  jurisdiction. Confirm beneficiary, estate and payment-continuation rules with the selling
+  lottery and qualified counsel before making the election.
+</p>
+
+<h2>Questions to answer before choosing</h2>
+<ol>
+  <li>What are the final advertised annuity and cash-option amounts for this winning share?</li>
+  <li>How long does the selling lottery allow for making the payment election?</li>
+  <li>Is the election irrevocable once claim documents are filed?</li>
+  <li>What federal, state, local or nonresident tax rules may apply?</li>
+  <li>How much liquidity is actually needed during the first several years?</li>
+  <li>Who will safeguard and administer the money?</li>
+  <li>How will the choice affect an estate, beneficiaries and shared ownership?</li>
+  <li>What costs, risks and assumptions are built into any proposed investment plan?</li>
+  <li>Has the decision been reviewed independently by qualified legal, tax and financial professionals?</li>
+</ol>
+<p>
+  The broader sequence before a claim is in
+  <a href="what-to-do-if-you-win-the-lottery.html">what to do if you win the lottery</a>.
+</p>
+
+<h2>Common comparison mistakes</h2>
+<ul>
+  <li><b>Comparing the advertised annuity with an after-tax cash estimate.</b></li>
+  <li><b>Treating the cash value as a fixed percentage of every jackpot.</b></li>
+  <li><b>Assuming withholding equals the final tax.</b></li>
+  <li><b>Assuming 30 payments means 30 equal payments.</b></li>
+  <li><b>Treating an assumed investment return as guaranteed.</b></li>
+  <li><b>Believing the annuity eliminates all spending, creditor or estate risk.</b></li>
+  <li><b>Filing claim paperwork before confirming the election deadline and consequences.</b></li>
+</ul>
+
+<h2>Practical takeaway</h2>
+<p>
+  The annuity offers a scheduled stream of increasing payments. The lump sum offers immediate
+  control of the published cash value. The advertised annuity is larger in nominal dollars, but
+  that fact alone does not decide which structure better fits a particular winner.
+</p>
+<p>
+  Before claiming, obtain the final figures and election instructions from the lottery that sold
+  the ticket. Then review the choice with qualified professionals who can evaluate the winner's
+  taxes, estate, family obligations and tolerance for financial risk.
+</p>
+<p>
+  This site explains the published payment structures. It does not recommend a payment option or
+  provide financial, tax or legal advice.
+</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq-list">
+${faqHtml}
+</dl>
+
+<section class="sources">
+  <h2>Sources and methodology</h2>
+  <p>
+    Payment structure, cash-value definitions and the Powerball estate description were checked
+    against official Powerball and Mega Millions materials. Federal tax reporting was checked
+    against IRS Topic No. 419 and Form W-2G guidance. Sources checked September 30, 2026.
+  </p>
+  <p>
+    Claim and election rules can change by lottery. This page is informational and is not legal,
+    tax, financial or claims advice.
+  </p>
+  <ul>
+    <li><a href="https://www.powerball.com/faqs" target="_blank" rel="noopener nofollow">Powerball — FAQs</a> (U.S. annuity or cash choice, 30 payments, 5% increases, pre-tax figures, cash-value definition, estimates, interest rates, and remaining payments after death)</li>
+    <li><a href="https://www.megamillions.com/difference-between-cash-value-and-annuity" target="_blank" rel="noopener nofollow">Mega Millions — Difference between cash value and annuity</a> (cash or annuity, 30 payments, 5% increases, official illustrations, and cash equal to the prize pool)</li>
+    <li><a href="https://www.irs.gov/taxtopics/tc419" target="_blank" rel="noopener nofollow">IRS — Topic No. 419, Gambling Income and Losses</a> (lottery winnings are taxable gambling income and must be reported)</li>
+    <li><a href="https://www.irs.gov/forms-pubs/about-form-w-2-g" target="_blank" rel="noopener nofollow">IRS — About Form W-2G</a> (reports qualifying gambling winnings and federal income tax withheld)</li>
+  </ul>
+  <p>
+    See also <a href="../methodology.html">our methodology and corrections policy</a>.
+  </p>
+</section>
+`;
+  },
+};
+
 export const GUIDES = [
 oddsCompared,
   independentTrials,
@@ -3707,4 +4048,5 @@ oddsCompared,
   unclaimedPrizes,
   winnerAnonymity,
   whatToDoIfYouWin,
+  lumpSumVsAnnuity,
 ];
