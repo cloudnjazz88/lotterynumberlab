@@ -92,6 +92,151 @@ export function shouldReplaceSnapshot(current, next) {
   return { ok: true, reason: "validated" };
 }
 
+/**
+ * A missing draw dated on or after this many days before the fetched latest
+ * date is recent. Those gaps fail the fetch. Only older omissions may be
+ * restored, and only from an already validated snapshot.
+ */
+export const RECENT_DRAW_WINDOW_DAYS = 365;
+
+/** One omitted historical row can be kept. A broader hole is a truncated feed. */
+export const MAX_HISTORICAL_BACKFILL = 1;
+
+function shiftIsoDate(iso, days) {
+  const utc = Date.parse(`${iso}T12:00:00Z`);
+  return new Date(utc + days * 86400000).toISOString().slice(0, 10);
+}
+
+function copyDraw(draw) {
+  return { d: draw.d, n: draw.n.slice(), s: draw.s };
+}
+
+/**
+ * Combine a newly fetched drawing list with a previously validated snapshot.
+ * The feed wins on any shared date. An omitted row is kept only when it is
+ * older than RECENT_DRAW_WINDOW_DAYS before the fetched latest date, the
+ * omission count is within MAX_HISTORICAL_BACKFILL, and the stored snapshot
+ * itself passes validateGameHistory. Returns { ok, reason, draws, backfilled }.
+ */
+export function mergeDrawingHistory(key, fetchedDraws, existingHistory) {
+  if (!Array.isArray(fetchedDraws) || fetchedDraws.length === 0) {
+    return { ok: false, reason: `${key}: fetched feed is empty`, draws: [], backfilled: [] };
+  }
+
+  const seen = new Set();
+  const fetched = [];
+  for (const draw of fetchedDraws) {
+    const error = validateDraw(key, draw);
+    if (error) {
+      return {
+        ok: false,
+        reason: `${key}: fetched row ${draw?.d || "?"} failed validation (${error}); refusing to replace it with a stored row`,
+        draws: [],
+        backfilled: [],
+      };
+    }
+    if (seen.has(draw.d)) {
+      return {
+        ok: false,
+        reason: `${key}: fetched feed has duplicate date ${draw.d}`,
+        draws: [],
+        backfilled: [],
+      };
+    }
+    seen.add(draw.d);
+    fetched.push(copyDraw(draw));
+  }
+  fetched.sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : 0));
+
+  const existingDraws = Array.isArray(existingHistory?.draws) ? existingHistory.draws : [];
+  const missing = [];
+  const existingDates = new Set();
+  for (const draw of existingDraws) {
+    if (!draw || existingDates.has(draw.d)) continue;
+    existingDates.add(draw.d);
+    if (!seen.has(draw.d)) missing.push(draw);
+  }
+
+  const backfilled = [];
+  if (missing.length > 0) {
+    if (missing.length > MAX_HISTORICAL_BACKFILL) {
+      return {
+        ok: false,
+        reason: `${key}: feed omitted ${missing.length} stored rows; historical backfill limit is ${MAX_HISTORICAL_BACKFILL}`,
+        draws: [],
+        backfilled: [],
+      };
+    }
+    const existingError = validateGameHistory(key, existingHistory);
+    if (existingError) {
+      return {
+        ok: false,
+        reason: `${key}: existing snapshot failed validation; historical fallback refused (${existingError})`,
+        draws: [],
+        backfilled: [],
+      };
+    }
+    const latest = fetched[0].d;
+    const cutoff = shiftIsoDate(latest, -RECENT_DRAW_WINDOW_DAYS);
+    for (const draw of missing) {
+      if (draw.d > latest) {
+        return {
+          ok: false,
+          reason: `${key}: omitted ${draw.d} is newer than fetched latest ${latest}; refusing to hide a missing recent drawing`,
+          draws: [],
+          backfilled: [],
+        };
+      }
+      if (draw.d >= cutoff) {
+        return {
+          ok: false,
+          reason: `${key}: omitted ${draw.d} is within ${RECENT_DRAW_WINDOW_DAYS} days of fetched latest ${latest}; refusing to backfill a recent gap`,
+          draws: [],
+          backfilled: [],
+        };
+      }
+      const storedError = validateDraw(key, draw);
+      if (storedError) {
+        return {
+          ok: false,
+          reason: `${key}: stored row ${draw.d} failed validation (${storedError}); historical fallback refused`,
+          draws: [],
+          backfilled: [],
+        };
+      }
+      backfilled.push({
+        date: draw.d,
+        reason: `the current feed omitted ${draw.d}, which is before ${cutoff} (${RECENT_DRAW_WINDOW_DAYS} days before fetched latest ${latest})`,
+      });
+    }
+  }
+
+  const draws = fetched.concat(missing.map(copyDraw));
+  draws.sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : 0));
+  const history = {
+    count: draws.length,
+    latestDraw: draws[0].d,
+    firstDraw: draws[draws.length - 1].d,
+    draws,
+  };
+  const error = validateGameHistory(key, history);
+  if (error) return { ok: false, reason: error, draws: [], backfilled: [] };
+  return { ok: true, reason: "validated", ...history, backfilled };
+}
+
+export function drawingRowsEqual(current, next) {
+  if (!current?.games || !next?.games) return false;
+  return Object.keys(GAME_RULES).every((key) => {
+    const a = current.games[key]?.draws;
+    const b = next.games[key]?.draws;
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+    return a.every((draw, index) => {
+      const other = b[index];
+      return other && draw.d === other.d && draw.s === other.s && draw.n.join(",") === other.n.join(",");
+    });
+  });
+}
+
 export function snapshotUnchanged(current, next) {
   if (!current?.games || !next?.games) return false;
   return Object.keys(GAME_RULES).every((key) => {

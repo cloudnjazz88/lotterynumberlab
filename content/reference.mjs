@@ -215,8 +215,9 @@ export function methodologyPage(ctx) {
 
         <h2 id="sources">2. Drawing data</h2>
         <p>
-          Results come from the New York State Open Data portal, which republishes official
-          multi-state drawings. The bundled snapshot currently runs through
+          Drawing history is maintained from validated New York Open Data records and checked
+          or extended with official Mega Millions and Powerball results when needed. The bundled
+          snapshot currently runs through
           ${dateLong(mm.history.latestDraw)} (Mega Millions) and
           ${dateLong(pb.history.latestDraw)} (Powerball). The “Fetch latest results” button on
           each dashboard talks to that portal directly. Feeds can lag or contain errors;

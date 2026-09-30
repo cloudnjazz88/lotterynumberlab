@@ -446,8 +446,9 @@ ${page.body}
         If gambling stops being fun, call 1-800-GAMBLER or visit
         <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener nofollow">ncpgambling.org</a>.
       </p>
-      <p class="footer__meta">© ${SITE.established}–present ${SITE.name}. Drawing data from the
-        New York State Open Data portal.</p>
+      <p class="footer__meta">© ${SITE.established}–present ${SITE.name}. Drawing history is maintained
+        from validated New York Open Data records and checked or extended with official Mega Millions
+        and Powerball results when needed.</p>
     </footer>
     ${scripts}
   </body>
