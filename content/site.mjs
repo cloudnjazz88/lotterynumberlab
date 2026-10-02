@@ -118,6 +118,7 @@ export const SOURCES = {
   pbPrizes: { label: "Powerball — prize chart and official odds", url: "https://www.powerball.com/powerball-prize-chart" },
   pbResults: { label: "Powerball — previous results", url: "https://www.powerball.com/previous-results" },
   pb2015: { label: "Nebraska Lottery — fact sheet on the October 2015 Powerball changes (old and new prize structures)", url: "https://nelottery.com/media/powerball_factsheet7_15.pdf" },
+  pbMonday2021: { label: "Powerball — Monday drawings begin August 23, 2021", url: "https://www.powerball.com/powerball-debuts-new-monday-drawing-double-play-feature-next-week" },
   pb2015la: { label: "Louisiana Lottery — “Powerball’s matrix changes to build bigger jackpots”", url: "https://louisianalottery.com/powerballs-matrix-changes-to-build-bigger-jackpots/" },
   musl: { label: "Multi-State Lottery Association (MUSL)", url: "https://www.musl.com/" },
   nyMega: { label: "New York State Open Data — Mega Millions winning numbers", url: "https://data.ny.gov/d/5xaw-6ayf" },

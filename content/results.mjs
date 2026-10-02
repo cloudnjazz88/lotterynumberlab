@@ -3,8 +3,14 @@
  * year page carries its own computed analysis, not just a table dump.
  */
 
-import { num, pct, table, dateLong, adSlot, link, sourceList } from "./site.mjs";
-import { yearInterpretation, formatBallList } from "../tools/year-analysis.mjs";
+import { num, pct, table, dateLong, adSlot, link, sourceList, SOURCES } from "./site.mjs";
+import {
+  yearInterpretation,
+  formatBallList,
+  splitAtBoundary,
+  MM_2025_BOUNDARY,
+  PB_2021_BOUNDARY,
+} from "../tools/year-analysis.mjs";
 
 const pad = (n) => String(n).padStart(2, "0");
 const sumOf = (draw) => draw.n.reduce((a, b) => a + b, 0);
@@ -51,9 +57,16 @@ function accentClass(gameId) {
   return gameId === "megamillions" ? "year-glance--mm" : "year-glance--pb";
 }
 
-function formatTiedBalls(entries) {
-  if (!entries.length) return "—";
-  return entries.map((x) => `<b>${x.n}</b> (${x.count}×)`).join(", ");
+function listWeekdays(days) {
+  if (!days?.length) return "—";
+  if (days.length === 1) return days[0];
+  if (days.length === 2) return `${days[0]} and ${days[1]}`;
+  return `${days.slice(0, -1).join(", ")}, and ${days[days.length - 1]}`;
+}
+
+function periodDates(period) {
+  if (!period?.first || !period?.last) return "—";
+  return `${dateLong(period.first)} – ${dateLong(period.last)}`;
 }
 
 function glanceCard(label, value, hint = "") {
@@ -171,12 +184,71 @@ function archiveRulesLabel(gameId, year, config) {
   }
   return `${config.matrixLabel} ·\n            ${config.ticketPrice} per play`;
 }
-function comparison(value, baseline, unit = "") {
+function observedArchiveHint(value, baseline, count) {
   const diff = value - baseline;
   const size = Math.abs(diff);
-  if (size < 1.5) return `almost exactly the long-run average of ${baseline.toFixed(1)}${unit}`;
-  const word = size > 6 ? (diff > 0 ? "well above" : "well below") : diff > 0 ? "above" : "below";
-  return `${word} the long-run average of ${baseline.toFixed(1)}${unit}`;
+  const relation =
+    size < 1.5
+      ? "within 1.5 of"
+      : diff > 0
+        ? `${size.toFixed(1)} above`
+        : `${size.toFixed(1)} below`;
+  return `${relation} the observed archive average of ${baseline.toFixed(1)} (${num(count)} drawings)`;
+}
+
+function transitionSection(gameId, year, draws) {
+  if (gameId === "megamillions" && Number(year) === 2025) {
+    const split = splitAtBoundary(draws, MM_2025_BOUNDARY);
+    return `<h2>April 8, 2025 rule change</h2>
+        <p>
+          White-ball pools stayed 5 of 70 on both sides of this date. The Mega Ball pool and the
+          base ticket price changed. Counts and dates below are the bundled drawings in each period.
+          Official announcement:
+          <a href="${SOURCES.mm2025.url}" target="_blank" rel="noopener nofollow">${SOURCES.mm2025.label}</a>.
+        </p>
+        ${table(
+          ["Period", "Bundled drawings", "Date coverage", "Mega Ball pool", "Base ticket price"],
+          [
+            ["Before April 8, 2025", String(split.before.count), periodDates(split.before), "1–25", "$2"],
+            ["From April 8, 2025", String(split.after.count), periodDates(split.after), "1–24", "$5"],
+          ],
+          { caption: `Mega Millions periods in the ${year} bundled snapshot, split on ${dateLong(MM_2025_BOUNDARY)}.` },
+        )}
+        <p>
+          White-ball frequencies on this page can be read as one pool. Mega Ball frequencies mix
+          the 1–25 period and the 1–24 period, so they are not a single set of rules.
+        </p>`;
+  }
+  if (gameId === "powerball" && Number(year) === 2021) {
+    const split = splitAtBoundary(draws, PB_2021_BOUNDARY);
+    return `<h2>August 23, 2021 schedule change</h2>
+        <p>
+          White and red pools stayed 5 of 69 and 1 of 26. Powerball added Monday drawings to the
+          existing Wednesday and Saturday drawings beginning August 23, 2021.
+          Official announcement:
+          <a href="${SOURCES.pbMonday2021.url}" target="_blank" rel="noopener nofollow">${SOURCES.pbMonday2021.label}</a>.
+          The schedule column is the set of weekdays present in the bundled rows for that period.
+        </p>
+        ${table(
+          ["Period", "Bundled drawings", "Date coverage", "Weekly drawing schedule"],
+          [
+            [
+              "Before August 23, 2021",
+              String(split.before.count),
+              periodDates(split.before),
+              listWeekdays(split.before.weekdays),
+            ],
+            [
+              "From August 23, 2021",
+              String(split.after.count),
+              periodDates(split.after),
+              listWeekdays(split.after.weekdays),
+            ],
+          ],
+          { caption: `Powerball periods in the ${year} bundled snapshot, split on ${dateLong(PB_2021_BOUNDARY)}.` },
+        )}`;
+  }
+  return "";
 }
 
 export function yearPage(ctx, gameId, year) {
@@ -186,55 +258,26 @@ export function yearPage(ctx, gameId, year) {
   const index = game.years.findIndex((y) => y.year === year);
   const newer = game.years[index - 1];
   const older = game.years[index + 1];
-  const scheduleNote =
-    gameId === "powerball" && Number(year) === 2021
-      ? ` Powerball added a third weekly drawing on Mondays in August 2021, which is why the
-         count sits between the two-a-week and three-a-week totals.`
-      : "";
+  const referenceDate = ctx.snapshotFetchedAt
+    ? String(ctx.snapshotFetchedAt).slice(0, 10)
+    : data.last;
 
   const expected = (data.count * config.pick) / config.mainMax;
   const mode = data.mostCommonOddEven;
-  const interpret = yearInterpretation(config, data, game.shape);
+  const interpret = yearInterpretation(config, data, game.shape, {
+    referenceDate,
+    archiveCount: game.shape.total,
+    archiveFirst: game.history.firstDraw,
+    archiveLast: game.history.latestDraw,
+  });
   const specialTop =
     data.mostFrequentSpecial && data.mostFrequentSpecial.length
       ? data.mostFrequentSpecial
       : data.topSpecial
         ? [data.topSpecial]
         : [];
-  const gameSlug = gameId === "megamillions" ? "mega-millions" : "powerball";
-  const fetchedNote = ctx.snapshotFetchedAt
-    ? dateLong(String(ctx.snapshotFetchedAt).slice(0, 10))
-    : dateLong(data.last);
-
-  const keyFindings = [];
-  if (data.mostFrequent?.length) {
-    keyFindings.push(
-      `Most frequent white ball${data.mostFrequent.length > 1 ? "s" : ""}: ${formatTiedBalls(data.mostFrequent)}.`,
-    );
-  }
-  if (data.leastFrequent?.length && data.count >= 2) {
-    keyFindings.push(
-      `Least frequent (including zeros): ${formatTiedBalls(data.leastFrequent.slice(0, 8))}${data.leastFrequent.length > 8 ? `, +${data.leastFrequent.length - 8} more` : ""}.`,
-    );
-  }
-  if (specialTop.length) {
-    keyFindings.push(
-      `Most frequent ${config.specialName}: ${formatTiedBalls(specialTop)}.`,
-    );
-  }
-  if (mode) {
-    keyFindings.push(
-      `Most common odd/even split: ${mode.odd} odd / ${mode.even} even (${mode.count} drawings, ${pct(mode.share)}).`,
-    );
-  }
-  keyFindings.push(
-    `Consecutive-number drawings: ${data.consecutiveCount} of ${data.count} (${pct(data.consecutiveShare)}).`,
-  );
-  if (data.sumMin && data.sumMax) {
-    keyFindings.push(
-      `White-ball sum range: ${data.sumMin.value} (${dateLong(data.sumMin.draw.d)}) to ${data.sumMax.value} (${dateLong(data.sumMax.draw.d)}).`,
-    );
-  }
+  const fetchedNote = dateLong(referenceDate);
+  const archiveScope = `${num(game.shape.total)} drawings, ${dateLong(game.history.firstDraw)} – ${dateLong(game.history.latestDraw)}`;
 
   return `      <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="${link("/", 1)}">Home</a>
@@ -249,7 +292,7 @@ export function yearPage(ctx, gameId, year) {
           <p class="page-kicker">${config.name} archive</p>
           <h1>${config.name} winning numbers for ${year}</h1>
           <p class="article-dek">
-            All ${data.count} ${config.name} drawings held in ${year}, from
+            ${data.count} bundled ${config.name} drawings in ${year}, from
             ${dateLong(data.first)} to ${dateLong(data.last)}, with year-specific frequency,
             sum, odd/even and consecutive-pair analysis from the bundled draw record.
           </p>
@@ -259,10 +302,10 @@ export function yearPage(ctx, gameId, year) {
         </header>
 
         <h2>Year at a glance</h2>
-        <p class="year-matrix-note">${data.matrixNote}${scheduleNote}</p>
+        <p class="year-matrix-note">${data.matrixNote}</p>
         <dl class="year-glance ${accentClass(gameId)}">
           ${glanceCard("Drawings", num(data.count), `${dateLong(data.first)} → ${dateLong(data.last)}`)}
-          ${glanceCard("Average white-ball sum", data.sumMean.toFixed(1), comparison(data.sumMean, game.shape.sumMean))}
+          ${glanceCard("Average white-ball sum", data.sumMean.toFixed(1), observedArchiveHint(data.sumMean, game.shape.sumMean, game.shape.total))}
           ${glanceCard(
             "Sum range",
             `${data.sumMin.value} – ${data.sumMax.value}`,
@@ -271,7 +314,7 @@ export function yearPage(ctx, gameId, year) {
           ${glanceCard(
             "Consecutive pairs",
             `${data.consecutiveCount} (${pct(data.consecutiveShare)})`,
-            `Matrix-wide ${pct(game.shape.consecutiveRate)}`,
+            `Observed archive rate ${pct(game.shape.consecutiveRate)} (${num(game.shape.total)} drawings)`,
           )}
           ${glanceCard(
             "Top odd/even split",
@@ -281,20 +324,21 @@ export function yearPage(ctx, gameId, year) {
           ${glanceCard(
             `Top ${config.specialName}`,
             specialTop.length ? specialTop.map((x) => x.n).join(", ") : "—",
-            specialTop.length ? `${specialTop[0].count}×` : "",
+            specialTop.length ? `${specialTop.length > 1 ? "tied at " : ""}${specialTop[0].count}×` : "",
           )}
         </dl>
-
-        <h2>Key findings for ${year}</h2>
-        <ul class="year-findings">
-          ${keyFindings.map((line) => `<li>${line}</li>`).join("\n          ")}
-        </ul>
+        <p><a href="#year-drawings">Every ${config.name} drawing in ${year}</a></p>
+${transitionSection(gameId, year, data.draws)}
+        <h2>How to interpret these ${year} figures</h2>
+        ${interpret.map((p) => `<p>${p}</p>`).join("\n        ")}
 
         <h2>Frequency — white balls and ${config.specialName}</h2>
         <p>
-          With ${data.count} drawings and five balls each, every white number's fair share is about
-          <b>${expected.toFixed(1)} appearances</b> if the drum is fair. Rankings below break ties
-          by ball number ascending so a rebuild always produces the same order.
+          With ${data.count} drawings and five white balls each, the mathematical expectation for
+          one specified white number is about <b>${expected.toFixed(1)} appearances</b>
+          (${data.count} × ${config.pick} / ${config.mainMax}). That is an expectation for this
+          year's drawing count, not the observed archive average. Rankings below break ties by
+          ball number ascending so a rebuild always produces the same order.
         </p>
         ${table(
           ["Rank", "White ball", "Times drawn", `Share of ${year} drawings`],
@@ -357,7 +401,7 @@ export function yearPage(ctx, gameId, year) {
           { caption: `Odd/even split of the five white balls across all ${data.count} drawings in ${year}.` },
         )}
         ${table(
-          ["Measure", String(year), `All ${num(game.history.count)} drawings`],
+          ["Measure", String(year), `Observed archive (${archiveScope})`],
           [
             ["Drawings", String(data.count), num(game.history.count)],
             ["Average sum", data.sumMean.toFixed(1), game.shape.sumMean.toFixed(1)],
@@ -383,18 +427,16 @@ export function yearPage(ctx, gameId, year) {
         <h2>Consecutive-number pairs</h2>
         <p>
           <b>${data.consecutiveCount}</b> of ${data.count} drawings (${pct(data.consecutiveShare)})
-          included at least one consecutive white-ball pair (for example 14–15). Across the full
-          ${config.matrixLabel} archive that rate is ${pct(game.shape.consecutiveRate)}. Consecutive
-          pairs are common in random samples; they are not a signal to seek or avoid on a ticket.
+          included at least one consecutive white-ball pair (for example 14–15). The observed rate
+          in the bundled archive (${archiveScope}) is ${pct(game.shape.consecutiveRate)}. That
+          comparison is a count, not a test of the difference. Consecutive pairs are not a signal
+          to seek or avoid on a ticket.
         </p>
 
 ${adSlot("results-year") ? `        ${adSlot("results-year")}\n` : ""}
 
-        <h2>Every ${config.name} drawing in ${year}</h2>
+        <h2 id="year-drawings">Every ${config.name} drawing in ${year}</h2>
         ${resultsTable(config, data.draws)}
-
-        <h2>How to interpret these ${year} figures</h2>
-        ${interpret.map((p) => `<p>${p}</p>`).join("\n        ")}
 
         <h2>Source and methodology</h2>
         <p>
@@ -462,7 +504,9 @@ ${[
       </section>
 
       ${sourceList(
-        gameId === "megamillions" ? ["nyMega", "mmDrawings", "mmHowTo"] : ["nyPower", "pbResults", "pbPrizes"],
+        gameId === "megamillions"
+          ? ["nyMega", "mmDrawings", "mmHowTo", ...(Number(year) === 2025 ? ["mm2025"] : [])]
+          : ["nyPower", "pbResults", "pbPrizes", ...(Number(year) === 2021 ? ["pbMonday2021"] : [])],
         1,
       )}
 `;

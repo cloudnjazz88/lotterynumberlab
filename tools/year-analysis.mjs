@@ -1,3 +1,5 @@
+import { dateLong } from "../content/site.mjs";
+
 /**
  * Per-calendar-year statistics for results archive pages.
  * All figures are derived from that year's bundled draws only.
@@ -56,6 +58,76 @@ export function tiedAtMin(ranked) {
  * Matrix / rule note for a calendar year. Describes the ball pools and
  * schedule quirks that applied during that year — not a prediction.
  */
+/**
+ * Calendar coverage is decided from an explicit snapshot reference date.
+ * A draw-count cutoff is not used to call a year current, complete, or partial.
+ * `smallSample` is only a description of sample size.
+ */
+export const SMALL_SAMPLE_DRAWINGS = 40;
+export const MM_2025_BOUNDARY = "2025-04-08";
+export const PB_2021_BOUNDARY = "2021-08-23";
+
+const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+export function weekdayOf(iso) {
+  const [y, m, d] = String(iso).slice(0, 10).split("-").map(Number);
+  return WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
+}
+
+export function periodFromDraws(draws) {
+  const list = (Array.isArray(draws) ? draws : []).slice().sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
+  const days = [];
+  for (const draw of list) {
+    const day = weekdayOf(draw.d);
+    if (!days.includes(day)) days.push(day);
+  }
+  days.sort((a, b) => WEEKDAYS.indexOf(a) - WEEKDAYS.indexOf(b));
+  return {
+    count: list.length,
+    first: list[0]?.d ?? null,
+    last: list[list.length - 1]?.d ?? null,
+    weekdays: days,
+    draws: list,
+  };
+}
+
+/** Drawings on `boundary` belong with the later period. */
+export function splitAtBoundary(draws, boundary) {
+  const before = [];
+  const after = [];
+  for (const draw of Array.isArray(draws) ? draws : []) {
+    if (draw.d < boundary) before.push(draw);
+    else after.push(draw);
+  }
+  return { boundary, before: periodFromDraws(before), after: periodFromDraws(after) };
+}
+
+export function describeYearCoverage(data, { referenceDate, archiveFirst } = {}) {
+  const ref = referenceDate ? String(referenceDate).slice(0, 10) : null;
+  const year = Number(data?.year);
+  const refYear = ref ? Number(ref.slice(0, 4)) : null;
+  let calendar = "unspecified";
+  if (ref && Number.isFinite(year) && Number.isFinite(refYear)) {
+    if (year === refYear) calendar = "year-to-date";
+    else if (year < refYear) calendar = "past-calendar";
+    else calendar = "after-reference";
+  }
+  const archiveStart = archiveFirst ? String(archiveFirst).slice(0, 10) : null;
+  const beginsPartway = Boolean(
+    archiveStart &&
+      data?.first &&
+      data.first === archiveStart &&
+      archiveStart.slice(0, 4) === String(data.year) &&
+      !archiveStart.endsWith("-01-01"),
+  );
+  return {
+    calendar,
+    beginsPartway,
+    smallSample: Boolean(data?.count > 0 && data.count < SMALL_SAMPLE_DRAWINGS),
+    referenceDate: ref,
+  };
+}
+
 export function matrixNoteForYear(gameId, year, opts = {}) {
   const y = Number(year);
   if (gameId === "megamillions") {
@@ -69,7 +141,7 @@ export function matrixNoteForYear(gameId, year, opts = {}) {
       return "Throughout this year Mega Millions used five white balls from 1–70 and a Mega Ball from 1–25, drawn Tuesday and Friday evenings (ET).";
     }
     if (y === 2025) {
-      return "White balls stayed 1–70 all year. On April 8, 2025 the Mega Ball pool shrank from 25 to 24 and the ticket price rose to $5 with a built-in multiplier — so Mega Ball 25 only appears in drawings before that date.";
+      return "White balls stayed 1–70 all year. April 8, 2025 is the boundary between two Mega Ball pools and ticket prices; the period table separates them.";
     }
     // 2026+
     return "Under the April 2025 rules: five white balls from 1–70 and a Mega Ball from 1–24, drawn Tuesday and Friday (ET). This page covers calendar drawings in this year only.";
@@ -86,7 +158,7 @@ export function matrixNoteForYear(gameId, year, opts = {}) {
     return "Powerball used five white balls from 1–69 and a red Powerball from 1–26, drawn Wednesday and Saturday evenings (ET).";
   }
   if (y === 2021) {
-    return "White and red pools stayed 1–69 / 1–26. Powerball added Monday drawings on August 23, 2021, so the year's count sits between the old two-a-week and the later three-a-week pace.";
+    return "White balls stayed 1–69 and the Powerball stayed 1–26 all year. The period table separates the weekly schedule before and from August 23, 2021.";
   }
   // 2022+
   const partial = opts.isPartial ? " This page covers the calendar year to date." : "";
@@ -202,11 +274,8 @@ export function analyzeYearDraws(config, draws, year) {
   const mostCommonOddEven = oddEvenDist[0];
 
   const sumMean = sums.reduce((a, b) => a + b, 0) / sums.length;
-  const yNum = Number(year);
-  const isPartial =
-    list.length < 90 ||
-    (config.id === "megamillions" && yNum === 2017) ||
-    (config.id === "powerball" && yNum === 2015);
+  // Coverage is not inferred from how many drawings a year has.
+  const isPartial = false;
 
   return {
     year: String(year),
@@ -261,110 +330,124 @@ export function yearlyBreakdown(config, draws) {
  * No prediction language; explicitly notes independence and that hot/cold
  * do not improve odds.
  */
-export function yearInterpretation(config, data, shape) {
+function bonusLeaderSentence(config, data) {
+  const leaders = data.mostFrequentSpecial?.length
+    ? data.mostFrequentSpecial
+    : data.topSpecial
+      ? [data.topSpecial]
+      : [];
+  if (!leaders.length) return "";
+  if (leaders.length === 1) {
+    return `The most frequent ${config.specialName} in ${data.year} was ${leaders[0].n}, drawn ${leaders[0].count} times.`;
+  }
+  const names = leaders.map((entry) => entry.n).join(", ");
+  return `${leaders.length} ${config.specialName}s tied for the lead in ${data.year}: ${names}, each drawn ${leaders[0].count} times.`;
+}
+
+export function yearInterpretation(config, data, shape, options = {}) {
   if (!data || data.count === 0) {
     return [
       `No ${config.name} drawings from this calendar year are in the bundled archive yet.`,
-      `Lottery drawings are independent random events. Past frequency — hot, cold, or overdue — does not change the odds of the next drawing.`,
+      `Each drawing is an independent trial. A frequency tally does not change the odds of a later drawing.`,
     ];
   }
 
   const paras = [];
   const name = config.name;
   const year = data.year;
-  const baseline = shape.sumMean;
-  const sumDiff = data.sumMean - baseline;
-  const absDiff = Math.abs(sumDiff);
-  const consecPct = (data.consecutiveShare * 100).toFixed(1);
-  const baselineConsec = (shape.consecutiveRate * 100).toFixed(1);
-  const mode = data.mostCommonOddEven;
-  const hot = data.mostFrequent;
-  const hotLead = hot[0];
-  const expected = (data.count * (config.pick || 5)) / config.mainMax;
+  const coverage = describeYearCoverage(data, options);
+  const show = (iso) => (iso ? dateLong(String(iso).slice(0, 10)) : "");
+  const refLabel = coverage.referenceDate ? show(coverage.referenceDate) : "the snapshot reference date";
+  const archiveCount = options.archiveCount ?? shape?.total;
+  const archiveSpan =
+    options.archiveFirst && options.archiveLast
+      ? ` from ${show(options.archiveFirst)} through ${show(options.archiveLast)}`
+      : "";
 
-  // 1) Opening frame — draw count / partial / schedule
   if (data.count === 1) {
     paras.push(
-      `${name} has a single archived drawing in ${year} (${data.first}). One draw cannot support a frequency ranking; the table below is still a convenience copy of that result. It is historical description, not a forecast.`,
+      `${name} has one bundled drawing in ${year} (${show(data.first)}). One row cannot support a frequency ranking. It is a record of that drawing, not a forecast.`,
     );
-  } else if (data.isPartial && Number(year) === Number(String(data.first).slice(0, 4)) && data.count < 40) {
+  } else if (coverage.calendar === "year-to-date") {
     paras.push(
-      `${year} is a short archive year for ${name}: ${data.count} drawings from ${data.first} through ${data.last}. Small samples swing hard — a number can lead the board after a handful of appearances and then vanish from the next year's ranking. Treat every figure on this page as a description of what already happened.`,
+      `${year} is year-to-date coverage in this snapshot. The reference date is ${refLabel}. These ${data.count} ${name} drawings run from ${show(data.first)} through ${show(data.last)}. Drawings later in ${year} are outside this snapshot.`,
     );
-  } else if (data.isPartial) {
+  } else if (coverage.calendar === "past-calendar") {
     paras.push(
-      `${year} is still in progress in this archive: ${data.count} ${name} drawings so far, from ${data.first} to ${data.last}. Mid-year totals move as new results land; nothing here is a projection of how the year will finish.`,
+      `${year} is a past calendar year relative to the snapshot reference date ${refLabel}. This page describes the ${data.count} bundled ${name} drawings from ${show(data.first)} through ${show(data.last)}. That span is what the archive holds. It is not a claim that every official drawing of the year was captured.`,
     );
-  } else if (absDiff >= 6) {
+  } else if (coverage.calendar === "after-reference") {
     paras.push(
-      `${name} ran ${data.count} drawings in ${year}. The five white balls averaged ${data.sumMean.toFixed(1)} — ${sumDiff > 0 ? "well above" : "well below"} this matrix's long-run mean of ${baseline.toFixed(1)}. A year-long tilt that large still sits inside ordinary sampling noise for a fair drum; it is not evidence the machine "favored" high or low totals.`,
-    );
-  } else if (absDiff >= 1.5) {
-    paras.push(
-      `${name} held ${data.count} drawings in ${year}, and the white-ball sum averaged ${data.sumMean.toFixed(1)}, ${sumDiff > 0 ? "a little above" : "a little below"} the long-run matrix average of ${baseline.toFixed(1)}. Year-to-year wiggles of a few points are the normal footprint of independent draws, not a signal to chase.`,
+      `${year} is after the snapshot reference date ${refLabel}. These ${data.count} bundled drawings run from ${show(data.first)} through ${show(data.last)}.`,
     );
   } else {
     paras.push(
-      `${name} completed ${data.count} drawings in ${year} with a white-ball average of ${data.sumMean.toFixed(1)} — almost exactly the long-run matrix mean of ${baseline.toFixed(1)}. Even when a year lands on the average, individual drawings still swing from the low ${data.sumMin.value}s to the high ${data.sumMax.value}s.`,
+      `This page describes ${data.count} bundled ${name} drawings in ${year}, from ${show(data.first)} through ${show(data.last)}.`,
     );
   }
 
-  // 2) Frequency / hot-cold
+  if (coverage.beginsPartway) {
+    paras.push(
+      `The bundled archive begins on ${show(data.first)}, partway through ${year}. Earlier ${year} drawings used a different ball pool and are not in this count.`,
+    );
+  }
+  if (coverage.smallSample && data.count > 1) {
+    paras.push(
+      `Separately from that calendar coverage, ${data.count} drawings is a small sample. A leading ball in a sample this size can sit far from its count in a longer record. Sample size is not a measure of how much of the calendar the archive covers.`,
+    );
+  }
+
+  if (shape && Number.isFinite(shape.sumMean) && archiveCount && data.count > 1) {
+    const sumDiff = data.sumMean - shape.sumMean;
+    const direction =
+      Math.abs(sumDiff) < 1.5
+        ? "within 1.5 points of"
+        : sumDiff > 0
+          ? `${Math.abs(sumDiff).toFixed(1)} points above`
+          : `${Math.abs(sumDiff).toFixed(1)} points below`;
+    paras.push(
+      `The five white balls in these ${year} drawings averaged ${data.sumMean.toFixed(1)}. The observed average across the bundled archive of ${archiveCount} drawings${archiveSpan} is ${shape.sumMean.toFixed(1)}. The ${year} average is ${direction} that observed archive average. The archive average is the mean of those recorded drawings, not a theoretical mean of the ball matrix.`,
+    );
+  } else if (data.count > 1 && data.sumMin && data.sumMax) {
+    paras.push(
+      `The five white balls in these ${year} drawings averaged ${data.sumMean.toFixed(1)}, with individual sums from ${data.sumMin.value} to ${data.sumMax.value}.`,
+    );
+  }
+
+  const hot = data.mostFrequent;
+  const hotLead = hot?.[0];
+  const expected = (data.count * (config.pick || 5)) / config.mainMax;
   if (data.count >= 2 && hotLead) {
     const tieNote =
       hot.length > 1
-        ? ` ${hot.length} white balls tied at ${hotLead.count} appearances (${hot.map((x) => x.n).join(", ")}).`
-        : ` White ball ${hotLead.n} led with ${hotLead.count} appearances (${((hotLead.count / data.count) * 100).toFixed(1)}% of drawings).`;
+        ? `${hot.length} white balls tied at ${hotLead.count} appearances (${hot.map((entry) => entry.n).join(", ")}).`
+        : `White ball ${hotLead.n} led with ${hotLead.count} appearances (${((hotLead.count / data.count) * 100).toFixed(1)}% of these drawings).`;
     const coldBit =
       data.missing.length > 0
-        ? ` ${data.missing.length} numbers from 1–${config.mainMax} never appeared at all in ${year}.`
-        : data.leastFrequent.length
-          ? ` The quietest count was ${data.leastFrequent[0].count}, shared by ${data.leastFrequent.length === 1 ? `number ${data.leastFrequent[0].n}` : `${data.leastFrequent.length} numbers`}.`
+        ? ` ${data.missing.length} numbers from 1–${config.mainMax} did not appear in these drawings.`
+        : data.leastFrequent?.length
+          ? ` The lowest count was ${data.leastFrequent[0].count}, shared by ${data.leastFrequent.length === 1 ? `number ${data.leastFrequent[0].n}` : `${data.leastFrequent.length} numbers`}.`
           : "";
-    if (hotLead.count >= expected * 1.6 && data.count >= 50) {
-      paras.push(
-        `Against a fair-share baseline of about ${expected.toFixed(1)} hits per number, ${year}'s leader board looks busy.${tieNote}${coldBit} Leaders reshuffle every year when you re-rank the same matrix — which is what you expect when each drawing is an independent event, not a memory of the last one.`,
-      );
-    } else if (data.missing.length > 8) {
-      paras.push(
-        `With only ${data.count} drawings, many of the ${config.mainMax} white balls never showed up.${tieNote}${coldBit} Gaps that large are normal in a short window; they are not "due" numbers for the next drawing.`,
-      );
-    } else {
-      paras.push(
-        `Frequency for ${year} is just a tally of past hits.${tieNote}${coldBit} A hot or cold label describes the finished year only — it does not improve or worsen that number's odds going forward.`,
-      );
-    }
-  }
-
-  // 3) Odd/even + consecutive
-  if (mode && data.count >= 2) {
-    const consecVs = data.consecutiveShare - shape.consecutiveRate;
-    let consecClause;
-    if (Math.abs(consecVs) < 0.03) {
-      consecClause = `Drawings with at least one consecutive white-ball pair landed ${consecPct}% of the time, in line with the matrix-wide ${baselineConsec}%.`;
-    } else if (consecVs > 0) {
-      consecClause = `Consecutive pairs showed up in ${data.consecutiveCount} drawings (${consecPct}%), a bit above the matrix-wide ${baselineConsec}%.`;
-    } else {
-      consecClause = `Consecutive pairs showed up in ${data.consecutiveCount} drawings (${consecPct}%), a bit under the matrix-wide ${baselineConsec}%.`;
-    }
     paras.push(
-      `The most common odd/even split was ${mode.odd} odd / ${mode.even} even — ${mode.count} drawings (${(mode.share * 100).toFixed(1)}%). ${consecClause} Neither pattern is a playbook; both are side effects of how combinations are counted, and each new draw resets the slate.`,
+      `A uniform mathematical expectation for one specified white ball in this year's record is about ${expected.toFixed(1)} appearances (${data.count} × ${config.pick || 5} / ${config.mainMax}). That expectation is not the observed archive average. ${tieNote}${coldBit} The tally describes these drawings only and does not change the odds of a later drawing.`,
     );
   }
 
-  // 4) Independence / anti-prediction (always, wording varies)
-  if (data.topSpecial && data.count >= 10) {
+  const mode = data.mostCommonOddEven;
+  if (mode && data.count >= 2 && shape && Number.isFinite(shape.consecutiveRate) && archiveCount) {
+    const consecPct = (data.consecutiveShare * 100).toFixed(1);
+    const archiveConsec = (shape.consecutiveRate * 100).toFixed(1);
     paras.push(
-      `The most frequent ${config.specialName} in ${year} was ${data.topSpecial.n} (${data.topSpecial.count}×). Bonus-ball streaks look meaningful on a year page and still carry no edge: the next drawing does not owe anyone a repeat or a make-up hit. This archive is for looking back — verify any ticket with your state lottery, and never treat hot, cold, or overdue lists as a way to beat the odds.`,
-    );
-  } else {
-    paras.push(
-      `Every ${name} drawing is an independent random event. Hot, cold, and overdue labels summarize history; they do not grant better odds on the next ticket. Use this page to inspect what ${year} actually produced, then confirm any claim with the official state lottery record.`,
+      `The most common odd/even split in ${year} was ${mode.odd} odd / ${mode.even} even, in ${mode.count} drawings (${(mode.share * 100).toFixed(1)}%). Consecutive white-ball pairs appeared in ${data.consecutiveCount} of ${data.count} drawings (${consecPct}%). The observed rate in the bundled archive of ${archiveCount} drawings is ${archiveConsec}%. These are counts, not a test of whether the difference is ordinary.`,
     );
   }
 
-  // Cap at 5
-  return paras.slice(0, 5);
+  const bonus = bonusLeaderSentence(config, data);
+  paras.push(
+    `${bonus ? `${bonus} ` : ""}Each ${name} drawing is an independent trial. Hot, cold, and overdue labels summarize records; they do not change the odds on the next ticket. Verify any real ticket with your state lottery.`,
+  );
+
+  return paras;
 }
 
 /** Format a list of ball numbers for prose. */
