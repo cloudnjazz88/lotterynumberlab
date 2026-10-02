@@ -173,7 +173,7 @@ check(
 );
 
 const hub = readFileSync(resolve(ROOT, "guides/index.html"), "utf8");
-check("guides hub says Sixteen guides", hub.includes("Sixteen guides covering"));
+check("guides hub says Sixteen guides", hub.includes(`${GUIDES.length} guides covering`));
 check("guides hub has no leftover Thirteen guides", !hub.includes("Thirteen guides covering"));
 check("guides hub has no leftover Eleven guides", !hub.includes("Eleven guides covering"));
 check(

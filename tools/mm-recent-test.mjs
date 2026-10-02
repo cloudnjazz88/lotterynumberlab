@@ -199,8 +199,13 @@ const powerballFeed = {
   },
 };
 check(
-  "a healthy Powerball feed matches the stored 1,413 rows and numbers",
-  powerball.count === 1413 && powerball.draws.length === 1413 && powerball.latestDraw === "2026-09-28" && drawingRowsEqual(snapshot, powerballFeed),
+  "a healthy Powerball feed matches the stored 1,414 rows and the September 30 drawing",
+  powerball.count === 1414 &&
+    powerball.draws.length === 1414 &&
+    powerball.latestDraw === "2026-09-30" &&
+    powerball.draws[0].n.join("-") === "4-6-23-33-44" &&
+    powerball.draws[0].s === 13 &&
+    drawingRowsEqual(snapshot, powerballFeed),
 );
 
 const degraded = resolveMegaMillionsHistory({

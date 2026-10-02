@@ -116,11 +116,11 @@ function guidesHub() {
         <p class="hero__eyebrow">Guides</p>
         <h1>Mega Millions and Powerball odds guides</h1>
         <p class="hero__lead">
-          Sixteen guides covering the probability, the prize structures, the tax arithmetic and the
-          rule changes behind Mega Millions and Powerball. Every figure is computed from the
-          published ball matrices and from
-          ${num(ctx.mm.history.count + ctx.pb.history.count)} recorded drawings — if a number
-          appears in one of these guides, you can reproduce it.
+          ${GUIDES.length} guides covering the probability, the prize structures, the tax arithmetic and the
+          rule changes behind Mega Millions and Powerball. Probability figures are calculated from
+          the official game rules. Historical statistics use the bundled drawing snapshot
+          (${num(ctx.mm.history.count + ctx.pb.history.count)} recorded drawings). Guides about
+          claims, payments, taxes, and winner disclosure cite the relevant official sources.
         </p>
       </section>
 
@@ -326,8 +326,8 @@ const pages = [
       },
       {
         q: "Does buying more identical tickets improve my odds?",
-        a: "No. Tickets per drawing only scales cost and fixed base prizes. Each ticket remains an independent trial at the same published odds.",
-        plain: "No. Tickets per drawing only scales cost and fixed base prizes. Each ticket remains an independent trial at the same published odds.",
+        a: "Identical lines in the same drawing win or lose together. Buying duplicates does not increase the probability that those numbers are drawn. This tool scales cost and estimated fixed-tier prizes only. Separate drawings are independent of one another; identical tickets within one drawing are not.",
+        plain: "Identical lines in the same drawing win or lose together. Buying duplicates does not increase the probability that those numbers are drawn. This tool scales cost and estimated fixed-tier prizes only. Separate drawings are independent of one another; identical tickets within one drawing are not.",
       },
       {
         q: "Why is the jackpot not given a dollar amount?",

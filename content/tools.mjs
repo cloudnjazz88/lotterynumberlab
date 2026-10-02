@@ -795,9 +795,10 @@ export function whatIfCalculatorPage(ctx) {
         <section aria-labelledby="wi-value">
           <h2 id="wi-value">What this tells you</h2>
           <p>
-            Each drawing is an independent trial. Holding the same five whites and bonus ball
+            Separate drawings are independent trials. Holding the same five whites and bonus ball
             fixed does not create a streak, a debt, or a pattern the next draw must repay.
-            Hot and cold counts describe the past; they do not raise or lower the published
+            Identical lines in the same drawing are not independent of each other: they win or
+            lose together. Hot and cold counts describe the past; they do not raise or lower the published
             odds on the next ticket.
           </p>
           <p>
@@ -833,7 +834,7 @@ export function whatIfCalculatorPage(ctx) {
             <li>Official base prize amounts by era (MM legacy before Apr 8, 2025; base-before-multiplier afterward); jackpot cash is never invented.</li>
             <li>Per-drawing historical ticket prices (Mega Millions $2 before Apr 8, 2025; $5 from Apr 8, 2025 onward; Powerball $2).</li>
             <li>Eastern Time drawing dates as shipped in this site&apos;s snapshot.</li>
-            <li>Identical tickets on a drawing scale fixed prizes and cost; they do not change per-ticket odds.</li>
+            <li>Identical lines in the same drawing scale cost and estimated fixed-tier prizes together. Buying duplicates does not increase the probability that those numbers are drawn.</li>
             <li>Empty ranges show an empty state instead of inventing drawings.</li>
           </ul>
         </section>
@@ -910,7 +911,7 @@ export function whatIfCalculatorPage(ctx) {
           <h3>Is this the same as Ticket Match?</h3>
           <p>No. Ticket Match compares one drawing. What If replays the same numbers across many drawings in the bundled history.</p>
           <h3>Does buying more identical tickets improve my odds?</h3>
-          <p>No. Tickets per drawing only scales cost and fixed base prizes. Each ticket remains an independent trial at the same published odds.</p>
+          <p>Identical lines in the same drawing win or lose together. Buying duplicates does not increase the probability that those numbers are drawn. This tool scales cost and estimated fixed-tier prizes only. Separate drawings are independent of one another; identical tickets within one drawing are not.</p>
           <h3>Why is the jackpot not given a dollar amount?</h3>
           <p>Advertised jackpots change by drawing. A jackpot-tier pattern is counted, but historical jackpot cash is not estimated here.</p>
           <h3>Are Megaplier and Power Play included?</h3>

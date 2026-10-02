@@ -36,18 +36,19 @@ export function faqContent(ctx) {
       a: `<p>No. Each drawing reloads a full set of balls. Knowing last Friday's result does
         not change tonight's probabilities — that is the definition of an independent trial.
         A chi-square test of ${num(mm.history.count + pb.history.count)} drawings on this site
-        is consistent with a fair game.
+        found no evidence of a departure under this test. A non-significant result does not
+        prove the game is fair.
         <a href="${link("guides/independent-trials.html", 0)}">The full argument, with the
         test</a>.</p>`,
     },
     {
       q: "Do hot or cold numbers work?",
-      a: `<p>They appear on charts because some numbers have been drawn more often than others
-        — which is exactly what a fair random process produces over a few thousand drawings.
-        Simulated fair histories of the same length produce the same extremes. A ranking that
-        reshuffles when you change the analysis window is not information.
-        <a href="${link("guides/hot-and-cold-numbers-tested.html", 0)}">The three tests we
-        ran</a>.</p>`,
+      a: `<p>        They appear on charts because some numbers have been drawn more often than others.
+        The chi-square and extreme-value comparisons found no evidence of a departure under
+        those tests. A non-significant result does not prove the game is fair. Changing the
+        window reshuffles the ranking, but that change does not by itself measure predictive
+        power.
+        <a href="${link("guides/hot-and-cold-numbers-tested.html", 0)}">The tests we ran</a>.</p>`,
     },
     {
       q: "Does this site sell lottery tickets or guarantee a win?",
@@ -253,9 +254,10 @@ export function methodologyPage(ctx) {
           A chi-square goodness-of-fit test compares each ball's count with the uniform
           expectation (${mm.expectedPerBall.toFixed(1)} Mega Millions appearances per ball,
           ${pb.expectedPerBall.toFixed(1)} Powerball). Current p-values are
-          ${mm.chi.p.toFixed(2)} and ${pb.chi.p.toFixed(2)} — consistent with a fair game.
-          Monte Carlo simulations of the same length produce “hot” and “cold” extremes as large
-          as the real record. Details:
+          ${mm.chi.p.toFixed(2)} and ${pb.chi.p.toFixed(2)}. Under this test there is no evidence
+          of a departure from a uniform model. A non-significant result does not prove the game
+          is fair. Monte Carlo simulations of the same length produce “hot” and “cold” extremes
+          as large as the real record. Details:
           <a href="guides/hot-and-cold-numbers-tested.html">hot and cold numbers tested</a>.
         </p>
 

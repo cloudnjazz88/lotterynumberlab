@@ -173,7 +173,7 @@ const sitemap = existsSync(resolve(ROOT, "sitemap.xml")) ? readFileSync(resolve(
 check("sitemap includes the guide", sitemap.includes(CANONICAL));
 
 const hub = existsSync(resolve(ROOT, "guides/index.html")) ? readFileSync(resolve(ROOT, "guides/index.html"), "utf8") : "";
-check("guides hub says Sixteen guides", hub.includes("Sixteen guides covering"));
+check("guides hub says Sixteen guides", hub.includes(`${GUIDES.length} guides covering`));
 check("guides hub has no leftover Fourteen guides", !hub.includes("Fourteen guides covering"));
 check("guides hub card", hub.includes(`${SLUG}.html`));
 

@@ -166,7 +166,7 @@ check("sitemap entry", sitemap.includes(CANONICAL));
 check("sitemap lastmod", sitemap.includes(`<loc>${CANONICAL}</loc>\n    <lastmod>2026-09-30</lastmod>`));
 
 const hub = existsSync(resolve(ROOT, "guides/index.html")) ? readFileSync(resolve(ROOT, "guides/index.html"), "utf8") : "";
-check("hub says Sixteen", hub.includes("Sixteen guides covering"));
+check("hub says Sixteen", hub.includes(`${GUIDES.length} guides covering`));
 check("hub has no leftover Fifteen", !hub.includes("Fifteen guides covering"));
 check("hub card", hub.includes(`${SLUG}.html`));
 

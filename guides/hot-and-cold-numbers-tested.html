@@ -69,24 +69,25 @@
         <header class="article-head">
           <p class="page-kicker">Data</p>
           <h1>Are hot and cold numbers real? Testing the full drawing record</h1>
-          <p class="article-dek">Every lottery site publishes a hot-numbers table. We ran the two tests that decide whether those tables contain any information at all.</p>
+          <p class="article-dek">Every lottery site publishes a hot-numbers table. Two tests compare the full drawing record with a uniform model. Comparing windows is exploratory and is not an out-of-sample forecast.</p>
           <p class="article-meta">
             <time datetime="2026-08-24">Published August 24, 2026</time>
-            · figures computed from 2,344 drawings and the published game rules
+            · figures computed from 2,345 drawings and the published game rules
           </p>
         </header>
 
 <p class="lede">
   "Hot" numbers are the ones drawn most often recently; "cold" numbers are the laggards. Both
-  tables are easy to compute and impossible to resist. The question is whether the ranking
-  carries any information about the next drawing — and that question has a definite answer.
+  tables are easy to compute and impossible to resist. The question is whether a ranking
+  carries any information about the next drawing. The two tests below describe the historical
+  counts. Measuring prediction requires a separate out-of-sample test, which is not reported here.
 </p>
 
 <h2>The current tables</h2>
-<div class="table-wrap"><table><caption>Counts cover 931 Mega Millions drawings since October 31, 2017 and 1,413 Powerball drawings since October 7, 2015.</caption>
+<div class="table-wrap"><table><caption>Counts cover 931 Mega Millions drawings since October 31, 2017 and 1,414 Powerball drawings since October 7, 2015.</caption>
   <thead><tr><th>Game</th><th>Most drawn</th><th>Least drawn</th><th>Longest current dry spell</th></tr></thead>
   <tbody><tr><td>Mega Millions</td><td><b>10</b>&nbsp;(87), <b>17</b>&nbsp;(84), <b>31</b>&nbsp;(80), <b>3</b>&nbsp;(79), <b>42</b>&nbsp;(78)</td><td><b>51</b>&nbsp;(52), <b>67</b>&nbsp;(53), <b>65</b>&nbsp;(53), <b>45</b>&nbsp;(53), <b>23</b>&nbsp;(55)</td><td>ball <b>11</b>, 56 drawings</td></tr>
-  <tr><td>Powerball</td><td><b>21</b>&nbsp;(126), <b>61</b>&nbsp;(126), <b>64</b>&nbsp;(125), <b>28</b>&nbsp;(120), <b>27</b>&nbsp;(118)</td><td><b>13</b>&nbsp;(76), <b>46</b>&nbsp;(83), <b>26</b>&nbsp;(83), <b>49</b>&nbsp;(84), <b>34</b>&nbsp;(84)</td><td>ball <b>51</b>, 54 drawings</td></tr></tbody></table></div>
+  <tr><td>Powerball</td><td><b>21</b>&nbsp;(126), <b>61</b>&nbsp;(126), <b>64</b>&nbsp;(125), <b>28</b>&nbsp;(120), <b>23</b>&nbsp;(118)</td><td><b>13</b>&nbsp;(76), <b>46</b>&nbsp;(83), <b>26</b>&nbsp;(83), <b>49</b>&nbsp;(84), <b>34</b>&nbsp;(84)</td><td>ball <b>51</b>, 55 drawings</td></tr></tbody></table></div>
 <p>
   In Powerball the gap between the top and bottom of that table is
   50 appearances — ball 21 has
@@ -102,12 +103,13 @@
 </p>
 <div class="table-wrap"><table>
   <thead><tr><th>Game</th><th>Expected per ball</th><th>Chi-square</th><th>df</th><th>p-value</th><th>Verdict</th></tr></thead>
-  <tbody><tr><td>Mega Millions</td><td>66.5</td><td>62.6</td><td>69</td><td>0.69</td><td>consistent with a fair game</td></tr>
-  <tr><td>Powerball</td><td>102.4</td><td>78.6</td><td>68</td><td>0.18</td><td>consistent with a fair game</td></tr></tbody></table></div>
+  <tbody><tr><td>Mega Millions</td><td>66.5</td><td>62.6</td><td>69</td><td>0.69</td><td>no evidence of a departure under this test</td></tr>
+  <tr><td>Powerball</td><td>102.5</td><td>79.3</td><td>68</td><td>0.16</td><td>no evidence of a departure under this test</td></tr></tbody></table></div>
 <p>
-  A p-value of 0.69 means that if the game is perfectly fair, you would see
-  counts at least this uneven about 69% of the time. That is not evidence of
-  anything. Both games pass comfortably.
+  A p-value of 0.69 for Mega Millions means that if every white ball were
+  equally likely, counts at least this uneven would show up about 69% of the
+  time. Powerball's p-value is 0.16. Under this test there is no evidence of a
+  departure from that uniform model. A non-significant result is not proof that the game is fair.
 </p>
 
 <h2>Test 2: are the extremes more extreme than chance allows?</h2>
@@ -122,7 +124,7 @@
   <thead><tr><th>Statistic</th><th>Real record</th><th>Fair simulation</th><th>Simulated 95th percentile</th></tr></thead>
   <tbody><tr><td>Mega Millions: highest ball count</td><td>87</td><td>86.0</td><td>93</td></tr>
   <tr><td>Mega Millions: hottest-minus-coldest</td><td>35</td><td>37.5</td><td>46</td></tr>
-  <tr><td>Powerball: highest ball count</td><td>126</td><td>126.3</td><td>134</td></tr>
+  <tr><td>Powerball: highest ball count</td><td>126</td><td>126.4</td><td>135</td></tr>
   <tr><td>Powerball: hottest-minus-coldest</td><td>50</td><td>46.4</td><td>57</td></tr></tbody></table></div>
 <p>
   The real extremes sit right on the simulated averages. Randomness is lumpy: spreading a few
@@ -133,13 +135,14 @@
 
 
 
-<h2>Test 3: does "hot" stay hot?</h2>
+<h2>Exploratory window comparison</h2>
 <p>
-  Information that predicts the future is stable. Superstition is not. Shorten the analysis
-  window on either of our generator pages — from the full matrix era to the last 400 or last 120
-  drawings — and the hot list reshuffles almost completely, which is precisely what you expect
-  from a table built on sampling noise. A ranking that changes every time you change the window
-  is not measuring a property of the balls.
+  The chi-square test and the extreme-value comparison above stay inside one historical sample.
+  Shortening the window on either generator page — from the full matrix era to the last 400 or
+  last 120 drawings — changes which balls sit at the top of the hot list. That change does not,
+  by itself, show a lack of predictive power. Predictive performance needs an out-of-sample test:
+  build the ranking on earlier drawings, then score it on later drawings that were not used to
+  make the ranking. This page does not report that test.
 </p>
 
 <aside class="callout callout--note">
@@ -150,9 +153,9 @@
     or so — enough to create dramatic-looking charts.</li>
     <li><b>We test after looking.</b> Picking the most extreme ball out of seventy and then
     asking whether it is unusual is the Texas sharpshooter fallacy.</li>
-    <li><b>Confirmation is cheap.</b> A hot number will appear again eventually — five in every
-    14 drawings, in fact — and that hit is remembered while
-    the misses are not.</li>
+    <li><b>Confirmation is cheap.</b> For one specified Mega Millions white ball, the per-drawing
+    probability is 5/70 = 1/14, approximately 7.14%. That is an expectation for each drawing,
+    not a guaranteed recurrence schedule. A hit is remembered while the misses are not.</li>
   </ul>
 </aside>
 
@@ -165,9 +168,11 @@
   we verify that with a chi-square test in our own test suite.
 </p>
 <p>
-  If a site charges you for a hot-numbers system, the two tests above are the ones to ask them
-  to run. <a href="independent-trials.html">The law of independent trials</a> explains why the
-  answer cannot come out any other way.
+  If a site charges you for a hot-numbers system, the two tests above — goodness of fit, and
+  extremes against a uniform simulation — are a starting comparison. They do not measure whether
+  a ranking predicts later drawings; that needs an out-of-sample test.
+  <a href="independent-trials.html">The law of independent trials</a> is the model those
+  comparisons use. No evidence of a departure under a test is not proof that the game is fair.
 </p>
         <footer class="article-foot">
           <p class="disclaimer-text">

@@ -161,6 +161,16 @@ ${adSlot("results-hub") ? `      ${adSlot("results-hub")}\n` : ""}
 
 /* ------------------------------- a year page ------------------------------ */
 
+function archiveRulesLabel(gameId, year, config) {
+  const y = Number(year);
+  if (gameId === "megamillions") {
+    if (y <= 2024) return "5 of 70 + 1 of 25 · $2 per play";
+    if (y === 2025) {
+      return "before April 8, 2025: 5 of 70 + 1 of 25 and $2 per play; from April 8, 2025: 5 of 70 + 1 of 24 and $5 per play";
+    }
+  }
+  return `${config.matrixLabel} ·\n            ${config.ticketPrice} per play`;
+}
 function comparison(value, baseline, unit = "") {
   const diff = value - baseline;
   const size = Math.abs(diff);
@@ -244,8 +254,7 @@ export function yearPage(ctx, gameId, year) {
             sum, odd/even and consecutive-pair analysis from the bundled draw record.
           </p>
           <p class="article-meta">
-            Dates are Eastern Time drawing dates · ${config.matrixLabel} ·
-            ${config.ticketPrice} per play
+            Dates are Eastern Time drawing dates · ${archiveRulesLabel(gameId, year, config)}
           </p>
         </header>
 

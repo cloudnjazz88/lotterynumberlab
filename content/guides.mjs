@@ -1048,7 +1048,7 @@ const hotCold = {
   slug: "hot-and-cold-numbers-tested",
   kicker: "Data",
   title: "Are hot and cold numbers real? Testing the full drawing record",
-  dek: "Every lottery site publishes a hot-numbers table. We ran the two tests that decide whether those tables contain any information at all.",
+  dek: "Every lottery site publishes a hot-numbers table. Two tests compare the full drawing record with a uniform model. Comparing windows is exploratory and is not an out-of-sample forecast.",
   description:
     "A statistical test of hot and cold lottery numbers using every Mega Millions and Powerball drawing of the current matrices: chi-square goodness of fit, Monte Carlo extremes and window stability.",
   published: "2026-08-24",
@@ -1059,8 +1059,9 @@ const hotCold = {
     return `
 <p class="lede">
   "Hot" numbers are the ones drawn most often recently; "cold" numbers are the laggards. Both
-  tables are easy to compute and impossible to resist. The question is whether the ranking
-  carries any information about the next drawing — and that question has a definite answer.
+  tables are easy to compute and impossible to resist. The question is whether a ranking
+  carries any information about the next drawing. The two tests below describe the historical
+  counts. Measuring prediction requires a separate out-of-sample test, which is not reported here.
 </p>
 
 <h2>The current tables</h2>
@@ -1106,7 +1107,7 @@ ${table(
       mm.chi.chi.toFixed(1),
       String(mm.chi.df),
       mm.chi.p.toFixed(2),
-      mm.chi.p > 0.05 ? "consistent with a fair game" : "worth another look",
+      mm.chi.p > 0.05 ? "no evidence of a departure under this test" : "worth another look",
     ],
     [
       pb.config.name,
@@ -1114,14 +1115,15 @@ ${table(
       pb.chi.chi.toFixed(1),
       String(pb.chi.df),
       pb.chi.p.toFixed(2),
-      pb.chi.p > 0.05 ? "consistent with a fair game" : "worth another look",
+      pb.chi.p > 0.05 ? "no evidence of a departure under this test" : "worth another look",
     ],
   ],
 )}
 <p>
-  A p-value of ${mm.chi.p.toFixed(2)} means that if the game is perfectly fair, you would see
-  counts at least this uneven about ${pct(mm.chi.p, 0)} of the time. That is not evidence of
-  anything. Both games pass comfortably.
+  A p-value of ${mm.chi.p.toFixed(2)} for Mega Millions means that if every white ball were
+  equally likely, counts at least this uneven would show up about ${pct(mm.chi.p, 0)} of the
+  time. Powerball's p-value is ${pb.chi.p.toFixed(2)}. Under this test there is no evidence of a
+  departure from that uniform model. A non-significant result is not proof that the game is fair.
 </p>
 
 <h2>Test 2: are the extremes more extreme than chance allows?</h2>
@@ -1170,13 +1172,14 @@ ${table(
 
 ${adSlot("guide-mid")}
 
-<h2>Test 3: does "hot" stay hot?</h2>
+<h2>Exploratory window comparison</h2>
 <p>
-  Information that predicts the future is stable. Superstition is not. Shorten the analysis
-  window on either of our generator pages — from the full matrix era to the last 400 or last 120
-  drawings — and the hot list reshuffles almost completely, which is precisely what you expect
-  from a table built on sampling noise. A ranking that changes every time you change the window
-  is not measuring a property of the balls.
+  The chi-square test and the extreme-value comparison above stay inside one historical sample.
+  Shortening the window on either generator page — from the full matrix era to the last 400 or
+  last 120 drawings — changes which balls sit at the top of the hot list. That change does not,
+  by itself, show a lack of predictive power. Predictive performance needs an out-of-sample test:
+  build the ranking on earlier drawings, then score it on later drawings that were not used to
+  make the ranking. This page does not report that test.
 </p>
 
 ${callout(
@@ -1187,9 +1190,9 @@ ${callout(
     or so — enough to create dramatic-looking charts.</li>
     <li><b>We test after looking.</b> Picking the most extreme ball out of seventy and then
     asking whether it is unusual is the Texas sharpshooter fallacy.</li>
-    <li><b>Confirmation is cheap.</b> A hot number will appear again eventually — five in every
-    ${mm.config.mainMax / mm.config.pick} drawings, in fact — and that hit is remembered while
-    the misses are not.</li>
+    <li><b>Confirmation is cheap.</b> For one specified Mega Millions white ball, the per-drawing
+    probability is 5/70 = 1/14, approximately 7.14%. That is an expectation for each drawing,
+    not a guaranteed recurrence schedule. A hit is remembered while the misses are not.</li>
   </ul>`,
 )}
 
@@ -1202,9 +1205,11 @@ ${callout(
   we verify that with a chi-square test in our own test suite.
 </p>
 <p>
-  If a site charges you for a hot-numbers system, the two tests above are the ones to ask them
-  to run. <a href="independent-trials.html">The law of independent trials</a> explains why the
-  answer cannot come out any other way.
+  If a site charges you for a hot-numbers system, the two tests above — goodness of fit, and
+  extremes against a uniform simulation — are a starting comparison. They do not measure whether
+  a ranking predicts later drawings; that needs an out-of-sample test.
+  <a href="independent-trials.html">The law of independent trials</a> is the model those
+  comparisons use. No evidence of a departure under a test is not proof that the game is fair.
 </p>`;
   },
 };
