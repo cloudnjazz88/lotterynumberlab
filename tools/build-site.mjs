@@ -285,7 +285,7 @@ const pages = [
     nav: "about",
     title: "Privacy policy",
     description:
-      "What this site stores (generator settings in your own browser), what it does not collect, and how third-party advertising cookies and opt-outs work.",
+      "Accounts and payments are not collected. Browser-local generator settings, hosting logs, voluntary email, and third-party advertising or analytics are described with opt-outs.",
     body: privacyPage(),
   },
   {

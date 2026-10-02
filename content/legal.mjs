@@ -19,9 +19,10 @@ export function aboutPage(ctx) {
 
         <h2>Who runs this</h2>
         <p>
-          ${SITE.name} is independently researched and edited by a US-based publisher.
-          Editorial decisions — what to publish, which eras to analyse, how to word the
-          disclaimers — are made here, not by an advertiser or a lottery.
+          ${SITE.name} is the publishing brand for this independent lottery-statistics site.
+          Content is researched and edited under that name. Editorial decisions — what to
+          publish, which eras to analyse, how to word the disclaimers — are made by
+          ${SITE.name}, not by an advertiser or a lottery.
         </p>
         <p class="contact-line">
           <a class="text-link" href="mailto:${SITE.email}">${SITE.email}</a>
@@ -34,13 +35,13 @@ export function aboutPage(ctx) {
 
         <h2>Editorial approach</h2>
         <p>
-          Every number published here is derived, not copied. The odds tables are computed from
-          the official ball matrices using the standard combination formula, and they reproduce
-          the prize charts published by both lotteries exactly. The statistics — frequencies,
+          Drawing results and jackpot estimates come from official sources. We calculate the
+          odds and historical statistics presented alongside them. The odds tables are computed
+          from the official ball matrices using the standard combination formula, and they
+          reproduce the prize charts published by both lotteries. The statistics — frequencies,
           dry spells, sum distributions, odd/even splits — are computed from
           ${num(mm.history.count)} Mega Millions drawings and ${num(pb.history.count)} Powerball
-          drawings, taken from an official open-data feed. When we cannot verify something, we
-          leave it out.
+          drawings in the bundled snapshot. When we cannot verify something, we leave it out.
         </p>
         <p>
           We also try to be unusually blunt about what statistics can and cannot do for a
@@ -56,27 +57,34 @@ export function aboutPage(ctx) {
           [
             [
               `<a href="https://data.ny.gov/d/5xaw-6ayf" target="_blank" rel="noopener">New York State Open Data — Mega Millions winning numbers</a>`,
-              `${num(mm.history.count)} drawings from ${dateLong(mm.history.firstDraw)} onward`,
+              `Primary Mega Millions history in the bundled snapshot (${num(mm.history.count)} drawings from ${dateLong(mm.history.firstDraw)} onward)`,
             ],
             [
               `<a href="https://data.ny.gov/d/d6yy-54nr" target="_blank" rel="noopener">New York State Open Data — Powerball winning numbers</a>`,
-              `${num(pb.history.count)} drawings from ${dateLong(pb.history.firstDraw)} onward`,
+              `Powerball history in the bundled snapshot (${num(pb.history.count)} drawings from ${dateLong(pb.history.firstDraw)} onward)`,
             ],
             [
-              `<a href="https://www.megamillions.com/" target="_blank" rel="noopener">megamillions.com</a>
-               and <a href="https://www.powerball.com/" target="_blank" rel="noopener">powerball.com</a>`,
-              "Game rules, prize structures, draw schedules and official odds statements",
+              `<a href="https://www.megamillions.com/" target="_blank" rel="noopener">megamillions.com</a>`,
+              "Game rules, prize structures, draw schedules, official odds statements, and next-drawing jackpot estimates; also the recent-drawings API used only when the Mega Millions open-data history is truncated",
+            ],
+            [
+              `<a href="https://www.powerball.com/" target="_blank" rel="noopener">powerball.com</a>`,
+              "Game rules, prize structures, draw schedules, official odds statements, and next-drawing jackpot estimates",
             ],
           ],
         )}
         <p>
-          The published pages use a verified snapshot of those official feeds. The snapshot is
-          rebuilt after drawings when the feed has new rows — at least once a day — and is
-          never replaced by an empty or shorter download. The “Fetch latest results” button on
-          either generator page talks to the same portal in your browser; it does not change
-          the published pages until the next rebuild. An open-data feed can lag or contain
-          errors: <strong>never claim a prize based on numbers shown here</strong>. Verify with
-          your state lottery or the official game website.
+          The published pages use a verified snapshot of those official sources. Drawing history
+          is rebuilt after drawings when the feed has new rows — at least once a day — and is
+          never replaced by an empty or shorter download. If the Mega Millions open-data history
+          is truncated, the validated snapshot is kept and may be extended from Mega Millions’
+          official recent-drawings API; Powerball continues from its New York open-data dataset.
+          Jackpot estimates are fetched from the official Mega Millions and Powerball sites; a
+          failed fetch keeps the previous verified estimate rather than clearing it. The “Fetch
+          latest results” button on either generator page talks to the New York open-data portal
+          in your browser; it does not change the published pages until the next rebuild. An
+          open-data feed can lag or contain errors: <strong>never claim a prize based on numbers
+          shown here</strong>. Verify with your state lottery or the official game website.
         </p>
 
         <h2>Independence</h2>
@@ -116,43 +124,53 @@ export function privacyPage() {
         <p class="page-kicker">Legal</p>
         <h1>Privacy policy</h1>
         <p class="lede">
-          Short version: we do not ask for your name, we do not have accounts, and we cannot
-          identify you. Your generator settings stay in your own browser. Third-party
-          advertising and analytics, where present, set their own cookies — details and opt-outs
-          are below.
+          Short version: this site has no accounts, newsletter signup, or payment collection.
+          Generator settings can stay in your browser. Voluntary emails, ordinary hosting logs,
+          and third-party advertising or analytics (where present) are described below.
         </p>
-        <p class="note">Last updated: ${dateLong("2026-08-24")}.</p>
+        <p class="note">Last updated: ${dateLong("2026-10-02")}.</p>
 
         <h3>1. Information we collect directly</h3>
         <p>
-          <strong>None that identifies you.</strong> This site has no sign-up, no login, no
-          contact form and no newsletter. We do not ask for your name, address, date of birth,
-          payment details or lottery numbers. If you email us, we hold that email — and nothing
-          else — for as long as it takes to answer you.
+          This site has no sign-up, no login, no contact form, no newsletter, and no payment
+          collection. We do not ask for your name, address, date of birth, or payment details as
+          a condition of using the pages. If you email
+          <a href="mailto:${SITE.email}">${SITE.email}</a>, we receive whatever you choose to
+          send in that message — typically an email address and the text of your note — and use
+          it to reply. We do not invent other account records from that correspondence.
         </p>
 
         <h3>2. Information stored on your device</h3>
         <p>
-          The generator remembers your own settings (analysis window, weighting preset, slider
-          values and filter toggles) using your browser's <code>localStorage</code>. That data
-          never leaves your device, is not readable by us, and contains nothing personal. Clear
-          your site data at any time and it is gone permanently; the site continues to work with
-          default settings.
+          The number generator can remember your own settings (analysis window, weighting preset,
+          slider values and filter toggles) in your browser's <code>localStorage</code>. That
+          storage stays in the browser; it is not uploaded to our servers by the site’s own
+          code. Clear your site data at any time and those saved settings are gone; the site
+          continues to work with defaults.
+        </p>
+        <p>
+          Interactive tools (for example Ticket Match, Odds Explorer, Spending, and What If) run
+          in your browser. Numbers or options you type into those tools are used for the
+          on-page calculation and are not sent to ${SITE.name} as account data. They are not
+          written to <code>localStorage</code> by the current tool scripts.
         </p>
 
         <h3>3. Server logs</h3>
         <p>
-          Like effectively every website, our hosting provider records standard technical request
-          logs — IP address, timestamp, page requested, referring page, browser user agent.
-          These are used for security and to keep the site running, and are retained only for as
-          long as our host's normal log rotation.
+          Our hosting provider may record ordinary technical request logs when pages are served.
+          Those logs can include an IP address, timestamp, requested URL, referring page, and
+          browser user agent. They are used for security and to keep the site running. Retention
+          follows the host’s practices; this policy does not invent a separate retention schedule.
         </p>
 
         <h3>4. Third-party advertising</h3>
         <p>
-          Pages on this site may show advertising supplied by Google and its partners. Ad
-          networks use cookies and similar technologies to serve and measure ads, and may use
-          them to show ads based on your prior visits to this or other websites.
+          Pages on this site may include Google advertising tags and may show advertising
+          supplied by Google and its partners. Ad networks use cookies and similar technologies
+          to serve and measure ads, and may use them to show ads based on your prior visits to
+          this or other websites. In the tracked site build, the AdSense client script is
+          included in page HTML when a publisher ID is configured; empty ad slots are only
+          rendered when ads are explicitly turned on in site configuration.
         </p>
         <ul>
           <li>
@@ -177,20 +195,16 @@ export function privacyPage() {
               >policies.google.com/technologies/partner-sites</a
             >.
           </li>
-          <li>
-            Where required by law, visitors in the European Economic Area, the United Kingdom and
-            Switzerland are shown a consent message before personalised advertising or
-            non-essential cookies are used, and can withdraw or change that consent at any time
-            through the same message.
-          </li>
         </ul>
 
         <h3>5. Analytics</h3>
         <p>
-          This site uses Google Analytics 4 to record page views and general traffic patterns —
-          never lottery selections, and never anything that identifies you by name. Google may
-          set cookies or use similar technology for that measurement. We do not sell, rent or
-          trade data about visitors to anyone, for any purpose.
+          This site uses Google Analytics 4 to record page views and general traffic patterns.
+          The tracked build loads the Google tag (<code>gtag.js</code>) as part of page HTML
+          when a measurement ID is configured. Google may set cookies or use similar technology
+          for that measurement. Lottery tool selections are not designed to be sent as Analytics
+          events by this site’s own scripts. We do not sell, rent or trade visitor lists for
+          marketing.
         </p>
         <p>
           You can opt out of Google Analytics with the
@@ -225,9 +239,10 @@ export function privacyPage() {
         <p>
           Depending on where you live, you may have the right to access, correct or delete
           personal data a site holds about you, to object to processing, or to opt out of the
-          "sale" or "sharing" of personal information. Because we hold no account data, the
-          practical steps are: clear your browser storage for this site, use the advertising
-          opt-outs linked above, and email us if you have sent us anything you want removed.
+          "sale" or "sharing" of personal information. Practical steps for this site include:
+          clear your browser storage for these pages, use the advertising and Analytics opt-outs
+          linked above, and email us if you have sent correspondence you want removed. Third-party
+          advertising and Analytics providers process data under their own policies.
         </p>
 
         <h3>9. Changes</h3>
