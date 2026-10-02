@@ -111,7 +111,66 @@ ${guide.body(ctx)}
 `;
 }
 
+const GUIDE_HUB_SECTIONS = [
+  {
+    id: "understand-the-odds",
+    title: "Understand the odds",
+    slugs: [
+      "mega-millions-vs-powerball-odds",
+      "how-lottery-odds-are-calculated",
+      "independent-trials",
+      "does-buying-more-lottery-tickets-improve-your-odds",
+      "quick-pick-vs-choosing-your-own-lottery-numbers",
+    ],
+  },
+  {
+    id: "read-the-drawing-data",
+    title: "Read the drawing data",
+    slugs: ["hot-and-cold-numbers-tested", "what-winning-combinations-look-like"],
+  },
+  {
+    id: "game-rule-changes",
+    title: "Game rule changes",
+    slugs: ["powerball-2015-rule-change", "mega-millions-2025-rule-change"],
+  },
+  {
+    id: "jackpots-payments-and-claims",
+    title: "Jackpots, payments and claims",
+    slugs: [
+      "expected-value-of-a-lottery-ticket",
+      "record-jackpots-and-taxes",
+      "what-happens-when-multiple-people-win-the-lottery-jackpot",
+      "what-happens-to-unclaimed-lottery-prizes",
+      "can-lottery-winners-stay-anonymous",
+      "what-to-do-if-you-win-the-lottery",
+      "lottery-lump-sum-vs-annuity",
+    ],
+  },
+];
+
+function guidesForHubSection(slugs) {
+  return slugs.map((slug) => {
+    const guide = GUIDES.find((g) => g.slug === slug);
+    if (!guide) throw new Error(`guides hub section references unknown slug: ${slug}`);
+    return guide;
+  });
+}
+
 function guidesHub() {
+  const sectionGuides = GUIDE_HUB_SECTIONS.map((section) => ({
+    ...section,
+    guides: guidesForHubSection(section.slugs),
+  }));
+  const listed = sectionGuides.flatMap((section) => section.guides.map((g) => g.slug));
+  if (listed.length !== GUIDES.length || new Set(listed).size !== GUIDES.length) {
+    throw new Error("guides hub sections must list every GUIDES entry exactly once");
+  }
+  for (const guide of GUIDES) {
+    if (!listed.includes(guide.slug)) {
+      throw new Error(`guides hub missing GUIDES entry: ${guide.slug}`);
+    }
+  }
+
   return `      <section class="hero hero--slim">
         <p class="hero__eyebrow">Guides</p>
         <h1>Mega Millions and Powerball odds guides</h1>
@@ -123,14 +182,6 @@ function guidesHub() {
           claims, payments, taxes, and winner disclosure cite the relevant official sources.
         </p>
       </section>
-
-      <section class="section">
-        <div class="guide-cards guide-cards--all">
-        ${guideCards(GUIDES, 1)}
-        </div>
-      </section>
-
-      ${adSlot("guides-hub")}
 
       <section class="panel prose">
         <h2>Start here if you are new</h2>
@@ -149,6 +200,28 @@ function guidesHub() {
           <a href="${link("powerball.html", 1)}">Powerball</a>.
         </p>
       </section>
+
+      <nav class="guides-hub__jumps" aria-label="Guide topics">
+        ${sectionGuides
+          .map(
+            (section) =>
+              `<a class="guides-hub__jump" href="#${section.id}">${section.title}</a>`,
+          )
+          .join("\n        ")}
+      </nav>
+
+      ${sectionGuides
+        .map(
+          (section) => `<section class="section guides-hub__section" aria-labelledby="${section.id}">
+        <h2 class="section__title" id="${section.id}">${section.title}</h2>
+        <div class="guide-cards">
+        ${guideCards(section.guides, 1)}
+        </div>
+      </section>`,
+        )
+        .join("\n\n      ")}
+
+      ${adSlot("guides-hub")}
 `;
 }
 

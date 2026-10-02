@@ -122,7 +122,7 @@ if (html) {
     html.includes('article-nav__side--next" href="mega-millions-vs-powerball-odds.html"'),
   );
   check("related keep reading includes record jackpots", html.includes('id="more-guides"') && html.includes("record-jackpots-and-taxes.html"));
-  check("stylesheet unchanged", html.includes("/styles.css?v=4b735dc77ae2"));
+  check("stylesheet unchanged", html.includes("/styles.css?v=649573db135d"));
 
   let depth = 0;
   let nested = false;

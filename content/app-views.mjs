@@ -177,7 +177,7 @@ export function homeBody(ctx, guides) {
   const related = [
     guides.find((g) => g.slug === "mega-millions-vs-powerball-odds") || guides[0],
     guides.find((g) => g.slug === "hot-and-cold-numbers-tested") || guides[6],
-    guides.find((g) => g.slug === "record-jackpots-and-taxes") || guides[2],
+    guides.find((g) => g.slug === "what-to-do-if-you-win-the-lottery") || guides[14],
   ].filter(Boolean);
   const mmCount = num(mm.history.count);
   const pbCount = num(pb.history.count);
@@ -228,6 +228,8 @@ export function homeBody(ctx, guides) {
           <p>
             Most recent drawings. Confirm a ticket with your state lottery before you claim.
             <a class="text-link" href="results/index.html">Full archive</a>
+            ·
+            <a class="text-link" href="tools/ticket-match-checker.html">Check your ticket</a>
           </p>
         </div>
         <div class="latest-grid">

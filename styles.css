@@ -1581,6 +1581,57 @@ label.switch {
   border-bottom-color: var(--accent);
 }
 
+.guides-hub__jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.65rem;
+  align-items: center;
+  margin: 0 0 4px;
+  padding: 0;
+}
+
+.guides-hub__jump {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+
+.guides-hub__jump:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+}
+
+.guides-hub__jump:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.guides-hub__section .section__title {
+  scroll-margin-top: 5.5rem;
+}
+
+@media (max-width: 640px) {
+  .guides-hub__jumps {
+    gap: 0.4rem 0.5rem;
+  }
+
+  .guides-hub__jump {
+    flex: 1 1 auto;
+    min-width: calc(50% - 0.3rem);
+    padding: 0.45rem 0.7rem;
+    font-size: 0.84rem;
+  }
+}
+
 .guide-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));

@@ -180,7 +180,10 @@ check("guides hub card", hub.includes(`${SLUG}.html`));
 const home = existsSync(resolve(ROOT, "index.html")) ? readFileSync(resolve(ROOT, "index.html"), "utf8") : "";
 const analyze = existsSync(resolve(ROOT, "analyze/index.html")) ? readFileSync(resolve(ROOT, "analyze/index.html"), "utf8") : "";
 const tools = existsSync(resolve(ROOT, "tools/index.html")) ? readFileSync(resolve(ROOT, "tools/index.html"), "utf8") : "";
-check("not featured on home", !home.includes(SLUG));
+const homeRelated = home.includes("analysis-feature__related")
+  ? home.slice(home.indexOf("analysis-feature__related"), home.indexOf("home-guide-callout"))
+  : "";
+check("featured in home related recommendations", homeRelated.includes(`${SLUG}.html`));
 check("not featured on analyze", !analyze.includes(SLUG));
 check("not added to tools hub", !tools.includes(SLUG));
 

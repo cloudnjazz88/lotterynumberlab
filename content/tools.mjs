@@ -666,6 +666,8 @@ export function oddsExplorerPage(ctx) {
           ·
           <a class="text-link" href="${link("guides/mega-millions-vs-powerball-odds.html", depth)}">MM vs PB odds guide</a>
           ·
+          <a class="text-link" href="${link("guides/does-buying-more-lottery-tickets-improve-your-odds.html", depth)}">Does buying more tickets improve your odds?</a>
+          ·
           <a class="text-link" href="${link("responsible-play.html", depth)}">Responsible play</a>
         </p>
       </article>
