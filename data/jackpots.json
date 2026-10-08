@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-07T17:59:32.553Z",
+  "updatedAt": "2026-10-08T10:25:20.133Z",
   "games": {
     "megamillions": {
       "estimatedJackpot": {
@@ -14,22 +14,22 @@
       },
       "nextDrawing": "2026-10-10T03:00:00.000Z",
       "sourceUrl": "https://www.megamillions.com/",
-      "verifiedAt": "2026-10-07T17:59:32.553Z"
+      "verifiedAt": "2026-10-08T10:25:20.133Z"
     },
     "powerball": {
       "estimatedJackpot": {
-        "amount": 485000000,
-        "display": "$485 Million",
+        "amount": 516000000,
+        "display": "$516 Million",
         "currency": "USD"
       },
       "cashValue": {
-        "amount": 199800000,
-        "display": "$199.8 Million",
+        "amount": 212600000,
+        "display": "$212.6 Million",
         "currency": "USD"
       },
-      "nextDrawing": "2026-10-08T02:59:00.000Z",
+      "nextDrawing": "2026-10-11T02:59:00.000Z",
       "sourceUrl": "https://www.powerball.com/",
-      "verifiedAt": "2026-10-07T17:59:32.553Z"
+      "verifiedAt": "2026-10-08T10:25:20.133Z"
     }
   }
 }
