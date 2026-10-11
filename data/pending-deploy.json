@@ -1,9 +1,0 @@
-{
-  "reason": "data-or-pages-updated",
-  "baseCommit": "3e1fbc40f457a2cc8fbd4ae206c0a1295857ee5a",
-  "targetCommit": "700033cc5dc684e5b9ab4f4e440c8c568d3b508f",
-  "snapshotId": "mm:2026-10-09|pb:2026-10-10|jp:2026-10-11T11:57:38.861Z",
-  "createdAt": "2026-10-11T11:57:46.826Z",
-  "updatedAt": "2026-10-11T11:57:46.878Z",
-  "retries": 0
-}
