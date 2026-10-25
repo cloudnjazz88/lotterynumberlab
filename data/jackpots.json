@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T10:32:42.476Z",
+  "updatedAt": "2026-10-25T15:05:28.736Z",
   "games": {
     "megamillions": {
       "estimatedJackpot": {
@@ -14,7 +14,7 @@
       },
       "nextDrawing": "2026-10-28T03:00:00.000Z",
       "sourceUrl": "https://www.megamillions.com/",
-      "verifiedAt": "2026-10-25T10:32:42.476Z"
+      "verifiedAt": "2026-10-25T15:05:28.736Z"
     },
     "powerball": {
       "estimatedJackpot": {
@@ -29,7 +29,7 @@
       },
       "nextDrawing": "2026-10-27T02:59:00.000Z",
       "sourceUrl": "https://www.powerball.com/",
-      "verifiedAt": "2026-10-25T10:32:42.476Z"
+      "verifiedAt": "2026-10-25T15:05:28.736Z"
     }
   }
 }
